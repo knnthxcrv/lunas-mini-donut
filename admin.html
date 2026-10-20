@@ -8,8 +8,6 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
     body { background: #f4f7f6; padding: 2rem; color: #333; }
-
-    /* LOGIN SCREEN */
     .login-container { display: flex; justify-content: center; align-items: center; min-height: 80vh; position: relative; }
     .back-link { position: absolute; top: 0; left: 0; text-decoration: none; color: #a54b1e; font-weight: 700; display: flex; align-items: center; gap: 0.5rem; background: white; padding: 0.6rem 1.2rem; border-radius: 50px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); transition: 0.2s; }
     .back-link:hover { background: #fff8f0; transform: translateY(-2px); }
@@ -24,8 +22,6 @@
     .login-btn { width: 100%; background: #ff9f6e; color: #2d1b0e; border: none; border-radius: 50px; padding: 1rem; font-size: 1.1rem; font-weight: 800; cursor: pointer; box-shadow: 0 6px 0 #b95d2b; transition: 0.1s; }
     .login-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #b95d2b; }
     .error-msg { color: #d9534f; font-weight: bold; font-size: 0.9rem; margin-top: 1rem; display: none; }
-
-    /* DASHBOARD */
     #dashboardView { display: none; }
     .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; }
     .header h1 { color: #2d1b0e; display: flex; align-items: center; gap: 0.5rem; }
@@ -35,18 +31,13 @@
     .btn-refresh { background: #2e8b57; color: white; box-shadow: 0 4px 0 #1e5c39; }
     .btn-logout { background: #ffe6d5; color: #a54b1e; box-shadow: 0 4px 0 #ffb88c; }
     .btn:active { transform: translateY(4px); box-shadow: none; }
-
-    /* TABS */
     .tabs { display: flex; gap: 1rem; margin-bottom: 2rem; border-bottom: 2px solid #ddd; padding-bottom: 1rem; }
     .tab-btn { background: none; border: none; font-size: 1.1rem; font-weight: bold; color: #888; cursor: pointer; padding: 0.5rem 1rem; border-radius: 10px; }
     .tab-btn.active { color: #ff7e3f; background: #fff5ee; }
-
-    /* ORDERS TAB */
     .dashboard-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
     .stat-card { background: white; padding: 1.5rem; border-radius: 1rem; box-shadow: 0 5px 15px rgba(0,0,0,0.05); border-left: 5px solid #ff8a4c; }
     .stat-card h3 { font-size: 0.9rem; color: #888; text-transform: uppercase; margin-bottom: 0.5rem; }
     .stat-card p { font-size: 2rem; font-weight: 800; color: #2d1b0e; }
-
     .orders-table-container { background: white; border-radius: 1rem; box-shadow: 0 5px 15px rgba(0,0,0,0.05); overflow-x: auto; margin-bottom: 2rem;}
     table { width: 100%; border-collapse: collapse; text-align: left; }
     th, td { padding: 1rem; border-bottom: 1px solid #eee; }
@@ -55,31 +46,31 @@
     .status-badge { padding: 0.3rem 0.8rem; border-radius: 50px; font-size: 0.8rem; font-weight: bold; background: #ffe6d5; color: #a54b1e; }
     .btn-complete { background: #2e8b57; color: white; border: none; padding: 0.5rem 1rem; border-radius: 5px; cursor: pointer; font-weight: bold; }
     .empty-state { text-align: center; padding: 3rem; color: #888; }
-    
     .clear-orders-btn { background: #d9534f; color: white; border: none; padding: 0.8rem 1.5rem; border-radius: 10px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 0 #a94442; display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; }
     .clear-orders-btn:active { transform: translateY(4px); box-shadow: none; }
-
-    /* EDIT MENU TAB */
     #editMenuView { display: none; }
     .menu-editor-container { background: white; border-radius: 1rem; padding: 2rem; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
     .menu-editor-table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; }
-    .menu-editor-table th, .menu-editor-table td { padding: 0.8rem; border-bottom: 1px solid #eee; text-align: left; }
-    .menu-editor-table input { width: 100%; padding: 0.6rem; border: 1px solid #ccc; border-radius: 5px; font-family: inherit; }
+    .menu-editor-table th, .menu-editor-table td { padding: 0.8rem; border-bottom: 1px solid #eee; text-align: left; vertical-align: middle; }
+    .menu-editor-table input[type="text"] { width: 100%; padding: 0.6rem; border: 1px solid #ccc; border-radius: 5px; font-family: inherit; }
     .btn-save-menu { background: #2e8b57; color: white; border: none; padding: 1rem 2rem; border-radius: 50px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 0 #1e5c39; font-size: 1rem; }
     .btn-save-menu:active { transform: translateY(4px); box-shadow: none; }
     .btn-delete-row { background: #ff4d4d; color: white; border: none; padding: 0.5rem 0.8rem; border-radius: 5px; cursor: pointer; font-weight: bold; }
     .add-donut-btn { background: #ff9f6e; color: #2d1b0e; border: none; padding: 0.6rem 1.2rem; border-radius: 5px; font-weight: bold; cursor: pointer; margin-bottom: 1rem; box-shadow: 0 4px 0 #b95d2b; }
+    .image-preview { width: 50px; height: 50px; object-fit: cover; border-radius: 50%; border: 2px solid #ffd9c4; background: #fff; display: block; margin: 0 auto; }
+    .upload-btn-wrapper { position: relative; overflow: hidden; display: inline-block; cursor: pointer; }
+    .upload-btn-wrapper input[type=file] { font-size: 100px; position: absolute; left: 0; top: 0; opacity: 0; cursor: pointer; }
+    .btn-upload { border: 2px solid #ff9f6e; color: #a54b1e; background-color: white; padding: 0.4rem 0.8rem; border-radius: 5px; font-size: 0.8rem; font-weight: bold; cursor: pointer; text-align: center; }
   </style>
 </head>
 <body>
 
-  <!-- LOGIN VIEW -->
   <div class="login-container" id="loginView">
     <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> Back to Shop</a>
     <div class="login-box">
       <i class="fas fa-cookie-bite"></i>
       <h2>Admin Login</h2>
-      <p>Enter your credentials to manage orders and menu.</p>
+      <p>Enter your credentials to manage orders.</p>
       <div class="input-group">
         <i class="fas fa-user"></i>
         <input type="text" id="username" placeholder="Username" value="admin">
@@ -93,7 +84,6 @@
     </div>
   </div>
 
-  <!-- DASHBOARD VIEW -->
   <div id="dashboardView">
     <div class="header">
       <h1><i class="fas fa-store"></i> Store Dashboard</h1>
@@ -105,11 +95,10 @@
     </div>
 
     <div class="tabs">
-      <button class="tab-btn active" id="tabOrders" onclick="switchTab('orders')"><i class="fas fa-receipt"></i> Live Orders</button>
+      <button class="tab-btn active" id="tabOrders" onclick="switchTab('orders')"><i class="fas fa-receipt"></i> Live Orders (Real-time)</button>
       <button class="tab-btn" id="tabMenu" onclick="switchTab('menu')"><i class="fas fa-pen-to-square"></i> Edit Flavors</button>
     </div>
 
-    <!-- TAB 1: LIVE ORDERS -->
     <div id="ordersView">
       <div class="dashboard-stats">
         <div class="stat-card">
@@ -135,7 +124,6 @@
           <thead>
             <tr>
               <th>Order #</th>
-              <th>Time</th>
               <th>Customer</th>
               <th>Address</th>
               <th>Items</th>
@@ -149,56 +137,78 @@
         <div id="emptyState" class="empty-state" style="display: none;">
           <i class="fas fa-receipt"></i>
           <h2>No orders yet</h2>
-          <p>Place a test order on the shop page, then click "Refresh".</p>
+          <p>Place a test order on the shop page!</p>
         </div>
       </div>
     </div>
 
-    <!-- TAB 2: EDIT FLAVORS -->
     <div id="editMenuView">
       <div class="menu-editor-container">
-        <h2 style="margin-bottom: 1rem; color: #2d1b0e;">Edit Donut Flavors</h2>
-        <p style="color: #666; margin-bottom: 1.5rem; font-size: 0.9rem;">Prices are fixed (Classic ₱20 / Premium ₱25). You can only edit the flavors, descriptions, and icons here.</p>
+        <h2 style="margin-bottom: 1rem; color: #2d1b0e;">Edit Donut Flavors & Images</h2>
+        <p style="color: #666; margin-bottom: 1.5rem; font-size: 0.9rem;">Prices are fixed (Classic ₱20 / Premium ₱25). Upload custom images for your donuts!</p>
         
         <button class="add-donut-btn" onclick="addNewDonutRow()"><i class="fas fa-plus"></i> Add New Flavor</button>
         
         <table class="menu-editor-table">
           <thead>
             <tr>
-              <th>Emoji</th>
+              <th style="width: 80px; text-align: center;">Image</th>
               <th>Flavor Name</th>
               <th>Description</th>
-              <th>Action</th>
+              <th style="width: 100px;">Action</th>
             </tr>
           </thead>
-          <tbody id="menuTableBody">
-            <!-- Menu rows will be injected by JS -->
-          </tbody>
+          <tbody id="menuTableBody"></tbody>
         </table>
         <button class="btn-save-menu" onclick="saveMenuChanges()"><i class="fas fa-save"></i> Save Flavor Changes</button>
       </div>
     </div>
-
   </div>
 
+  <!-- FIREBASE SDK IMPORTS -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getFirestore, collection, onSnapshot, doc, updateDoc, deleteDoc, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    // YOUR FIREBASE KEYS
+    const firebaseConfig = {
+      apiKey: "AIzaSyClaoSrxDdd0hLr6leu_XbYfLYPnCO7-pM",
+      authDomain: "lunas-donut.firebaseapp.com",
+      projectId: "lunas-donut",
+      storageBucket: "lunas-donut.firebasestorage.app",
+      messagingSenderId: "25279701650",
+      appId: "1:25279701650:web:ef9bd15078656fd0ecbc4b"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // Expose to regular script
+    window.firebaseOnSnapshot = onSnapshot;
+    window.firebaseCollection = collection;
+    window.firebaseDoc = doc;
+    window.firebaseUpdateDoc = updateDoc;
+    window.firebaseDeleteDoc = deleteDoc;
+    window.firebaseQuery = query;
+    window.firebaseWhere = where;
+    window.firebaseGetDocs = getDocs;
+    window.firestoreDb = db;
+  </script>
+
+  <!-- MAIN ADMIN LOGIC -->
   <script>
-    // =========================================
-    // 1. AUTHENTICATION
-    // =========================================
     const ADMIN_USER = "admin";
     const ADMIN_PASS = "luna123";
 
     function handleLogin() {
       const user = document.getElementById('username').value.trim();
       const pass = document.getElementById('password').value.trim();
-      const errorMsg = document.getElementById('loginError');
-
       if (user === ADMIN_USER && pass === ADMIN_PASS) {
-        errorMsg.style.display = 'none';
+        document.getElementById('loginError').style.display = 'none';
         sessionStorage.setItem('luna_admin_logged_in', 'true');
         showDashboard();
       } else {
-        errorMsg.style.display = 'block';
+        document.getElementById('loginError').style.display = 'block';
       }
     }
 
@@ -216,14 +226,9 @@
     }
 
     window.onload = function() {
-      if (sessionStorage.getItem('luna_admin_logged_in') === 'true') {
-        showDashboard();
-      }
+      if (sessionStorage.getItem('luna_admin_logged_in') === 'true') showDashboard();
     };
 
-    // =========================================
-    // 2. TAB SWITCHING
-    // =========================================
     function switchTab(tab) {
       document.getElementById('tabOrders').classList.remove('active');
       document.getElementById('tabMenu').classList.remove('active');
@@ -233,7 +238,7 @@
       if (tab === 'orders') {
         document.getElementById('tabOrders').classList.add('active');
         document.getElementById('ordersView').style.display = 'block';
-        loadOrders();
+        loadOrders(); // Will start real-time listener
       } else {
         document.getElementById('tabMenu').classList.add('active');
         document.getElementById('editMenuView').style.display = 'block';
@@ -242,100 +247,109 @@
     }
 
     function refreshAll() {
-      if (document.getElementById('ordersView').style.display !== 'none') {
-        loadOrders();
-      } else if (document.getElementById('editMenuView').style.display !== 'none') {
-        loadMenuForEditing();
-      }
+      if (document.getElementById('ordersView').style.display !== 'none') loadOrders();
+      else if (document.getElementById('editMenuView').style.display !== 'none') loadMenuForEditing();
     }
 
     // =========================================
-    // 3. ORDERS LOGIC
+    // REAL-TIME ORDERS FROM FIREBASE
     // =========================================
-    const STORAGE_KEY_ORDERS = 'luna_orders';
     const formatPrice = (p) => `₱${p.toFixed(2)}`;
 
     function loadOrders() {
-      const rawData = localStorage.getItem(STORAGE_KEY_ORDERS);
-      const orders = rawData ? JSON.parse(rawData) : [];
-      
       const tableBody = document.getElementById('ordersTableBody');
       const emptyState = document.getElementById('emptyState');
-      const totalOrdersEl = document.getElementById('totalOrders');
-      const totalRevenueEl = document.getElementById('totalRevenue');
-      const pendingOrdersEl = document.getElementById('pendingOrders');
+      
+      // Setup the real-time listener
+      window.firebaseOnSnapshot(window.firebaseCollection(window.firestoreDb, "orders"), (snapshot) => {
+        let orders = [];
+        snapshot.forEach((doc) => {
+          orders.push({ firebaseId: doc.id, ...doc.data() });
+        });
 
-      totalOrdersEl.textContent = orders.length;
-      let revenue = 0;
-      let pending = 0;
+        // Sort by timestamp (newest first)
+        orders.sort((a, b) => b.timestamp - a.timestamp);
 
-      orders.forEach(o => {
-        revenue += o.total;
-        if (o.status === 'Pending') pending++;
-      });
+        // Update Stats
+        document.getElementById('totalOrders').textContent = orders.length;
+        let revenue = 0, pending = 0;
+        orders.forEach(o => {
+          revenue += o.total;
+          if (o.status === 'Pending') pending++;
+        });
+        document.getElementById('totalRevenue').textContent = formatPrice(revenue);
+        document.getElementById('pendingOrders').textContent = pending;
 
-      totalRevenueEl.textContent = formatPrice(revenue);
-      pendingOrdersEl.textContent = pending;
+        // Render Table
+        tableBody.innerHTML = '';
+        if (orders.length === 0) {
+          emptyState.style.display = 'block';
+          return;
+        } else {
+          emptyState.style.display = 'none';
+        }
 
-      tableBody.innerHTML = '';
-
-      if (orders.length === 0) {
-        emptyState.style.display = 'block';
-        return;
-      } else {
-        emptyState.style.display = 'none';
-      }
-
-      orders.forEach((order, index) => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td><strong>#${order.id}</strong></td>
-          <td style="color:#666; font-size:0.9rem;">${order.time}</td>
-          <td><strong>${order.name}</strong></td>
-          <td style="max-width: 150px; font-size:0.9rem;">${order.address}</td>
-          <td style="font-size:0.9rem; max-width: 250px;">${order.items}</td>
-          <td><span style="background:#f0f0f0; padding: 0.3rem 0.6rem; border-radius: 5px; font-size:0.8rem; font-weight:bold;">${order.method}</span></td>
-          <td><strong style="color:#b64a12;">${formatPrice(order.total)}</strong></td>
-          <td>
-            ${order.status === 'Pending' 
-              ? `<button class="btn-complete" onclick="window.completeOrder(${index})">Mark Done</button>` 
-              : `<span class="status-badge" style="background:#d4edda; color:#155724;">Completed</span>`
-            }
-          </td>
-        `;
-        tableBody.appendChild(tr);
+        orders.forEach((order) => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td><strong>#${order.id}</strong></td>
+            <td><strong>${order.name}</strong></td>
+            <td style="max-width: 150px; font-size:0.9rem;">${order.address}</td>
+            <td style="font-size:0.9rem; max-width: 250px;">${order.items}</td>
+            <td><span style="background:#f0f0f0; padding: 0.3rem 0.6rem; border-radius: 5px; font-size:0.8rem; font-weight:bold;">${order.method}</span></td>
+            <td><strong style="color:#b64a12;">${formatPrice(order.total)}</strong></td>
+            <td>
+              ${order.status === 'Pending' 
+                ? `<button class="btn-complete" onclick="window.completeOrder('${order.firebaseId}')">Mark Done</button>` 
+                : `<span class="status-badge" style="background:#d4edda; color:#155724;">Completed</span>`
+              }
+            </td>
+          `;
+          tableBody.appendChild(tr);
+        });
       });
     }
 
-    window.completeOrder = function(index) {
-      const orders = JSON.parse(localStorage.getItem(STORAGE_KEY_ORDERS) || '[]');
-      if (orders[index]) {
-        orders[index].status = 'Completed';
-        localStorage.setItem(STORAGE_KEY_ORDERS, JSON.stringify(orders));
-        loadOrders();
+    window.completeOrder = async function(firebaseId) {
+      try {
+        const orderRef = window.firebaseDoc(window.firestoreDb, "orders", firebaseId);
+        await window.firebaseUpdateDoc(orderRef, { status: 'Completed' });
+        // No need to reload manually, the onSnapshot listener will catch the update automatically!
+      } catch (e) {
+        console.error("Error updating order: ", e);
+        alert("Failed to update order.");
       }
     };
 
-    function clearCompletedOrders() {
-      if (!confirm("Are you sure you want to remove all Completed orders? Pending orders will not be deleted.")) return;
+    async function clearCompletedOrders() {
+      if (!confirm("Remove all Completed orders from the database?")) return;
       
-      let orders = JSON.parse(localStorage.getItem(STORAGE_KEY_ORDERS) || '[]');
-      orders = orders.filter(o => o.status !== 'Completed');
-      localStorage.setItem(STORAGE_KEY_ORDERS, JSON.stringify(orders));
-      loadOrders();
+      try {
+        const q = window.firebaseQuery(window.firebaseCollection(window.firestoreDb, "orders"), window.firebaseWhere("status", "==", "Completed"));
+        const querySnapshot = await window.firebaseGetDocs(q);
+        
+        const deletePromises = [];
+        querySnapshot.forEach((document) => {
+          deletePromises.push(window.firebaseDeleteDoc(window.firebaseDoc(window.firestoreDb, "orders", document.id)));
+        });
+        
+        await Promise.all(deletePromises);
+      } catch (e) {
+        console.error("Error clearing orders: ", e);
+      }
     }
 
     // =========================================
-    // 4. EDIT FLAVORS LOGIC
+    // EDIT MENU LOGIC (Still using LocalStorage)
     // =========================================
     const STORAGE_KEY_MENU = 'luna_mini_donut_menu';
     const defaultFlavors = [
-      { id: 'glazed', name: 'Glazed Bliss', desc: 'Classic sweet glaze', icon: '🍩' },
-      { id: 'chocolate', name: 'Choco Dream', desc: 'Rich chocolate flavor', icon: '🍫' },
-      { id: 'strawberry', name: 'Berry Love', desc: 'Sweet strawberry taste', icon: '🍓' },
-      { id: 'caramel', name: 'Caramel Crunch', desc: 'Salted caramel twist', icon: '🍯' },
-      { id: 'vanilla', name: 'Vanilla Cloud', desc: 'Smooth vanilla bean', icon: '🍦' },
-      { id: 'pistachio', name: 'Pistachio', desc: 'Nutty pistachio', icon: '🥜' }
+      { id: 'glazed', name: 'Glazed Bliss', desc: 'Classic sweet glaze', image: '' },
+      { id: 'chocolate', name: 'Choco Dream', desc: 'Rich chocolate flavor', image: '' },
+      { id: 'strawberry', name: 'Berry Love', desc: 'Sweet strawberry taste', image: '' },
+      { id: 'caramel', name: 'Caramel Crunch', desc: 'Salted caramel twist', image: '' },
+      { id: 'vanilla', name: 'Vanilla Cloud', desc: 'Smooth vanilla bean', image: '' },
+      { id: 'pistachio', name: 'Pistachio', desc: 'Nutty pistachio', image: '' }
     ];
 
     let editingMenu = [];
@@ -351,8 +365,22 @@
 
       editingMenu.forEach((donut, index) => {
         const tr = document.createElement('tr');
+        
+        let imageHtml = '';
+        if (donut.image && donut.image.trim() !== '') {
+          imageHtml = `<img src="${donut.image}" class="image-preview" id="preview-${index}">`;
+        } else {
+          imageHtml = `<div class="image-preview" style="display:flex; align-items:center; justify-content:center; font-size: 1.5rem;" id="preview-${index}">🍩</div>`;
+        }
+
         tr.innerHTML = `
-          <td><input type="text" value="${donut.icon}" onchange="updateMenuField(${index}, 'icon', this.value)" style="width: 50px; text-align:center;"></td>
+          <td style="text-align: center;">
+            ${imageHtml}
+            <div class="upload-btn-wrapper" style="margin-top: 5px;">
+              <button class="btn-upload"><i class="fas fa-upload"></i> Upload</button>
+              <input type="file" accept="image/*" onchange="handleImageUpload(event, ${index})" />
+            </div>
+          </td>
           <td><input type="text" value="${donut.name}" onchange="updateMenuField(${index}, 'name', this.value)"></td>
           <td><input type="text" value="${donut.desc}" onchange="updateMenuField(${index}, 'desc', this.value)"></td>
           <td><button class="btn-delete-row" onclick="deleteMenuRow(${index})"><i class="fas fa-trash"></i></button></td>
@@ -360,6 +388,19 @@
         tbody.appendChild(tr);
       });
     }
+
+    window.handleImageUpload = function(event, index) {
+      const file = event.target.files[0];
+      if (!file) return;
+      if (file.size > 1000000) { alert("Image is too large! Please choose an image smaller than 1MB."); return; }
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        editingMenu[index].image = e.target.result;
+        document.getElementById(`preview-${index}`).outerHTML = `<img src="${e.target.result}" class="image-preview" id="preview-${index}">`;
+      };
+      reader.readAsDataURL(file);
+    };
 
     window.updateMenuField = function(index, field, value) {
       editingMenu[index][field] = value;
@@ -374,7 +415,7 @@
 
     window.addNewDonutRow = function() {
       const newId = 'flavor_' + Date.now();
-      editingMenu.push({ id: newId, name: 'New Flavor', desc: 'Delicious taste!', icon: '🍩' });
+      editingMenu.push({ id: newId, name: 'New Flavor', desc: 'Delicious taste!', image: '' });
       renderMenuEditor();
     };
 
@@ -383,16 +424,13 @@
         if (!d.name.trim()) { alert("Flavor names cannot be empty."); return; }
       }
 
-      localStorage.setItem(STORAGE_KEY_MENU, JSON.stringify(editingMenu));
-      alert("Flavors saved successfully! Customers will see the updated list.");
-    }
-
-    // Auto-refresh orders every 5 seconds if on the orders tab
-    setInterval(() => {
-      if (sessionStorage.getItem('luna_admin_logged_in') === 'true' && document.getElementById('ordersView').style.display !== 'none') {
-        loadOrders();
+      try {
+        localStorage.setItem(STORAGE_KEY_MENU, JSON.stringify(editingMenu));
+        alert("Flavors saved successfully!");
+      } catch (e) {
+        alert("Failed to save. Your browser's storage might be full.");
       }
-    }, 5000);
+    }
   </script>
 </body>
 </html>
