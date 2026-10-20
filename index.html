@@ -11,12 +11,21 @@
     
     .delivery-app { max-width: 1300px; width: 100%; background: #ffffff; border-radius: 3.5rem; box-shadow: 0 25px 50px -8px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(255, 184, 140, 0.3); overflow: hidden; display: flex; flex-direction: column; position: relative; }
     
+    /* HEADER */
     .header { background: linear-gradient(135deg, #ffb88c 0%, #ff9f6e 100%); padding: 1.8rem 2.5rem; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; }
     .brand { display: flex; align-items: center; gap: 0.75rem; }
     .brand i { font-size: 2.4rem; color: #4a2c1b; background: #fff1e0; border-radius: 50%; padding: 0.6rem; box-shadow: 0 6px 0 #c26b3b; transform: rotate(10deg); }
     .brand h1 { font-size: 2rem; font-weight: 800; color: #3b1e0e; letter-spacing: -0.5px; text-shadow: 2px 2px 0 #ffd9b5; }
     .brand span { font-size: 0.9rem; font-weight: 500; color: #51301a; background: #fff1e0; padding: 0.25rem 0.8rem; border-radius: 40px; margin-left: 0.5rem; }
     
+    .header-right { display: flex; align-items: center; gap: 1rem; }
+    
+    /* ADMIN BUTTON */
+    .admin-btn { 
+      background: #fff1e0; color: #a54b1e; padding: 0.6rem 1rem; border-radius: 50px; font-weight: 700; font-size: 0.85rem; text-decoration: none; display: flex; align-items: center; gap: 0.5rem; border: 1px solid #ffd9c4; transition: 0.2s;
+    }
+    .admin-btn:hover { background: #ffe6d5; transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+
     .delivery-badge { background: #2d1b0e; color: #ffe6d5; padding: 0.75rem 1.6rem; border-radius: 60px; font-weight: 600; display: flex; align-items: center; gap: 0.8rem; font-size: 1rem; box-shadow: 0 6px 0 #0f0905; }
     .delivery-badge i { font-size: 1.2rem; color: #ffb88c; }
     
@@ -107,7 +116,7 @@
     .receipt-box strong { display: block; margin-bottom: 0.5rem; border-bottom: 1px solid #e6cfbe; padding-bottom: 0.5rem; font-size: 1rem; }
     @keyframes pop { 0% { transform: scale(0); } 80% { transform: scale(1.2); } 100% { transform: scale(1); } }
     .footer-note { text-align: center; padding: 1rem 2rem 1.8rem; color: #b68c73; font-size: 0.85rem; border-top: 2px dashed #ffe1d0; margin-top: 0.5rem; }
-    @media (max-width: 750px) { .delivery-app { border-radius: 2rem; } .main-panel { padding: 1.8rem 1.5rem; } .brand h1 { font-size: 1.6rem; } .cart-item { flex-wrap: wrap; } }
+    @media (max-width: 750px) { .delivery-app { border-radius: 2rem; } .main-panel { padding: 1.8rem 1.5rem; } .brand h1 { font-size: 1.6rem; } .cart-item { flex-wrap: wrap; } .admin-btn span { display: none; } .admin-btn { padding: 0.6rem 0.8rem; border-radius: 50%; } }
   </style>
 </head>
 <body>
@@ -119,8 +128,14 @@
         <i class="fas fa-cookie-bite"></i>
         <h1>Luna's Mini Donut <span>delivery</span></h1>
       </div>
-      <div class="delivery-badge">
-        <i class="fas fa-motorcycle"></i> 30–45 min
+      <div class="header-right">
+        <!-- ADMIN LOGIN BUTTON -->
+        <a href="admin.html" class="admin-btn" title="Staff / Admin Access">
+          <i class="fas fa-lock"></i> <span>Admin Login</span>
+        </a>
+        <div class="delivery-badge">
+          <i class="fas fa-motorcycle"></i> 30–45 min
+        </div>
       </div>
     </div>
 
@@ -486,7 +501,7 @@
         if (selectedPaymentMethod === 'card') methodName = 'Card';
         document.getElementById('receiptMethod').textContent = methodName;
 
-        // === SAVE ORDER TO LOCALSTORAGE (For Admin Panel) ===
+        // === SAVE ORDER TO LOCALSTORAGE ===
         const orderData = {
           id: orderNum,
           name: customerNameInput.value.trim(),
@@ -504,7 +519,7 @@
         let existingOrders = JSON.parse(localStorage.getItem('luna_orders') || '[]');
         existingOrders.unshift(orderData);
         localStorage.setItem('luna_orders', JSON.stringify(existingOrders));
-        // ====================================================
+        // ===================================
 
         checkoutView.style.display = 'none';
         successView.classList.add('active');
