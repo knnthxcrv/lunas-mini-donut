@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Luna's Mini Donut · Delivery</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, system-ui, sans-serif; }
+
+    body {
+      background: #fff8f0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 1.5rem;
+    }
+
+    .delivery-app {
+      max-width: 1300px;
+      width: 100%;
+      background: #ffffff;
+      border-radius: 3.5rem;
+      box-shadow: 0 25px 50px -8px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(255, 184, 140, 0.3);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #ffb88c 0%, #ff9f6e 100%);
+      padding: 1.8rem 2.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .brand { display: flex; align-items: center; gap: 0.75rem; }
+
+    .brand i {
+      font-size: 2.4rem;
+      color: #4a2c1b;
+      background: #fff1e0;
+      border-radius: 50%;
+      padding: 0.6rem;
+      box-shadow: 0 6px 0 #c26b3b;
+      transform: rotate(10deg);
+    }
+
+    .brand h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      color: #3b1e0e;
+      letter-spacing: -0.5px;
+      text-shadow: 2px 2px 0 #ffd9b5;
+    }
+
+    .brand span {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: #51301a;
+      background: #fff1e0;
+      padding: 0.25rem 0.8rem;
+      border-radius: 40px;
+      margin-left: 0.5rem;
+    }
+
+    .delivery-badge {
+      background: #2d1b0e;
+      color: #ffe6d5;
+      padding: 0.75rem 1.6rem;
+      border-radius: 60px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      font-size: 1rem;
+      box-shadow: 0 6px 0 #0f0905;
+    }
+
+    .delivery-badge i { font-size: 1.2rem; color: #ffb88c; }
+
+    .main-panel {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      padding: 2rem 2.5rem 2.5rem;
+      gap: 2.2rem;
+    }
+
+    .menu-section { flex: 2; min-width: 320px; }
+
+    .menu-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 1.5rem;
+    }
+
+    .menu-header h2 {
+      font-size: 1.9rem;
+      font-weight: 700;
+      color: #2d1b0e;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .menu-header h2 i { color: #ff9f6e; font-size: 1.8rem; }
+
+    .menu-header p {
+      color: #b16d47;
+      font-weight: 500;
+      background: #ffede1;
+      padding: 0.4rem 1.2rem;
+      border-radius: 50px;
+    }
+
+    .donut-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+      gap: 1.4rem;
+    }
+
+    .donut-card {
+      background: #fffbf7;
+      border-radius: 2rem;
+      padding: 1.5rem 1rem 1.2rem;
+      box-shadow: 0 8px 0 #f0d5c0, 0 12px 20px -8px rgba(160, 100, 60, 0.2);
+      transition: 0.15s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      border: 1px solid #ffe2cf;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .donut-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 0 #eec6ab, 0 18px 25px -8px rgba(160, 100, 60, 0.25);
+    }
+
+    .donut-card.selected {
+      border: 3px solid #ff8a4c;
+      background: #fff4ec;
+      box-shadow: 0 8px 0 #dba37b, 0 18px 25px -8px #b47a52;
+      transform: translateY(-3px);
+    }
+
+    .donut-icon {
+      font-size: 3.8rem;
+      line-height: 1;
+      filter: drop-shadow(0 6px 4px rgba(0,0,0,0.1));
+      margin-bottom: 0.5rem;
+    }
+
+    .donut-card h3 { font-size: 1.3rem; font-weight: 700; color: #391e0e; margin-bottom: 0.3rem; }
+
+    .donut-desc {
+      font-size: 0.8rem;
+      color: #8f5e3f;
+      margin-bottom: 0.6rem;
+      font-weight: 500;
+      min-height: 2.2em;
+    }
+
+    .price {
+      font-weight: 800;
+      font-size: 1.3rem;
+      color: #a6521e;
+      background: #ffe3d2;
+      padding: 0.35rem 1rem;
+      border-radius: 40px;
+      display: inline-block;
+      margin-top: 0.3rem;
+    }
+
+    .order-panel {
+      flex: 1.2;
+      min-width: 300px;
+      background: #fdf6f0;
+      border-radius: 2.5rem;
+      padding: 2rem 1.8rem;
+      box-shadow: inset 0 0 0 1px #ffe6d5, 0 15px 25px -10px #c9a185;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .order-panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.8rem;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .order-panel h2 {
+      font-size: 1.7rem;
+      font-weight: 700;
+      color: #2d1b0e;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+    }
+
+    .order-panel h2 i {
+      color: #ff7e3f;
+      background: #fff1e6;
+      padding: 0.4rem;
+      border-radius: 1rem;
+    }
+
+    .clear-btn {
+      background: #ffe6d5;
+      border: 2px solid #ffb88c;
+      color: #a54b1e;
+      font-weight: 700;
+      font-size: 0.8rem;
+      padding: 0.5rem 1.1rem;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      letter-spacing: 0.3px;
+    }
+
+    .clear-btn:hover { background: #ffd9c4; border-color: #ff8a4c; color: #7b2d0a; }
+    .clear-btn:active { transform: scale(0.95); }
+    .clear-btn:disabled { opacity: 0.4; cursor: not-allowed; pointer-events: none; }
+
+    .cart-items {
+      flex: 1;
+      margin-bottom: 1.4rem;
+      max-height: 300px;
+      overflow-y: auto;
+      padding-right: 0.5rem;
+    }
+
+    /* Restored cart item styling */
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: white;
+      padding: 0.7rem 0.9rem 0.7rem 1.2rem;
+      border-radius: 60px;
+      box-shadow: 0 3px 0 #e6cfbe;
+      border: 1px solid #f5ded0;
+      font-weight: 500;
+      gap: 0.6rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .cart-item-info {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .cart-item-info i { color: #ff8a4c; font-size: 1.2rem; }
+    .cart-item-info .item-name { color: #3b1e0e; font-weight: 600; }
+
+    .qty-stepper {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      background: #fff5ee;
+      border-radius: 40px;
+      padding: 0.2rem;
+      border: 1px solid #ffd9c4;
+      flex-shrink: 0;
+    }
+
+    .qty-btn {
+      background: #ffe0d0;
+      border: none;
+      color: #a54b1e;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: 0.15s;
+      font-size: 0.7rem;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+
+    .qty-btn:hover { background: #ff8a4c; color: white; }
+    .qty-btn:active { transform: scale(0.85); }
+
+    .qty-value {
+      font-weight: 800;
+      color: #3b1e0e;
+      font-size: 0.85rem;
+      min-width: 1.6rem;
+      text-align: center;
+    }
+
+    .item-price {
+      font-weight: 700;
+      color: #7b431f;
+      background: #fff1e6;
+      padding: 0.25rem 0.8rem;
+      border-radius: 30px;
+      font-size: 0.95rem;
+      white-space: nowrap;
+    }
+
+    .remove-item-btn {
+      background: #ffe0d0;
+      border: 1px solid #ffb898;
+      color: #c4450c;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: 0.15s;
+      font-size: 0.85rem;
+      flex-shrink: 0;
+    }
+
+    .remove-item-btn:hover { background: #ff8a4c; color: white; border-color: #e06b2d; }
+    .remove-item-btn:active { transform: scale(0.9); }
+
+    .empty-cart-message {
+      color: #bc8d70;
+      text-align: center;
+      padding: 2rem 0;
+      font-style: italic;
+      background: #fff9f4;
+      border-radius: 2rem;
+      border: 1px dashed #e7c2aa;
+      margin-top: 0.8rem;
+    }
+
+    .free-delivery-block {
+      background: #fff9f4;
+      border: 1px solid #ffe6d5;
+      border-radius: 1.4rem;
+      padding: 0.9rem 1.1rem;
+      margin-bottom: 1rem;
+    }
+
+    .free-delivery-text {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #8a4a22;
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      margin-bottom: 0.55rem;
+    }
+
+    .free-delivery-text i { color: #ff7e3f; }
+    .free-delivery-text.unlocked { color: #2e8b57; }
+    .free-delivery-text.unlocked i { color: #2e8b57; }
+
+    .progress-track {
+      height: 10px;
+      background: #ffe6d5;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: inset 0 1px 3px rgba(160, 100, 60, 0.2);
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      border-radius: 20px;
+      background: linear-gradient(90deg, #ffb88c, #ff7e3f);
+      transition: width 0.35s ease;
+    }
+
+    .progress-fill.complete { background: linear-gradient(90deg, #7ed99b, #2e8b57); }
+
+    .total-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #2d1b0e;
+      padding: 1rem 0 0.8rem;
+      border-top: 3px solid #ffc7a5;
+      margin-bottom: 1.6rem;
+    }
+
+    .total-row span:last-child { color: #b64a12; }
+
+    .delivery-details { margin-bottom: 1.5rem; }
+
+    .delivery-details h3 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #6b3f27;
+      margin-bottom: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .input-group { margin-bottom: 0.9rem; position: relative; }
+
+    .input-group i {
+      position: absolute;
+      left: 1.2rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #b97e5c;
+      font-size: 1rem;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 0.9rem 1rem 0.9rem 2.8rem;
+      border: 2px solid #ffd9c4;
+      border-radius: 60px;
+      font-size: 0.95rem;
+      background: white;
+      transition: 0.2s;
+      outline: none;
+      color: #2d1b0e;
+      font-weight: 500;
+    }
+
+    .input-group input:focus { border-color: #ff8a4c; box-shadow: 0 0 0 4px rgba(255, 138, 76, 0.2); }
+    .input-group input::placeholder { color: #c9a690; font-weight: 400; }
+
+    .order-btn {
+      background: #ff9f6e;
+      border: none;
+      border-radius: 60px;
+      padding: 1.2rem;
+      font-weight: 800;
+      font-size: 1.3rem;
+      color: #2d1b0e;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.9rem;
+      cursor: pointer;
+      transition: 0.15s;
+      box-shadow: 0 8px 0 #b95d2b, 0 10px 18px -5px #b45f30;
+      border: 1px solid #ffbc94;
+      letter-spacing: 0.5px;
+    }
+
+    .order-btn i { font-size: 1.5rem; }
+    .order-btn:active { transform: translateY(5px); box-shadow: 0 3px 0 #b95d2b, 0 10px 18px -5px #b45f30; }
+    .order-btn:disabled {
+      opacity: 0.5;
+      transform: translateY(4px);
+      box-shadow: 0 4px 0 #b95d2b;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    .notification {
+      margin-top: 0.8rem;
+      font-size: 0.9rem;
+      color: #3f8f5f;
+      font-weight: 600;
+      text-align: center;
+      background: #e2f7e9;
+      padding: 0.5rem;
+      border-radius: 60px;
+      display: none;
+    }
+
+    .notification.show { display: block; }
+
+    .footer-note {
+      text-align: center;
+      padding: 1rem 2rem 1.8rem;
+      color: #b68c73;
+      font-size: 0.85rem;
+      border-top: 2px dashed #ffe1d0;
+      margin-top: 0.5rem;
+    }
+
+    .footer-note i { color: #ff9f6e; }
+
+    .cart-items::-webkit-scrollbar { width: 6px; }
+    .cart-items::-webkit-scrollbar-track { background: #ffe9db; border-radius: 10px; }
+    .cart-items::-webkit-scrollbar-thumb { background: #ffb88c; border-radius: 10px; }
+
+    @media (max-width: 750px) {
+      .delivery-app { border-radius: 2rem; }
+      .header { padding: 1.4rem 1.5rem; }
+      .main-panel { padding: 1.8rem 1.5rem; }
+      .brand h1 { font-size: 1.6rem; }
+      .delivery-badge { font-size: 0.85rem; padding: 0.6rem 1rem; }
+      .order-panel h2 { font-size: 1.4rem; }
+      .cart-item { flex-wrap: wrap; }
+    }
+  </style>
+</head>
+<body>
+  <div class="delivery-app">
+    <div class="header">
+      <div class="brand">
+        <i class="fas fa-cookie-bite"></i>
+        <h1>Luna's Mini Donut <span>delivery</span></h1>
+      </div>
+      <div class="delivery-badge">
+        <i class="fas fa-motorcycle"></i> 30–45 min
+      </div>
+    </div>
+
+    <div class="main-panel">
+      <div class="menu-section">
+        <div class="menu-header">
+          <h2><i class="fas fa-donut"></i> Mini Donuts</h2>
+          <p>tap to add</p>
+        </div>
+        <div class="donut-grid" id="donutGrid"></div>
+      </div>
+
+      <div class="order-panel">
+        <div class="order-panel-header">
+          <h2><i class="fas fa-shopping-bag"></i> Your Box</h2>
+          <button class="clear-btn" id="clearBoxBtn" disabled>
+            <i class="fas fa-trash-can"></i> Clear Box
+          </button>
+        </div>
+
+        <div class="cart-items" id="cartContainer">
+          <div class="empty-cart-message" id="emptyCartMsg">
+            <i class="fas fa-donut" style="opacity:0.6;"></i> Your box is empty — add some mini donuts!
+          </div>
+        </div>
+
+        <div class="free-delivery-block">
+          <div class="free-delivery-text" id="freeDeliveryText">
+            <i class="fas fa-truck-fast"></i>
+            <span id="freeDeliveryMsg">Add ₱500.00 more for FREE delivery</span>
+          </div>
+          <div class="progress-track">
+            <div class="progress-fill" id="progressFill"></div>
+          </div>
+        </div>
+
+        <div class="total-row">
+          <span>Total</span>
+          <span id="totalAmount">₱0.00</span>
+        </div>
+
+        <div class="delivery-details">
+          <h3><i class="fas fa-location-dot"></i> Delivery details</h3>
+          <div class="input-group">
+            <i class="fas fa-user"></i>
+            <input type="text" id="customerName" placeholder="Your name">
+          </div>
+          <div class="input-group">
+            <i class="fas fa-house"></i>
+            <input type="text" id="customerAddress" placeholder="Address">
+          </div>
+        </div>
+
+        <button class="order-btn" id="orderBtn">
+          <i class="fas fa-truck-fast"></i> Place Order
+        </button>
+        <div class="notification" id="notification">
+          <i class="fas fa-check-circle"></i> Order confirmed! Donuts on the way 🍩
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-note">
+      <i class="fas fa-heart"></i> Freshly baked mini donuts · Free delivery over ₱500
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      const FREE_DELIVERY_THRESHOLD = 500;
+      const STORAGE_KEY_CART = 'luna_mini_donut_cart';
+      const STORAGE_KEY_NAME = 'luna_mini_donut_name';
+      const STORAGE_KEY_ADDR = 'luna_mini_donut_address';
+
+      const donuts = [
+        { id: 'glazed', name: 'Glazed Bliss', desc: 'Classic honey glaze', price: 79, icon: '🍩' },
+        { id: 'chocolate', name: 'Choco Dream', desc: 'Dark chocolate sprinkle', price: 89, icon: '🍫' },
+        { id: 'strawberry', name: 'Berry Love', desc: 'Strawberry icing', price: 85, icon: '🍓' },
+        { id: 'caramel', name: 'Caramel Crunch', desc: 'Salted caramel & toffee', price: 95, icon: '🍯' },
+        { id: 'vanilla', name: 'Vanilla Cloud', desc: 'Vanilla bean glaze', price: 79, icon: '🍦' },
+        { id: 'pistachio', name: 'Pistachio', desc: 'Roasted pistachio', price: 99, icon: '🥜' }
+      ];
+
+      let cart = {};
+
+      const donutGrid = document.getElementById('donutGrid');
+      const cartContainer = document.getElementById('cartContainer');
+      const emptyCartMsg = document.getElementById('emptyCartMsg');
+      const totalAmountEl = document.getElementById('totalAmount');
+      const orderBtn = document.getElementById('orderBtn');
+      const notification = document.getElementById('notification');
+      const customerNameInput = document.getElementById('customerName');
+      const customerAddressInput = document.getElementById('customerAddress');
+      const clearBoxBtn = document.getElementById('clearBoxBtn');
+      const progressFill = document.getElementById('progressFill');
+      const freeDeliveryMsg = document.getElementById('freeDeliveryMsg');
+      const freeDeliveryText = document.getElementById('freeDeliveryText');
+
+      const formatPrice = (p) => `₱${p.toFixed(2)}`;
+
+      // ---------- localStorage ----------
+      function loadState() {
+        try {
+          const savedCart = localStorage.getItem(STORAGE_KEY_CART);
+          if (savedCart) {
+            const parsed = JSON.parse(savedCart);
+            if (parsed && typeof parsed === 'object') {
+              const validCart = {};
+              Object.keys(parsed).forEach(id => {
+                if (donuts.some(d => d.id === id) && Number.isInteger(parsed[id]) && parsed[id] > 0) {
+                  validCart[id] = parsed[id];
+                }
+              });
+              cart = validCart;
+            }
+          }
+        } catch (e) {
+          console.warn('Cart load failed', e);
+          cart = {};
+        }
+        const savedName = localStorage.getItem(STORAGE_KEY_NAME);
+        if (savedName) customerNameInput.value = savedName;
+        const savedAddr = localStorage.getItem(STORAGE_KEY_ADDR);
+        if (savedAddr) customerAddressInput.value = savedAddr;
+      }
+
+      function saveCart() {
+        try { localStorage.setItem(STORAGE_KEY_CART, JSON.stringify(cart)); }
+        catch (e) { console.warn('Cart save failed', e); }
+      }
+
+      function saveCustomerDetails() {
+        try {
+          localStorage.setItem(STORAGE_KEY_NAME, customerNameInput.value.trim());
+          localStorage.setItem(STORAGE_KEY_ADDR, customerAddressInput.value.trim());
+        } catch (e) { /* ignore */ }
+      }
+
+      // ---------- Render ----------
+      function renderMenu() {
+        donutGrid.innerHTML = '';
+        donuts.forEach(donut => {
+          const card = document.createElement('div');
+          card.className = 'donut-card' + (cart[donut.id] ? ' selected' : '');
+          card.dataset.id = donut.id;
+          card.innerHTML = `
+            <div class="donut-icon">${donut.icon}</div>
+            <h3>${donut.name}</h3>
+            <div class="donut-desc">${donut.desc}</div>
+            <div class="price">${formatPrice(donut.price)}</div>
+          `;
+          card.addEventListener('click', (e) => {
+            e.stopPropagation();
+            addToCart(donut.id);
+          });
+          donutGrid.appendChild(card);
+        });
+      }
+
+      function renderCart() {
+        cartContainer.querySelectorAll('.cart-item').forEach(el => el.remove());
+
+        const cartIds = Object.keys(cart);
+        let total = 0;
+
+        if (cartIds.length === 0) {
+          emptyCartMsg.style.display = 'block';
+          totalAmountEl.textContent = '₱0.00';
+          clearBoxBtn.disabled = true;
+        } else {
+          emptyCartMsg.style.display = 'none';
+          clearBoxBtn.disabled = false;
+
+          cartIds.forEach(id => {
+            const donut = donuts.find(d => d.id === id);
+            if (!donut) return;
+            const qty = cart[id];
+            const itemTotal = donut.price * qty;
+            total += itemTotal;
+
+            const itemEl = document.createElement('div');
+            itemEl.className = 'cart-item';
+
+            const infoDiv = document.createElement('div');
+            infoDiv.className = 'cart-item-info';
+            infoDiv.innerHTML = `<i class="fas fa-donut"></i><span class="item-name">${donut.name}</span>`;
+
+            const stepper = document.createElement('div');
+            stepper.className = 'qty-stepper';
+
+            const minusBtn = document.createElement('button');
+            minusBtn.className = 'qty-btn';
+            minusBtn.innerHTML = '<i class="fas fa-minus"></i>';
+            minusBtn.title = 'Remove one';
+            minusBtn.addEventListener('click', (e) => { e.stopPropagation(); changeQty(id, -1); });
+
+            const qtyValue = document.createElement('span');
+            qtyValue.className = 'qty-value';
+            qtyValue.textContent = qty;
+
+            const plusBtn = document.createElement('button');
+            plusBtn.className = 'qty-btn';
+            plusBtn.innerHTML = '<i class="fas fa-plus"></i>';
+            plusBtn.title = 'Add one';
+            plusBtn.addEventListener('click', (e) => { e.stopPropagation(); changeQty(id, 1); });
+
+            stepper.appendChild(minusBtn);
+            stepper.appendChild(qtyValue);
+            stepper.appendChild(plusBtn);
+
+            const priceDiv = document.createElement('div');
+            priceDiv.className = 'item-price';
+            priceDiv.textContent = formatPrice(itemTotal);
+
+            const removeBtn = document.createElement('button');
+            removeBtn.className = 'remove-item-btn';
+            removeBtn.innerHTML = '<i class="fas fa-xmark"></i>';
+            removeBtn.title = 'Remove all';
+            removeBtn.addEventListener('click', (e) => { e.stopPropagation(); removeItem(id); });
+
+            itemEl.appendChild(infoDiv);
+            itemEl.appendChild(stepper);
+            itemEl.appendChild(priceDiv);
+            itemEl.appendChild(removeBtn);
+
+            cartContainer.insertBefore(itemEl, emptyCartMsg);
+          });
+        }
+
+        totalAmountEl.textContent = formatPrice(total);
+        orderBtn.disabled = cartIds.length === 0;
+        updateProgressBar(total);
+      }
+
+      function updateProgressBar(total) {
+        const ratio = Math.min(total / FREE_DELIVERY_THRESHOLD, 1);
+        progressFill.style.width = (ratio * 100) + '%';
+
+        if (total >= FREE_DELIVERY_THRESHOLD) {
+          progressFill.classList.add('complete');
+          freeDeliveryText.classList.add('unlocked');
+          freeDeliveryMsg.innerHTML = '🎉 You unlocked <strong>FREE delivery!</strong>';
+        } else {
+          progressFill.classList.remove('complete');
+          freeDeliveryText.classList.remove('unlocked');
+          freeDeliveryMsg.innerHTML = `Add <strong>${formatPrice(FREE_DELIVERY_THRESHOLD - total)}</strong> more for FREE delivery`;
+        }
+      }
+
+      // ---------- Actions ----------
+      function addToCart(donutId) {
+        cart[donutId] = (cart[donutId] || 0) + 1;
+        notification.classList.remove('show');
+        saveCart();
+        renderMenu();
+        renderCart();
+      }
+
+      function changeQty(donutId, delta) {
+        if (!cart[donutId]) return;
+        cart[donutId] += delta;
+        if (cart[donutId] <= 0) delete cart[donutId];
+        notification.classList.remove('show');
+        saveCart();
+        renderMenu();
+        renderCart();
+      }
+
+      function removeItem(donutId) {
+        if (!cart[donutId]) return;
+        delete cart[donutId];
+        notification.classList.remove('show');
+        saveCart();
+        renderMenu();
+        renderCart();
+      }
+
+      function clearBox() {
+        if (Object.keys(cart).length === 0) return;
+        cart = {};
+        notification.classList.remove('show');
+        saveCart();
+        renderMenu();
+        renderCart();
+      }
+
+      function placeOrder() {
+        const cartIds = Object.keys(cart);
+        if (cartIds.length === 0) { alert('Your box is empty. Add some mini donuts first!'); return; }
+        const name = customerNameInput.value.trim();
+        const address = customerAddressInput.value.trim();
+        if (!name) { alert('Please enter your name.'); customerNameInput.focus(); return; }
+        if (!address) { alert('Please enter your delivery address.'); customerAddressInput.focus(); return; }
+
+        saveCustomerDetails();
+        notification.classList.add('show');
+        cart = {};
+        saveCart();
+        renderMenu();
+        renderCart();
+        setTimeout(() => notification.classList.remove('show'), 4000);
+      }
+
+      // ---------- Init ----------
+      function init() {
+        // 1) Render the menu FIRST so it's never missing
+        renderMenu();
+
+        // 2) Then load saved state (cart, name, address)
+        loadState();
+
+        // 3) Re-render menu so selected highlights reflect saved cart
+        renderMenu();
+        renderCart();
+
+        orderBtn.addEventListener('click', placeOrder);
+        clearBoxBtn.addEventListener('click', clearBox);
+        customerNameInput.addEventListener('input', saveCustomerDetails);
+        customerAddressInput.addEventListener('input', saveCustomerDetails);
+      }
+
+      init();
+    })();
+  </script>
+</body>
+</html>
