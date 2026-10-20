@@ -8,28 +8,73 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, system-ui, sans-serif; }
     body { background: #fff8f0; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 1.5rem; }
-    .delivery-app { max-width: 1300px; width: 100%; background: #ffffff; border-radius: 3.5rem; box-shadow: 0 25px 50px -8px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(255, 184, 140, 0.3); overflow: hidden; display: flex; flex-direction: column; position: relative; }
+    
+    /* =========================================
+       CUSTOMER LOGIN SCREEN STYLES
+       ========================================= */
+    .auth-container {
+      background: #ffffff; max-width: 420px; width: 100%; border-radius: 3.5rem;
+      box-shadow: 0 25px 50px -8px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(255, 184, 140, 0.3);
+      padding: 3rem 2.5rem; text-align: center; display: none; 
+    }
+    .auth-container.active { display: block; }
+    .auth-container i.main-icon { font-size: 4rem; color: #ff9f6e; margin-bottom: 1rem; }
+    .auth-container h2 { color: #2d1b0e; margin-bottom: 0.5rem; font-size: 1.8rem; }
+    .auth-container p { color: #888; margin-bottom: 2rem; font-size: 0.95rem; }
+    
+    .auth-input-group { position: relative; margin-bottom: 1.2rem; text-align: left; }
+    .auth-input-group i { position: absolute; left: 1.2rem; top: 50%; transform: translateY(-50%); color: #b97e5c; font-size: 1.1rem; }
+    .auth-input-group input {
+      width: 100%; padding: 1rem 1rem 1rem 3rem; border: 2px solid #ffe6d5; border-radius: 50px;
+      font-size: 1rem; outline: none; transition: 0.2s; font-weight: 500;
+    }
+    .auth-input-group input:focus { border-color: #ff8a4c; box-shadow: 0 0 0 4px rgba(255, 138, 76, 0.2); }
+
+    .auth-btn {
+      width: 100%; background: #ff9f6e; color: #2d1b0e; border: none; border-radius: 50px;
+      padding: 1rem; font-size: 1.1rem; font-weight: 800; cursor: pointer;
+      box-shadow: 0 6px 0 #b95d2b; transition: 0.1s; margin-bottom: 1rem;
+    }
+    .auth-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #b95d2b; }
+    
+    .toggle-auth { color: #a6521e; font-weight: 700; cursor: pointer; text-decoration: underline; }
+    .auth-error { color: #d9534f; font-weight: bold; font-size: 0.85rem; margin-bottom: 1rem; display: none; }
+
+    /* =========================================
+       MAIN APP STYLES (Hidden until logged in)
+       ========================================= */
+    .delivery-app { display: none; max-width: 1300px; width: 100%; background: #ffffff; border-radius: 3.5rem; box-shadow: 0 25px 50px -8px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(255, 184, 140, 0.3); overflow: hidden; flex-direction: column; position: relative; }
+    .delivery-app.active { display: flex; }
+    
     .header { background: linear-gradient(135deg, #ffb88c 0%, #ff9f6e 100%); padding: 1.8rem 2.5rem; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; }
     .brand { display: flex; align-items: center; gap: 0.75rem; }
     .brand i { font-size: 2.4rem; color: #4a2c1b; background: #fff1e0; border-radius: 50%; padding: 0.6rem; box-shadow: 0 6px 0 #c26b3b; transform: rotate(10deg); }
     .brand h1 { font-size: 2rem; font-weight: 800; color: #3b1e0e; letter-spacing: -0.5px; text-shadow: 2px 2px 0 #ffd9b5; }
     .brand span { font-size: 0.9rem; font-weight: 500; color: #51301a; background: #fff1e0; padding: 0.25rem 0.8rem; border-radius: 40px; margin-left: 0.5rem; }
+    
+    .header-right { display: flex; align-items: center; gap: 1rem; }
+    .user-greeting { color: #3b1e0e; font-weight: 700; background: #fff1e0; padding: 0.5rem 1rem; border-radius: 50px; font-size: 0.9rem; display: flex; align-items: center; gap: 0.5rem;}
+    .logout-link { background: none; border: none; color: #d9534f; font-weight: 700; cursor: pointer; text-decoration: underline; font-size: 0.9rem;}
+
     .delivery-badge { background: #2d1b0e; color: #ffe6d5; padding: 0.75rem 1.6rem; border-radius: 60px; font-weight: 600; display: flex; align-items: center; gap: 0.8rem; font-size: 1rem; box-shadow: 0 6px 0 #0f0905; }
     .delivery-badge i { font-size: 1.2rem; color: #ffb88c; }
+    
     .main-panel { display: flex; flex-direction: row; flex-wrap: wrap; padding: 2rem 2.5rem 2.5rem; gap: 2.2rem; }
     .menu-section { flex: 2; min-width: 320px; }
     .menu-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 1.5rem; }
     .menu-header h2 { font-size: 1.9rem; font-weight: 700; color: #2d1b0e; display: flex; align-items: center; gap: 0.6rem; }
     .menu-header h2 i { color: #ff9f6e; font-size: 1.8rem; }
     .menu-header p { color: #b16d47; font-weight: 500; background: #ffede1; padding: 0.4rem 1.2rem; border-radius: 50px; }
+    
     .donut-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 1.4rem; }
-    .donut-card { background: #fffbf7; border-radius: 2rem; padding: 1.5rem 1rem 1.2rem; box-shadow: 0 8px 0 #f0d5c0, 0 12px 20px -8px rgba(160, 100, 60, 0.2); transition: 0.15s; display: flex; flex-direction: column; align-items: center; text-align: center; border: 1px solid #ffe2cf; cursor: pointer; position: relative; }
+    .donut-card { background: #fffbf7; border-radius: 2rem; padding: 1.5rem 1rem 1.2rem; box-shadow: 0 8px 0 #f0d5c0, 0 12px 20px -8px rgba(160, 100, 60, 0.2); transition: 0.15s; display: flex; flex-direction: column; align-items: center; text-align: center; border: 1px solid #ffe2cf; cursor: pointer; }
     .donut-card:hover { transform: translateY(-5px); box-shadow: 0 12px 0 #eec6ab, 0 18px 25px -8px rgba(160, 100, 60, 0.25); }
     .donut-card.selected { border: 3px solid #ff8a4c; background: #fff4ec; box-shadow: 0 8px 0 #dba37b, 0 18px 25px -8px #b47a52; transform: translateY(-3px); }
     .donut-icon { font-size: 3.8rem; line-height: 1; filter: drop-shadow(0 6px 4px rgba(0,0,0,0.1)); margin-bottom: 0.5rem; }
     .donut-card h3 { font-size: 1.3rem; font-weight: 700; color: #391e0e; margin-bottom: 0.3rem; }
     .donut-desc { font-size: 0.8rem; color: #8f5e3f; margin-bottom: 0.6rem; font-weight: 500; min-height: 2.2em; }
     .price { font-weight: 800; font-size: 1.3rem; color: #a6521e; background: #ffe3d2; padding: 0.35rem 1rem; border-radius: 40px; display: inline-block; margin-top: 0.3rem; }
+    
     .order-panel { flex: 1.2; min-width: 300px; background: #fdf6f0; border-radius: 2.5rem; padding: 2rem 1.8rem; box-shadow: inset 0 0 0 1px #ffe6d5, 0 15px 25px -10px #c9a185; display: flex; flex-direction: column; }
     .order-panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.8rem; flex-wrap: wrap; gap: 0.5rem; }
     .order-panel h2 { font-size: 1.7rem; font-weight: 700; color: #2d1b0e; display: flex; align-items: center; gap: 0.7rem; }
@@ -105,14 +150,56 @@
   </style>
 </head>
 <body>
-  <div class="delivery-app">
+
+  <!-- =========================================
+       CUSTOMER LOGIN SCREEN
+       ========================================= -->
+  <div class="auth-container" id="authView">
+    <i class="fas fa-cookie-bite main-icon"></i>
+    <h2 id="authTitle">Welcome to Luna's</h2>
+    <p id="authSubtitle">Log in to order your mini donuts.</p>
+    
+    <div class="auth-error" id="authError">Invalid email or password!</div>
+    
+    <div class="auth-input-group">
+      <i class="fas fa-envelope"></i>
+      <input type="email" id="authEmail" placeholder="Email Address">
+    </div>
+    <div class="auth-input-group">
+      <i class="fas fa-lock"></i>
+      <input type="password" id="authPassword" placeholder="Password">
+    </div>
+    <!-- Extra name field for Registration -->
+    <div class="auth-input-group" id="nameField" style="display: none;">
+      <i class="fas fa-user"></i>
+      <input type="text" id="authName" placeholder="Your Full Name">
+    </div>
+    
+    <button class="auth-btn" id="authSubmitBtn" onclick="handleAuthSubmit()">Login</button>
+    
+    <p style="font-size: 0.9rem; color: #6b3f27;">
+      <span id="authToggleText">Don't have an account?</span> 
+      <span class="toggle-auth" onclick="toggleAuthMode()" id="authToggleBtn">Register here</span>
+    </p>
+  </div>
+
+  <!-- =========================================
+       MAIN DELIVERY APP
+       ========================================= -->
+  <div class="delivery-app" id="appView">
     <div class="header">
       <div class="brand">
         <i class="fas fa-cookie-bite"></i>
         <h1>Luna's Mini Donut <span>delivery</span></h1>
       </div>
-      <div class="delivery-badge">
-        <i class="fas fa-motorcycle"></i> 30–45 min
+      <div class="header-right">
+        <div class="user-greeting" id="userGreeting">
+          <i class="fas fa-user-circle"></i> <span id="displayName">User</span>
+        </div>
+        <button class="logout-link" onclick="handleLogout()">Logout</button>
+        <div class="delivery-badge">
+          <i class="fas fa-motorcycle"></i> 30–45 min
+        </div>
       </div>
     </div>
 
@@ -263,273 +350,373 @@
   </div>
 
   <script>
-    (function() {
-      const FREE_DELIVERY_THRESHOLD = 500;
-      const STORAGE_KEY_CART = 'luna_mini_donut_cart';
-      const STORAGE_KEY_NAME = 'luna_mini_donut_name';
-      const STORAGE_KEY_ADDR = 'luna_mini_donut_address';
+    // =========================================
+    // 1. CUSTOMER AUTHENTICATION LOGIC
+    // =========================================
+    let isRegisterMode = false;
 
-      const donuts = [
-        { id: 'glazed', name: 'Glazed Bliss', desc: 'Classic honey glaze', price: 79, icon: '🍩' },
-        { id: 'chocolate', name: 'Choco Dream', desc: 'Dark chocolate sprinkle', price: 89, icon: '🍫' },
-        { id: 'strawberry', name: 'Berry Love', desc: 'Strawberry icing', price: 85, icon: '🍓' },
-        { id: 'caramel', name: 'Caramel Crunch', desc: 'Salted caramel & toffee', price: 95, icon: '🍯' },
-        { id: 'vanilla', name: 'Vanilla Cloud', desc: 'Vanilla bean glaze', price: 79, icon: '🍦' },
-        { id: 'pistachio', name: 'Pistachio', desc: 'Roasted pistachio', price: 99, icon: '🥜' }
-      ];
+    function toggleAuthMode() {
+      isRegisterMode = !isRegisterMode;
+      const title = document.getElementById('authTitle');
+      const subtitle = document.getElementById('authSubtitle');
+      const submitBtn = document.getElementById('authSubmitBtn');
+      const toggleText = document.getElementById('authToggleText');
+      const toggleBtn = document.getElementById('authToggleBtn');
+      const nameField = document.getElementById('nameField');
+      document.getElementById('authError').style.display = 'none';
 
-      let cart = {};
-      let currentTotal = 0;
-      let selectedPaymentMethod = 'cod';
+      if (isRegisterMode) {
+        title.textContent = "Create an Account";
+        subtitle.textContent = "Join Luna's to place an order.";
+        submitBtn.textContent = "Register";
+        toggleText.textContent = "Already have an account?";
+        toggleBtn.textContent = "Login here";
+        nameField.style.display = 'block';
+      } else {
+        title.textContent = "Welcome to Luna's";
+        subtitle.textContent = "Log in to order your mini donuts.";
+        submitBtn.textContent = "Login";
+        toggleText.textContent = "Don't have an account?";
+        toggleBtn.textContent = "Register here";
+        nameField.style.display = 'none';
+      }
+    }
 
-      const donutGrid = document.getElementById('donutGrid');
-      const cartContainer = document.getElementById('cartContainer');
-      const emptyCartMsg = document.getElementById('emptyCartMsg');
-      const totalAmountEl = document.getElementById('totalAmount');
-      const orderBtn = document.getElementById('orderBtn');
-      const customerNameInput = document.getElementById('customerName');
-      const customerAddressInput = document.getElementById('customerAddress');
-      const clearBoxBtn = document.getElementById('clearBoxBtn');
-      const progressFill = document.getElementById('progressFill');
-      const freeDeliveryMsg = document.getElementById('freeDeliveryMsg');
-      const freeDeliveryText = document.getElementById('freeDeliveryText');
+    function handleAuthSubmit() {
+      const email = document.getElementById('authEmail').value.trim().toLowerCase();
+      const password = document.getElementById('authPassword').value.trim();
+      const nameInput = document.getElementById('authName').value.trim();
+      const errorEl = document.getElementById('authError');
 
-      const modalOverlay = document.getElementById('paymentModalOverlay');
-      const checkoutView = document.getElementById('checkoutView');
-      const successView = document.getElementById('successView');
-      const closeModalBtn = document.getElementById('closeModalBtn');
-      const confirmPayBtn = document.getElementById('confirmPayBtn');
-      const payAmountSpan = document.getElementById('payAmount');
-      const eWalletFields = document.getElementById('eWalletFields');
-      const cardFields = document.getElementById('cardFields');
-      const finishOrderBtn = document.getElementById('finishOrderBtn');
-
-      const formatPrice = (p) => `₱${p.toFixed(2)}`;
-
-      function loadState() {
-        try {
-          const savedCart = localStorage.getItem(STORAGE_KEY_CART);
-          if (savedCart) {
-            const parsed = JSON.parse(savedCart);
-            Object.keys(parsed).forEach(id => {
-              if (donuts.some(d => d.id === id) && Number.isInteger(parsed[id]) && parsed[id] > 0) {
-                cart[id] = parsed[id];
-              }
-            });
-          }
-        } catch (e) { cart = {}; }
-        const savedName = localStorage.getItem(STORAGE_KEY_NAME);
-        if (savedName) customerNameInput.value = savedName;
-        const savedAddr = localStorage.getItem(STORAGE_KEY_ADDR);
-        if (savedAddr) customerAddressInput.value = savedAddr;
+      if (!email || !password) {
+        errorEl.textContent = "Please fill in all fields.";
+        errorEl.style.display = 'block';
+        return;
       }
 
-      function saveCart() { try { localStorage.setItem(STORAGE_KEY_CART, JSON.stringify(cart)); } catch (e) {} }
-      function saveCustomerDetails() {
-        try {
-          localStorage.setItem(STORAGE_KEY_NAME, customerNameInput.value.trim());
-          localStorage.setItem(STORAGE_KEY_ADDR, customerAddressInput.value.trim());
-        } catch (e) {}
-      }
+      // Get existing users list
+      let users = JSON.parse(localStorage.getItem('luna_users') || '[]');
 
-      function renderMenu() {
-        donutGrid.innerHTML = '';
-        donuts.forEach(donut => {
-          const card = document.createElement('div');
-          card.className = 'donut-card' + (cart[donut.id] ? ' selected' : '');
-          card.innerHTML = `
-            <div class="donut-icon">${donut.icon}</div>
-            <h3>${donut.name}</h3>
-            <div class="donut-desc">${donut.desc}</div>
-            <div class="price">${formatPrice(donut.price)}</div>
+      if (isRegisterMode) {
+        if (!nameInput) {
+          errorEl.textContent = "Please enter your name.";
+          errorEl.style.display = 'block';
+          return;
+        }
+        // Check if user exists
+        if (users.find(u => u.email === email)) {
+          errorEl.textContent = "Email already registered. Try logging in.";
+          errorEl.style.display = 'block';
+          return;
+        }
+        // Register new user
+        users.push({ email, password, name: nameInput });
+        localStorage.setItem('luna_users', JSON.stringify(users));
+        alert("Registration successful! You can now log in.");
+        toggleAuthMode(); // Switch to login mode
+      } else {
+        // Login existing user
+        const user = users.find(u => u.email === email && u.password === password);
+        if (user) {
+          // Success!
+          sessionStorage.setItem('luna_customer_logged_in', 'true');
+          sessionStorage.setItem('luna_customer_name', user.name);
+          showApp(user.name);
+        } else {
+          errorEl.textContent = "Incorrect email or password.";
+          errorEl.style.display = 'block';
+        }
+      }
+    }
+
+    function handleLogout() {
+      sessionStorage.removeItem('luna_customer_logged_in');
+      sessionStorage.removeItem('luna_customer_name');
+      document.getElementById('appView').classList.remove('active');
+      document.getElementById('authView').classList.add('active');
+      document.getElementById('authPassword').value = '';
+    }
+
+    function showApp(name) {
+      document.getElementById('authView').classList.remove('active');
+      document.getElementById('appView').classList.add('active');
+      document.getElementById('displayName').textContent = name;
+      
+      // Auto-fill delivery name!
+      document.getElementById('customerName').value = name;
+      
+      // Load cart and render
+      loadState();
+      renderMenu();
+      renderCart();
+    }
+
+    // Check if user is already logged in on page load
+    window.onload = function() {
+      if (sessionStorage.getItem('luna_customer_logged_in') === 'true') {
+        showApp(sessionStorage.getItem('luna_customer_name'));
+      } else {
+        document.getElementById('authView').classList.add('active');
+      }
+    };
+
+    // =========================================
+    // 2. SHOP & CART LOGIC
+    // =========================================
+    const FREE_DELIVERY_THRESHOLD = 500;
+    const STORAGE_KEY_CART = 'luna_mini_donut_cart';
+    const STORAGE_KEY_ADDR = 'luna_mini_donut_address';
+
+    const donuts = [
+      { id: 'glazed', name: 'Glazed Bliss', desc: 'Classic honey glaze', price: 79, icon: '🍩' },
+      { id: 'chocolate', name: 'Choco Dream', desc: 'Dark chocolate sprinkle', price: 89, icon: '🍫' },
+      { id: 'strawberry', name: 'Berry Love', desc: 'Strawberry icing', price: 85, icon: '🍓' },
+      { id: 'caramel', name: 'Caramel Crunch', desc: 'Salted caramel & toffee', price: 95, icon: '🍯' },
+      { id: 'vanilla', name: 'Vanilla Cloud', desc: 'Vanilla bean glaze', price: 79, icon: '🍦' },
+      { id: 'pistachio', name: 'Pistachio', desc: 'Roasted pistachio', price: 99, icon: '🥜' }
+    ];
+
+    let cart = {};
+    let currentTotal = 0;
+    let selectedPaymentMethod = 'cod';
+
+    // DOM refs
+    const donutGrid = document.getElementById('donutGrid');
+    const cartContainer = document.getElementById('cartContainer');
+    const emptyCartMsg = document.getElementById('emptyCartMsg');
+    const totalAmountEl = document.getElementById('totalAmount');
+    const orderBtn = document.getElementById('orderBtn');
+    const customerNameInput = document.getElementById('customerName');
+    const customerAddressInput = document.getElementById('customerAddress');
+    const clearBoxBtn = document.getElementById('clearBoxBtn');
+    const progressFill = document.getElementById('progressFill');
+    const freeDeliveryMsg = document.getElementById('freeDeliveryMsg');
+    const freeDeliveryText = document.getElementById('freeDeliveryText');
+
+    const modalOverlay = document.getElementById('paymentModalOverlay');
+    const checkoutView = document.getElementById('checkoutView');
+    const successView = document.getElementById('successView');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    const confirmPayBtn = document.getElementById('confirmPayBtn');
+    const payAmountSpan = document.getElementById('payAmount');
+    const eWalletFields = document.getElementById('eWalletFields');
+    const cardFields = document.getElementById('cardFields');
+    const finishOrderBtn = document.getElementById('finishOrderBtn');
+
+    const formatPrice = (p) => `₱${p.toFixed(2)}`;
+
+    function loadState() {
+      try {
+        const savedCart = localStorage.getItem(STORAGE_KEY_CART);
+        if (savedCart) {
+          const parsed = JSON.parse(savedCart);
+          Object.keys(parsed).forEach(id => {
+            if (donuts.some(d => d.id === id) && Number.isInteger(parsed[id]) && parsed[id] > 0) {
+              cart[id] = parsed[id];
+            }
+          });
+        }
+      } catch (e) { cart = {}; }
+      
+      const savedAddr = localStorage.getItem(STORAGE_KEY_ADDR);
+      if (savedAddr) customerAddressInput.value = savedAddr;
+    }
+
+    function saveCart() { try { localStorage.setItem(STORAGE_KEY_CART, JSON.stringify(cart)); } catch (e) {} }
+    
+    function saveCustomerDetails() {
+      try {
+        localStorage.setItem(STORAGE_KEY_ADDR, customerAddressInput.value.trim());
+      } catch (e) {}
+    }
+
+    function renderMenu() {
+      donutGrid.innerHTML = '';
+      donuts.forEach(donut => {
+        const card = document.createElement('div');
+        card.className = 'donut-card' + (cart[donut.id] ? ' selected' : '');
+        card.innerHTML = `
+          <div class="donut-icon">${donut.icon}</div>
+          <h3>${donut.name}</h3>
+          <div class="donut-desc">${donut.desc}</div>
+          <div class="price">${formatPrice(donut.price)}</div>
+        `;
+        card.addEventListener('click', () => addToCart(donut.id));
+        donutGrid.appendChild(card);
+      });
+    }
+
+    function renderCart() {
+      cartContainer.querySelectorAll('.cart-item').forEach(el => el.remove());
+      const cartIds = Object.keys(cart);
+      currentTotal = 0;
+
+      if (cartIds.length === 0) {
+        emptyCartMsg.style.display = 'block';
+        totalAmountEl.textContent = '₱0.00';
+        clearBoxBtn.disabled = true;
+      } else {
+        emptyCartMsg.style.display = 'none';
+        clearBoxBtn.disabled = false;
+
+        cartIds.forEach(id => {
+          const donut = donuts.find(d => d.id === id);
+          if (!donut) return;
+          const qty = cart[id];
+          const itemTotal = donut.price * qty;
+          currentTotal += itemTotal;
+
+          const itemEl = document.createElement('div');
+          itemEl.className = 'cart-item';
+          itemEl.innerHTML = `
+            <div class="cart-item-info">
+              <i class="fas fa-donut"></i><span class="item-name">${donut.name}</span>
+            </div>
+            <div class="qty-stepper">
+              <button class="qty-btn" onclick="window.changeQty('${id}', -1)"><i class="fas fa-minus"></i></button>
+              <span class="qty-value">${qty}</span>
+              <button class="qty-btn" onclick="window.changeQty('${id}', 1)"><i class="fas fa-plus"></i></button>
+            </div>
+            <div class="item-price">${formatPrice(itemTotal)}</div>
+            <button class="remove-item-btn" onclick="window.removeItem('${id}')"><i class="fas fa-xmark"></i></button>
           `;
-          card.addEventListener('click', () => addToCart(donut.id));
-          donutGrid.appendChild(card);
+          cartContainer.insertBefore(itemEl, emptyCartMsg);
         });
       }
 
-      function renderCart() {
-        cartContainer.querySelectorAll('.cart-item').forEach(el => el.remove());
-        const cartIds = Object.keys(cart);
-        currentTotal = 0;
+      totalAmountEl.textContent = formatPrice(currentTotal);
+      orderBtn.disabled = cartIds.length === 0;
+      updateProgressBar(currentTotal);
+    }
 
-        if (cartIds.length === 0) {
-          emptyCartMsg.style.display = 'block';
-          totalAmountEl.textContent = '₱0.00';
-          clearBoxBtn.disabled = true;
-        } else {
-          emptyCartMsg.style.display = 'none';
-          clearBoxBtn.disabled = false;
+    function updateProgressBar(total) {
+      const ratio = Math.min(total / FREE_DELIVERY_THRESHOLD, 1);
+      progressFill.style.width = (ratio * 100) + '%';
+      if (total >= FREE_DELIVERY_THRESHOLD) {
+        progressFill.classList.add('complete');
+        freeDeliveryText.classList.add('unlocked');
+        freeDeliveryMsg.innerHTML = '🎉 You unlocked <strong>FREE delivery!</strong>';
+      } else {
+        progressFill.classList.remove('complete');
+        freeDeliveryText.classList.remove('unlocked');
+        freeDeliveryMsg.innerHTML = `Add <strong>${formatPrice(FREE_DELIVERY_THRESHOLD - total)}</strong> more for FREE delivery`;
+      }
+    }
 
-          cartIds.forEach(id => {
-            const donut = donuts.find(d => d.id === id);
-            if (!donut) return;
-            const qty = cart[id];
-            const itemTotal = donut.price * qty;
-            currentTotal += itemTotal;
+    window.addToCart = function(donutId) {
+      cart[donutId] = (cart[donutId] || 0) + 1;
+      saveCart();
+      renderMenu();
+      renderCart();
+    }
 
-            const itemEl = document.createElement('div');
-            itemEl.className = 'cart-item';
-            itemEl.innerHTML = `
-              <div class="cart-item-info">
-                <i class="fas fa-donut"></i><span class="item-name">${donut.name}</span>
-              </div>
-              <div class="qty-stepper">
-                <button class="qty-btn" onclick="window.changeQty('${id}', -1)"><i class="fas fa-minus"></i></button>
-                <span class="qty-value">${qty}</span>
-                <button class="qty-btn" onclick="window.changeQty('${id}', 1)"><i class="fas fa-plus"></i></button>
-              </div>
-              <div class="item-price">${formatPrice(itemTotal)}</div>
-              <button class="remove-item-btn" onclick="window.removeItem('${id}')"><i class="fas fa-xmark"></i></button>
-            `;
-            cartContainer.insertBefore(itemEl, emptyCartMsg);
-          });
-        }
+    window.changeQty = function(donutId, delta) {
+      if (!cart[donutId]) return;
+      cart[donutId] += delta;
+      if (cart[donutId] <= 0) delete cart[donutId];
+      saveCart();
+      renderMenu();
+      renderCart();
+    }
 
-        totalAmountEl.textContent = formatPrice(currentTotal);
-        orderBtn.disabled = cartIds.length === 0;
-        updateProgressBar(currentTotal);
+    window.removeItem = function(donutId) {
+      delete cart[donutId];
+      saveCart();
+      renderMenu();
+      renderCart();
+    }
+
+    clearBoxBtn.addEventListener('click', () => {
+      cart = {};
+      saveCart();
+      renderMenu();
+      renderCart();
+    });
+
+    window.selectPayment = function(method, el) {
+      selectedPaymentMethod = method;
+      document.querySelectorAll('.pay-option').forEach(opt => opt.classList.remove('selected'));
+      el.classList.add('selected');
+      el.querySelector('input[type="radio"]').checked = true;
+
+      eWalletFields.classList.remove('active');
+      cardFields.classList.remove('active');
+      if (method === 'gcash' || method === 'maya') eWalletFields.classList.add('active');
+      else if (method === 'card') cardFields.classList.add('active');
+    }
+
+    orderBtn.addEventListener('click', () => {
+      const name = customerNameInput.value.trim();
+      const address = customerAddressInput.value.trim();
+      if (!name) { alert('Please enter your name.'); customerNameInput.focus(); return; }
+      if (!address) { alert('Please enter your delivery address.'); customerAddressInput.focus(); return; }
+
+      saveCustomerDetails();
+      payAmountSpan.textContent = formatPrice(currentTotal);
+      checkoutView.style.display = 'block';
+      successView.classList.remove('active');
+      modalOverlay.classList.add('active');
+    });
+
+    closeModalBtn.addEventListener('click', () => { modalOverlay.classList.remove('active'); });
+
+    confirmPayBtn.addEventListener('click', () => {
+      if (selectedPaymentMethod === 'gcash' || selectedPaymentMethod === 'maya') {
+        if (document.getElementById('ewalletNumber').value.length < 10) { alert('Enter valid mobile number.'); return; }
+      } else if (selectedPaymentMethod === 'card') {
+        if (document.getElementById('cardNumber').value.length < 15) { alert('Enter valid card number.'); return; }
       }
 
-      function updateProgressBar(total) {
-        const ratio = Math.min(total / FREE_DELIVERY_THRESHOLD, 1);
-        progressFill.style.width = (ratio * 100) + '%';
-        if (total >= FREE_DELIVERY_THRESHOLD) {
-          progressFill.classList.add('complete');
-          freeDeliveryText.classList.add('unlocked');
-          freeDeliveryMsg.innerHTML = '🎉 You unlocked <strong>FREE delivery!</strong>';
-        } else {
-          progressFill.classList.remove('complete');
-          freeDeliveryText.classList.remove('unlocked');
-          freeDeliveryMsg.innerHTML = `Add <strong>${formatPrice(FREE_DELIVERY_THRESHOLD - total)}</strong> more for FREE delivery`;
-        }
-      }
+      confirmPayBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+      confirmPayBtn.disabled = true;
 
-      window.addToCart = function(donutId) {
-        cart[donutId] = (cart[donutId] || 0) + 1;
-        saveCart();
-        renderMenu();
-        renderCart();
-      }
+      setTimeout(() => {
+        const orderNum = Math.floor(10000 + Math.random() * 90000);
+        document.getElementById('receiptOrderNum').textContent = orderNum;
+        document.getElementById('receiptName').textContent = customerNameInput.value.trim();
+        document.getElementById('receiptAddress').textContent = customerAddressInput.value.trim();
+        document.getElementById('receiptTotal').textContent = formatPrice(currentTotal);
+        
+        let methodName = 'Cash on Delivery';
+        if (selectedPaymentMethod === 'gcash') methodName = 'GCash';
+        if (selectedPaymentMethod === 'maya') methodName = 'Maya';
+        if (selectedPaymentMethod === 'card') methodName = 'Card';
+        document.getElementById('receiptMethod').textContent = methodName;
 
-      window.changeQty = function(donutId, delta) {
-        if (!cart[donutId]) return;
-        cart[donutId] += delta;
-        if (cart[donutId] <= 0) delete cart[donutId];
-        saveCart();
-        renderMenu();
-        renderCart();
-      }
+        // === SAVE ORDER TO LOCALSTORAGE (For Admin Panel) ===
+        const orderData = {
+          id: orderNum,
+          name: customerNameInput.value.trim(),
+          address: customerAddressInput.value.trim(),
+          items: Object.keys(cart).map(id => {
+            const d = donuts.find(x => x.id === id);
+            return `${cart[id]}x ${d.name}`;
+          }).join(', '),
+          total: currentTotal,
+          method: methodName,
+          status: 'Pending',
+          time: new Date().toLocaleTimeString()
+        };
+        
+        let existingOrders = JSON.parse(localStorage.getItem('luna_orders') || '[]');
+        existingOrders.unshift(orderData);
+        localStorage.setItem('luna_orders', JSON.stringify(existingOrders));
+        // ====================================================
 
-      window.removeItem = function(donutId) {
-        delete cart[donutId];
-        saveCart();
-        renderMenu();
-        renderCart();
-      }
+        checkoutView.style.display = 'none';
+        successView.classList.add('active');
+        confirmPayBtn.innerHTML = '<i class="fas fa-lock"></i> Pay <span id="payAmount">₱0.00</span>';
+        confirmPayBtn.disabled = false;
 
-      clearBoxBtn.addEventListener('click', () => {
         cart = {};
         saveCart();
         renderMenu();
         renderCart();
-      });
 
-      window.selectPayment = function(method, el) {
-        selectedPaymentMethod = method;
-        document.querySelectorAll('.pay-option').forEach(opt => opt.classList.remove('selected'));
-        el.classList.add('selected');
-        el.querySelector('input[type="radio"]').checked = true;
+      }, 1500);
+    });
 
-        eWalletFields.classList.remove('active');
-        cardFields.classList.remove('active');
-        if (method === 'gcash' || method === 'maya') eWalletFields.classList.add('active');
-        else if (method === 'card') cardFields.classList.add('active');
-      }
-
-      orderBtn.addEventListener('click', () => {
-        const name = customerNameInput.value.trim();
-        const address = customerAddressInput.value.trim();
-        if (!name) { alert('Please enter your name.'); customerNameInput.focus(); return; }
-        if (!address) { alert('Please enter your delivery address.'); customerAddressInput.focus(); return; }
-
-        saveCustomerDetails();
-        payAmountSpan.textContent = formatPrice(currentTotal);
-        checkoutView.style.display = 'block';
-        successView.classList.remove('active');
-        modalOverlay.classList.add('active');
-      });
-
-      closeModalBtn.addEventListener('click', () => { modalOverlay.classList.remove('active'); });
-
-      confirmPayBtn.addEventListener('click', () => {
-        if (selectedPaymentMethod === 'gcash' || selectedPaymentMethod === 'maya') {
-          if (document.getElementById('ewalletNumber').value.length < 10) { alert('Enter valid mobile number.'); return; }
-        } else if (selectedPaymentMethod === 'card') {
-          if (document.getElementById('cardNumber').value.length < 15) { alert('Enter valid card number.'); return; }
-        }
-
-        confirmPayBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
-        confirmPayBtn.disabled = true;
-
-        setTimeout(() => {
-          const orderNum = Math.floor(10000 + Math.random() * 90000);
-          document.getElementById('receiptOrderNum').textContent = orderNum;
-          document.getElementById('receiptName').textContent = customerNameInput.value.trim();
-          document.getElementById('receiptAddress').textContent = customerAddressInput.value.trim();
-          document.getElementById('receiptTotal').textContent = formatPrice(currentTotal);
-          
-          let methodName = 'Cash on Delivery';
-          if (selectedPaymentMethod === 'gcash') methodName = 'GCash';
-          if (selectedPaymentMethod === 'maya') methodName = 'Maya';
-          if (selectedPaymentMethod === 'card') methodName = 'Card';
-          document.getElementById('receiptMethod').textContent = methodName;
-
-          // === SAVE ORDER TO LOCALSTORAGE (For Admin Panel) ===
-          const orderData = {
-            id: orderNum,
-            name: customerNameInput.value.trim(),
-            address: customerAddressInput.value.trim(),
-            items: Object.keys(cart).map(id => {
-              const d = donuts.find(x => x.id === id);
-              return `${cart[id]}x ${d.name}`;
-            }).join(', '),
-            total: currentTotal,
-            method: methodName,
-            status: 'Pending',
-            time: new Date().toLocaleTimeString()
-          };
-          
-          let existingOrders = JSON.parse(localStorage.getItem('luna_orders') || '[]');
-          existingOrders.unshift(orderData);
-          localStorage.setItem('luna_orders', JSON.stringify(existingOrders));
-          // ====================================================
-
-          checkoutView.style.display = 'none';
-          successView.classList.add('active');
-          confirmPayBtn.innerHTML = '<i class="fas fa-lock"></i> Pay <span id="payAmount">₱0.00</span>';
-          confirmPayBtn.disabled = false;
-
-          cart = {};
-          saveCart();
-          renderMenu();
-          renderCart();
-
-        }, 1500);
-      });
-
-      finishOrderBtn.addEventListener('click', () => { modalOverlay.classList.remove('active'); });
-
-      function init() {
-        renderMenu();
-        loadState();
-        renderMenu();
-        renderCart();
-        customerNameInput.addEventListener('input', saveCustomerDetails);
-        customerAddressInput.addEventListener('input', saveCustomerDetails);
-      }
-      init();
-    })();
+    finishOrderBtn.addEventListener('click', () => { modalOverlay.classList.remove('active'); });
   </script>
 </body>
 </html>
