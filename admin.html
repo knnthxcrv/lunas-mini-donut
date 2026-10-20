@@ -52,8 +52,16 @@
     th, td { padding: 1rem; border-bottom: 1px solid #eee; }
     th { background: #fff8f0; color: #6b3f27; font-weight: 700; white-space: nowrap; }
     tr:hover { background: #fafafa; }
-    .status-badge { padding: 0.3rem 0.8rem; border-radius: 50px; font-size: 0.8rem; font-weight: bold; background: #ffe6d5; color: #a54b1e; }
-    .btn-complete { background: #2e8b57; color: white; border: none; padding: 0.5rem 1rem; border-radius: 5px; cursor: pointer; font-weight: bold; }
+    
+    .status-badge { padding: 0.3rem 0.8rem; border-radius: 50px; font-size: 0.8rem; font-weight: bold; display: inline-block;}
+    .status-pending { background: #ffe6d5; color: #a54b1e; }
+    .status-completed { background: #d4edda; color: #155724; }
+    .status-rejected { background: #f8d7da; color: #721c24; }
+
+    .action-buttons { display: flex; gap: 0.5rem; }
+    .btn-complete { background: #2e8b57; color: white; border: none; padding: 0.5rem 0.8rem; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 0.8rem;}
+    .btn-reject { background: #d9534f; color: white; border: none; padding: 0.5rem 0.8rem; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 0.8rem;}
+    
     .empty-state { text-align: center; padding: 3rem; color: #888; }
     
     .clear-orders-btn { background: #d9534f; color: white; border: none; padding: 0.8rem 1.5rem; border-radius: 10px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 0 #a94442; display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; }
@@ -129,8 +137,8 @@
         </div>
       </div>
 
-      <button class="clear-orders-btn" onclick="clearCompletedOrders()">
-        <i class="fas fa-broom"></i> Clear Completed Orders
+      <button class="clear-orders-btn" onclick="clearFinishedOrders()">
+        <i class="fas fa-broom"></i> Clear Completed & Rejected
       </button>
 
       <div class="orders-table-container">
@@ -143,7 +151,7 @@
               <th>Items</th>
               <th>Payment</th>
               <th>Total</th>
-              <th>Status</th>
+              <th>Action / Status</th>
             </tr>
           </thead>
           <tbody id="ordersTableBody"></tbody>
@@ -196,7 +204,6 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // Expose to main script
     window.firebaseOnSnapshot = onSnapshot;
     window.firebaseCollection = collection;
     window.firebaseDoc = doc;
@@ -206,7 +213,6 @@
     window.firebaseWhere = where;
     window.firebaseGetDocs = getDocs;
     window.firestoreDb = db;
-    window.firebaseReady = true;
   </script>
 
   <!-- MAIN ADMIN LOGIC -->
@@ -264,37 +270,34 @@
     // REAL-TIME ORDERS FROM FIREBASE
     // =========================================
     const formatPrice = (p) => `₱${p.toFixed(2)}`;
-
-    // Auto-refresh listener setup
     let unsubscribeOrders = null;
 
     function loadOrders() {
-      if (unsubscribeOrders) unsubscribeOrders(); // Unsubscribe from previous listener if exists
+      if (unsubscribeOrders) unsubscribeOrders();
 
       const tableBody = document.getElementById('ordersTableBody');
       const emptyState = document.getElementById('emptyState');
       
-      // Setup the real-time listener
       unsubscribeOrders = window.firebaseOnSnapshot(window.firebaseCollection(window.firestoreDb, "orders"), (snapshot) => {
         let orders = [];
         snapshot.forEach((doc) => {
           orders.push({ firebaseId: doc.id, ...doc.data() });
         });
 
-        // Sort by timestamp (newest first)
         orders.sort((a, b) => b.timestamp - a.timestamp);
 
-        // Update Stats
         document.getElementById('totalOrders').textContent = orders.length;
         let revenue = 0, pending = 0;
+        
         orders.forEach(o => {
-          revenue += o.total;
+          // I-count lang ang revenue kung HINDI Rejected
+          if (o.status !== 'Rejected') revenue += o.total; 
           if (o.status === 'Pending') pending++;
         });
+        
         document.getElementById('totalRevenue').textContent = formatPrice(revenue);
         document.getElementById('pendingOrders').textContent = pending;
 
-        // Render Table
         tableBody.innerHTML = '';
         if (orders.length === 0) {
           emptyState.style.display = 'block';
@@ -305,6 +308,21 @@
 
         orders.forEach((order) => {
           const tr = document.createElement('tr');
+          
+          let statusHtml = '';
+          if (order.status === 'Pending') {
+            statusHtml = `
+              <div class="action-buttons">
+                <button class="btn-complete" onclick="window.updateOrderStatus('${order.firebaseId}', 'Completed')">Done</button>
+                <button class="btn-reject" onclick="window.updateOrderStatus('${order.firebaseId}', 'Rejected')">Reject</button>
+              </div>
+            `;
+          } else if (order.status === 'Completed') {
+            statusHtml = `<span class="status-badge status-completed">Completed</span>`;
+          } else if (order.status === 'Rejected') {
+            statusHtml = `<span class="status-badge status-rejected">Rejected</span>`;
+          }
+
           tr.innerHTML = `
             <td><strong>#${order.id}</strong></td>
             <td><strong>${order.name}</strong></td>
@@ -312,23 +330,20 @@
             <td style="font-size:0.9rem; max-width: 250px;">${order.items}</td>
             <td><span style="background:#f0f0f0; padding: 0.3rem 0.6rem; border-radius: 5px; font-size:0.8rem; font-weight:bold;">${order.method}</span></td>
             <td><strong style="color:#b64a12;">${formatPrice(order.total)}</strong></td>
-            <td>
-              ${order.status === 'Pending' 
-                ? `<button class="btn-complete" onclick="window.completeOrder('${order.firebaseId}')">Mark Done</button>` 
-                : `<span class="status-badge" style="background:#d4edda; color:#155724;">Completed</span>`
-              }
-            </td>
+            <td>${statusHtml}</td>
           `;
           tableBody.appendChild(tr);
         });
       });
     }
 
-    // Function to mark a specific order as done
-    window.completeOrder = async function(firebaseId) {
+    // Universal function to update status (Completed or Rejected)
+    window.updateOrderStatus = async function(firebaseId, newStatus) {
+      if (newStatus === 'Rejected' && !confirm("Are you sure you want to REJECT this order?")) return;
+
       try {
         const orderRef = window.firebaseDoc(window.firestoreDb, "orders", firebaseId);
-        await window.firebaseUpdateDoc(orderRef, { status: 'Completed' });
+        await window.firebaseUpdateDoc(orderRef, { status: newStatus });
         // Real-time listener automatically updates the table!
       } catch (e) {
         console.error("Error updating order: ", e);
@@ -336,22 +351,25 @@
       }
     };
 
-    // Function to clear Completed orders
-    async function clearCompletedOrders() {
-      if (!confirm("Are you sure you want to remove all Completed orders from the database?")) return;
+    // Clear both Completed and Rejected
+    async function clearFinishedOrders() {
+      if (!confirm("Are you sure you want to remove all Completed and Rejected orders?")) return;
       
       try {
-        const q = window.firebaseQuery(window.firebaseCollection(window.firestoreDb, "orders"), window.firebaseWhere("status", "==", "Completed"));
-        const querySnapshot = await window.firebaseGetDocs(q);
+        // Query for Completed
+        const q1 = window.firebaseQuery(window.firebaseCollection(window.firestoreDb, "orders"), window.firebaseWhere("status", "==", "Completed"));
+        const snap1 = await window.firebaseGetDocs(q1);
+        
+        // Query for Rejected
+        const q2 = window.firebaseQuery(window.firebaseCollection(window.firestoreDb, "orders"), window.firebaseWhere("status", "==", "Rejected"));
+        const snap2 = await window.firebaseGetDocs(q2);
         
         const deletePromises = [];
-        querySnapshot.forEach((document) => {
-          deletePromises.push(window.firebaseDeleteDoc(window.firebaseDoc(window.firestoreDb, "orders", document.id)));
-        });
+        snap1.forEach((document) => deletePromises.push(window.firebaseDeleteDoc(window.firebaseDoc(window.firestoreDb, "orders", document.id))));
+        snap2.forEach((document) => deletePromises.push(window.firebaseDeleteDoc(window.firebaseDoc(window.firestoreDb, "orders", document.id))));
         
         await Promise.all(deletePromises);
-        alert("Completed orders cleared!");
-        // Real-time listener automatically refreshes table
+        alert("Finished orders cleared!");
       } catch (e) {
         console.error("Error clearing orders: ", e);
         alert("Failed to clear orders. Check your internet connection.");
@@ -359,7 +377,7 @@
     }
 
     // =========================================
-    // EDIT MENU LOGIC (Local Storage)
+    // EDIT MENU LOGIC
     // =========================================
     const STORAGE_KEY_MENU = 'luna_mini_donut_menu';
     const defaultFlavors = [
