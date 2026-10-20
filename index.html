@@ -6,7 +6,7 @@
   <title>Luna's Mini Donut · Delivery</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
-    /* [YOUR CSS GOES HERE - I kept it the same so it still looks good] */
+    /* [SAME CSS AS BEFORE - KEPT INTACT] */
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, system-ui, sans-serif; }
     body { background: #fff8f0; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 1.5rem; }
     .delivery-app { max-width: 1300px; width: 100%; background: #ffffff; border-radius: 3.5rem; box-shadow: 0 25px 50px -8px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(255, 184, 140, 0.3); overflow: hidden; display: flex; flex-direction: column; position: relative; }
@@ -106,6 +106,7 @@
     .payment-dynamic-fields small { color: #8f5e3f; display: block; margin-bottom: 0.3rem; font-weight: 600; }
     .confirm-pay-btn { width: 100%; background: #2e8b57; color: white; border: none; border-radius: 50px; padding: 1rem; font-size: 1.1rem; font-weight: 800; cursor: pointer; box-shadow: 0 6px 0 #1e5c39; display: flex; justify-content: center; align-items: center; gap: 0.5rem; }
     .confirm-pay-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #1e5c39; }
+    .confirm-pay-btn:disabled { opacity: 0.7; cursor: not-allowed; }
     .success-screen { display: none; text-align: center; padding: 1rem 0; }
     .success-screen.active { display: block; }
     .success-screen i { font-size: 4rem; color: #2e8b57; margin-bottom: 1rem; animation: pop 0.5s ease; }
@@ -333,9 +334,8 @@
   <!-- FIREBASE SDK IMPORTS -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    // YOUR FIREBASE KEYS
     const firebaseConfig = {
       apiKey: "AIzaSyClaoSrxDdd0hLr6leu_XbYfLYPnCO7-pM",
       authDomain: "lunas-donut.firebaseapp.com",
@@ -348,14 +348,11 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // Make Firebase available to our regular script
     window.firebaseAddDoc = addDoc;
     window.firebaseCollection = collection;
-    window.firebaseGetDocs = getDocs;
     window.firestoreDb = db;
   </script>
 
-  <!-- MAIN APP LOGIC -->
   <script>
     const FREE_DELIVERY_THRESHOLD = 500;
     const STORAGE_KEY_CART = 'luna_mini_donut_cart';
@@ -365,7 +362,6 @@
     const PRICE_PREMIUM = 25;
     const TOPPING_PRICES = { sprinkles: 5, choco: 10, oreo: 15 };
 
-    // Default Menu (Will switch to Firebase later, using local for now)
     const defaultFlavors = [
       { id: 'glazed', name: 'Glazed Bliss', desc: 'Classic sweet glaze', image: '' },
       { id: 'chocolate', name: 'Choco Dream', desc: 'Rich chocolate flavor', image: '' },
@@ -445,7 +441,6 @@
       });
     }
 
-    // CUSTOMIZATION LOGIC
     function openCustomizer(flavorId) {
       customizingFlavorId = flavorId;
       customType = 'classic';
@@ -519,7 +514,6 @@
       closeModal('customizeModal');
     }
 
-    // CART LOGIC
     function renderCart() {
       cartContainer.querySelectorAll('.cart-item').forEach(el => el.remove());
       const cartKeys = Object.keys(cart);
@@ -598,7 +592,6 @@
       renderCart();
     });
 
-    // CHECKOUT
     window.selectPayment = function(method, el) {
       selectedPaymentMethod = method;
       document.querySelectorAll('.pay-option').forEach(opt => opt.classList.remove('selected'));
@@ -626,67 +619,83 @@
 
     closeModalBtn.addEventListener('click', () => { modalOverlay.classList.remove('active'); });
 
-    // 🔥 THIS IS WHERE WE SEND TO FIREBASE 🔥
+    // 🔥 FIXED PAYMENT PROCESSING 🔥
     confirmPayBtn.addEventListener('click', async () => {
+      // 1. Validate fields first before disabling the button
       if (selectedPaymentMethod === 'gcash' || selectedPaymentMethod === 'maya') {
-        if (document.getElementById('ewalletNumber').value.length < 10) { alert('Enter valid mobile number.'); return; }
+        const num = document.getElementById('ewalletNumber').value.trim();
+        const pin = document.getElementById('ewalletPin').value.trim();
+        if (num.length < 10 || pin.length < 4) { 
+          alert('Please enter a valid 10-digit mobile number and 4-digit MPIN.'); 
+          return; 
+        }
       } else if (selectedPaymentMethod === 'card') {
-        if (document.getElementById('cardNumber').value.length < 15) { alert('Enter valid card number.'); return; }
+        const cardNum = document.getElementById('cardNumber').value.trim();
+        if (cardNum.length < 15) { 
+          alert('Please enter a valid credit/debit card number.'); 
+          return; 
+        }
       }
 
+      // 2. Change button to loading state
       confirmPayBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
       confirmPayBtn.disabled = true;
 
-      const orderNum = Math.floor(10000 + Math.random() * 90000);
-      let methodName = 'Cash on Delivery';
-      if (selectedPaymentMethod === 'gcash') methodName = 'GCash';
-      if (selectedPaymentMethod === 'maya') methodName = 'Maya';
-      if (selectedPaymentMethod === 'card') methodName = 'Card';
+      // 3. Fake processing delay (1.5 seconds)
+      setTimeout(async () => {
+        const orderNum = Math.floor(10000 + Math.random() * 90000);
+        let methodName = 'Cash on Delivery';
+        if (selectedPaymentMethod === 'gcash') methodName = 'GCash';
+        if (selectedPaymentMethod === 'maya') methodName = 'Maya';
+        if (selectedPaymentMethod === 'card') methodName = 'Card';
 
-      const orderItems = Object.keys(cart).map(key => {
-        const item = cart[key];
-        const typeText = item.type === 'classic' ? 'Classic' : 'Premium';
-        const toppingsText = item.toppings.length > 0 ? ` w/ ${item.toppings.join(', ')}` : '';
-        return `${item.qty}x ${item.name} (${typeText})${toppingsText}`;
-      }).join(', ');
+        const orderItems = Object.keys(cart).map(key => {
+          const item = cart[key];
+          const typeText = item.type === 'classic' ? 'Classic' : 'Premium';
+          const toppingsText = item.toppings.length > 0 ? ` w/ ${item.toppings.join(', ')}` : '';
+          return `${item.qty}x ${item.name} (${typeText})${toppingsText}`;
+        }).join(', ');
 
-      const orderData = {
-        id: orderNum,
-        name: customerNameInput.value.trim(),
-        address: customerAddressInput.value.trim(),
-        items: orderItems,
-        total: currentTotal,
-        method: methodName,
-        status: 'Pending',
-        timestamp: Date.now() // Used for sorting in Admin
-      };
+        const orderData = {
+          id: orderNum,
+          name: customerNameInput.value.trim(),
+          address: customerAddressInput.value.trim(),
+          items: orderItems,
+          total: currentTotal,
+          method: methodName,
+          status: 'Pending',
+          timestamp: Date.now()
+        };
 
-      try {
-        // Send data to Firebase!
-        await window.firebaseAddDoc(window.firebaseCollection(window.firestoreDb, "orders"), orderData);
+        try {
+          // 4. Send to Firebase
+          await window.firebaseAddDoc(window.firebaseCollection(window.firestoreDb, "orders"), orderData);
 
-        // Update UI on success
-        document.getElementById('receiptOrderNum').textContent = orderNum;
-        document.getElementById('receiptName').textContent = orderData.name;
-        document.getElementById('receiptAddress').textContent = orderData.address;
-        document.getElementById('receiptTotal').textContent = formatPrice(currentTotal);
-        document.getElementById('receiptMethod').textContent = methodName;
+          // 5. Show Receipt
+          document.getElementById('receiptOrderNum').textContent = orderNum;
+          document.getElementById('receiptName').textContent = orderData.name;
+          document.getElementById('receiptAddress').textContent = orderData.address;
+          document.getElementById('receiptTotal').textContent = formatPrice(currentTotal);
+          document.getElementById('receiptMethod').textContent = methodName;
 
-        checkoutView.style.display = 'none';
-        successView.classList.add('active');
-        confirmPayBtn.innerHTML = '<i class="fas fa-lock"></i> Pay <span id="payAmount">₱0.00</span>';
-        confirmPayBtn.disabled = false;
+          checkoutView.style.display = 'none';
+          successView.classList.add('active');
+          
+          // Reset Button
+          confirmPayBtn.innerHTML = '<i class="fas fa-lock"></i> Pay <span id="payAmount">₱0.00</span>';
+          confirmPayBtn.disabled = false;
 
-        cart = {};
-        saveCart();
-        renderCart();
+          cart = {};
+          saveCart();
+          renderCart();
 
-      } catch (e) {
-        console.error("Error saving order: ", e);
-        alert("Failed to send order to the kitchen. Please check your internet connection.");
-        confirmPayBtn.innerHTML = '<i class="fas fa-lock"></i> Pay <span id="payAmount">₱0.00</span>';
-        confirmPayBtn.disabled = false;
-      }
+        } catch (e) {
+          console.error("Error saving order: ", e);
+          alert("Failed to send order to the kitchen. Please check your internet connection.");
+          confirmPayBtn.innerHTML = '<i class="fas fa-lock"></i> Pay <span id="payAmount">₱0.00</span>';
+          confirmPayBtn.disabled = false;
+        }
+      }, 1500); // 1.5 second delay
     });
 
     finishOrderBtn.addEventListener('click', () => { modalOverlay.classList.remove('active'); });
