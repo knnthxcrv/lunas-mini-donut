@@ -159,7 +159,7 @@
       <button class="btn btn-back" onclick="switchTab('orders')"><i class="fas fa-arrow-left"></i> Back to Orders</button>
       <div class="editor-container">
         <h2 style="margin-bottom: 1rem; color: var(--text-dark); font-size: 1.2rem;">Edit Menu Cards</h2>
-        <p style="font-size:0.85rem; color:var(--text-light); margin-bottom:1rem;">I-upload ang totoong picture ng item at i-edit ang detalye.</p>
+        <p style="font-size:0.85rem; color:var(--text-light); margin-bottom:1rem;">I-upload ang totoong picture ng item at i-edit ang detalye. <strong>Naka-save ito sa Firebase.</strong></p>
         <table class="editor-table">
           <thead>
             <tr>
@@ -172,7 +172,7 @@
           </thead>
           <tbody id="menuTableBody"></tbody>
         </table>
-        <button class="btn-save-menu" onclick="saveMenuCards()"><i class="fas fa-save"></i> Save Cards</button>
+        <button class="btn-save-menu" onclick="saveMenuCards()"><i class="fas fa-save"></i> Save Cards to Firebase</button>
       </div>
     </div>
 
@@ -234,7 +234,7 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, collection, onSnapshot, doc, updateDoc, deleteDoc, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getFirestore, collection, onSnapshot, doc, updateDoc, deleteDoc, query, where, getDocs, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
     import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
     const firebaseConfig = {
@@ -250,7 +250,7 @@
     const db = getFirestore(app);
     const auth = getAuth(app);
 
-    window.firebaseOnSnapshot = onSnapshot; window.firebaseCollection = collection; window.firebaseDoc = doc; window.firebaseUpdateDoc = updateDoc; window.firebaseDeleteDoc = deleteDoc; window.firebaseQuery = query; window.firebaseWhere = where; window.firebaseGetDocs = getDocs; window.firestoreDb = db;
+    window.firebaseOnSnapshot = onSnapshot; window.firebaseCollection = collection; window.firebaseDoc = doc; window.firebaseUpdateDoc = updateDoc; window.firebaseDeleteDoc = deleteDoc; window.firebaseQuery = query; window.firebaseWhere = where; window.firebaseGetDocs = getDocs; window.firebaseSetDoc = setDoc; window.firestoreDb = db;
     window.firebaseAuth = auth; window.firebaseSignIn = signInWithEmailAndPassword; window.firebaseSignOut = signOut; window.firebaseOnAuthStateChanged = onAuthStateChanged;
   </script>
 
@@ -357,9 +357,25 @@
     window.updateOrderStatus = async function(firebaseId, newStatus) { if (newStatus === 'Rejected' && !confirm("Reject this order?")) return; try { await window.firebaseUpdateDoc(window.firebaseDoc(window.firestoreDb, "orders", firebaseId), { status: newStatus }); } catch (e) { alert("Failed."); } };
     async function clearFinishedOrders() { if (!confirm("Remove all Completed and Rejected orders?")) return; try { const q1 = window.firebaseQuery(window.firebaseCollection(window.firestoreDb, "orders"), window.firebaseWhere("status", "==", "Completed")); const q2 = window.firebaseQuery(window.firebaseCollection(window.firestoreDb, "orders"), window.firebaseWhere("status", "==", "Rejected")); const [snap1, snap2] = await Promise.all([window.firebaseGetDocs(q1), window.firebaseGetDocs(q2)]); const del = []; snap1.forEach(d => del.push(window.firebaseDeleteDoc(window.firebaseDoc(window.firestoreDb, "orders", d.id)))); snap2.forEach(d => del.push(window.firebaseDeleteDoc(window.firebaseDoc(window.firestoreDb, "orders", d.id)))); await Promise.all(del); } catch (e) { alert("Error clearing."); } }
 
+    // ==========================================
+    // FIREBASE MENU LOGIC (UPDATED)
+    // ==========================================
     let editingMenu = [];
-    function loadMenuCards() {
-      editingMenu = JSON.parse(localStorage.getItem(STORAGE_KEY_MENU)) || [...defaultMenu];
+    
+    async function loadMenuCards() {
+      // Kunin mula sa Firebase
+      const snap = await window.firebaseGetDocs(window.firebaseCollection(window.firestoreDb, "menu"));
+      if (snap.empty) {
+        // Kung wala pa sa Firebase, i-save ang default menu
+        for(let i=0; i<defaultMenu.length; i++) {
+          await window.firebaseSetDoc(window.firebaseDoc(window.firestoreDb, "menu", defaultMenu[i].id), defaultMenu[i]);
+        }
+        editingMenu = [...defaultMenu];
+      } else {
+        editingMenu = [];
+        snap.forEach(doc => editingMenu.push(doc.data()));
+      }
+      
       const tbody = document.getElementById('menuTableBody'); tbody.innerHTML = '';
       editingMenu.forEach((item, index) => {
         const tr = document.createElement('tr'); const isChecked = item.inStock === false ? '' : 'checked';
@@ -383,7 +399,7 @@
       });
     }
 
-    // I-COMPRESS ANG IMAGE BAGO I-SAVE PARA UMABOT SA LOCALSTORAGE AT FIREBASE
+    // I-COMPRESS ANG IMAGE BAGO I-SAVE PARA UMABOT SA FIREBASE LIMIT
     window.handleImageUpload = function(event, index) {
       const file = event.target.files[0];
       if (!file) return;
@@ -413,8 +429,21 @@
     };
 
     window.updateMenuField = (i, f, v) => { editingMenu[i][f] = v; };
-    window.saveMenuCards = function() { try { localStorage.setItem(STORAGE_KEY_MENU, JSON.stringify(editingMenu)); alert("Menu Cards Saved!"); } catch (e) { alert("Failed. Storage might be full."); } }
+    
+    window.saveMenuCards = async function() { 
+      try { 
+        for (let i=0; i<editingMenu.length; i++) {
+          await window.firebaseSetDoc(window.firebaseDoc(window.firestoreDb, "menu", editingMenu[i].id), editingMenu[i]);
+        }
+        alert("Menu Cards Saved to Firebase! Lalabas na ito sa lahat ng devices."); 
+      } catch (e) { 
+        alert("Failed to save to Firebase: " + e.message); 
+      } 
+    }
 
+    // ==========================================
+    // PRICING & FLAVORS (STILL USING LOCALSTORAGE FOR NOW)
+    // ==========================================
     function loadPricing() {
       const settings = JSON.parse(localStorage.getItem(STORAGE_KEY_SETTINGS)) || defaultSettings;
       document.getElementById('price-c-2').value = settings.prices.classic[2]; document.getElementById('price-c-6').value = settings.prices.classic[6]; document.getElementById('price-c-12').value = settings.prices.classic[12];
