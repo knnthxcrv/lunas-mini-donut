@@ -6,7 +6,7 @@
   <title>Luna's Mini Donut · Delivery</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
-    /* [SAME CSS AS BEFORE - KEPT INTACT] */
+    /* [CSS REMAINS EXACTLY THE SAME AS BEFORE] */
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, system-ui, sans-serif; }
     body { background: #fff8f0; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 1.5rem; }
     .delivery-app { max-width: 1300px; width: 100%; background: #ffffff; border-radius: 3.5rem; box-shadow: 0 25px 50px -8px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(255, 184, 140, 0.3); overflow: hidden; display: flex; flex-direction: column; position: relative; }
@@ -348,6 +348,8 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
+    // Expose functions globally
+    window.firebaseReady = true;
     window.firebaseAddDoc = addDoc;
     window.firebaseCollection = collection;
     window.firestoreDb = db;
@@ -619,9 +621,16 @@
 
     closeModalBtn.addEventListener('click', () => { modalOverlay.classList.remove('active'); });
 
-    // 🔥 FIXED PAYMENT PROCESSING 🔥
+    // 🔥 ROBUST PAYMENT PROCESSING 🔥
     confirmPayBtn.addEventListener('click', async () => {
-      // 1. Validate fields first before disabling the button
+      
+      // 1. Check if Firebase loaded properly
+      if (!window.firebaseReady) {
+        alert("System is still loading. Please wait a moment and try again.");
+        return;
+      }
+
+      // 2. Validate inputs
       if (selectedPaymentMethod === 'gcash' || selectedPaymentMethod === 'maya') {
         const num = document.getElementById('ewalletNumber').value.trim();
         const pin = document.getElementById('ewalletPin').value.trim();
@@ -637,65 +646,68 @@
         }
       }
 
-      // 2. Change button to loading state
+      // 3. Set Loading State
       confirmPayBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
       confirmPayBtn.disabled = true;
 
-      // 3. Fake processing delay (1.5 seconds)
-      setTimeout(async () => {
-        const orderNum = Math.floor(10000 + Math.random() * 90000);
-        let methodName = 'Cash on Delivery';
-        if (selectedPaymentMethod === 'gcash') methodName = 'GCash';
-        if (selectedPaymentMethod === 'maya') methodName = 'Maya';
-        if (selectedPaymentMethod === 'card') methodName = 'Card';
+      // 4. Prepare Order Data
+      const orderNum = Math.floor(10000 + Math.random() * 90000);
+      let methodName = 'Cash on Delivery';
+      if (selectedPaymentMethod === 'gcash') methodName = 'GCash';
+      if (selectedPaymentMethod === 'maya') methodName = 'Maya';
+      if (selectedPaymentMethod === 'card') methodName = 'Card';
 
-        const orderItems = Object.keys(cart).map(key => {
-          const item = cart[key];
-          const typeText = item.type === 'classic' ? 'Classic' : 'Premium';
-          const toppingsText = item.toppings.length > 0 ? ` w/ ${item.toppings.join(', ')}` : '';
-          return `${item.qty}x ${item.name} (${typeText})${toppingsText}`;
-        }).join(', ');
+      const orderItems = Object.keys(cart).map(key => {
+        const item = cart[key];
+        const typeText = item.type === 'classic' ? 'Classic' : 'Premium';
+        const toppingsText = item.toppings.length > 0 ? ` w/ ${item.toppings.join(', ')}` : '';
+        return `${item.qty}x ${item.name} (${typeText})${toppingsText}`;
+      }).join(', ');
 
-        const orderData = {
-          id: orderNum,
-          name: customerNameInput.value.trim(),
-          address: customerAddressInput.value.trim(),
-          items: orderItems,
-          total: currentTotal,
-          method: methodName,
-          status: 'Pending',
-          timestamp: Date.now()
-        };
+      const orderData = {
+        id: orderNum,
+        name: customerNameInput.value.trim(),
+        address: customerAddressInput.value.trim(),
+        items: orderItems,
+        total: currentTotal,
+        method: methodName,
+        status: 'Pending',
+        timestamp: Date.now()
+      };
 
-        try {
-          // 4. Send to Firebase
-          await window.firebaseAddDoc(window.firebaseCollection(window.firestoreDb, "orders"), orderData);
+      // 5. Try saving to Firebase
+      try {
+        // We use await here to make sure it saves before showing the receipt
+        await window.firebaseAddDoc(window.firebaseCollection(window.firestoreDb, "orders"), orderData);
 
-          // 5. Show Receipt
-          document.getElementById('receiptOrderNum').textContent = orderNum;
-          document.getElementById('receiptName').textContent = orderData.name;
-          document.getElementById('receiptAddress').textContent = orderData.address;
-          document.getElementById('receiptTotal').textContent = formatPrice(currentTotal);
-          document.getElementById('receiptMethod').textContent = methodName;
+        // 6. Show Success Receipt
+        document.getElementById('receiptOrderNum').textContent = orderNum;
+        document.getElementById('receiptName').textContent = orderData.name;
+        document.getElementById('receiptAddress').textContent = orderData.address;
+        document.getElementById('receiptTotal').textContent = formatPrice(currentTotal);
+        document.getElementById('receiptMethod').textContent = methodName;
 
-          checkoutView.style.display = 'none';
-          successView.classList.add('active');
-          
-          // Reset Button
-          confirmPayBtn.innerHTML = '<i class="fas fa-lock"></i> Pay <span id="payAmount">₱0.00</span>';
-          confirmPayBtn.disabled = false;
+        checkoutView.style.display = 'none';
+        successView.classList.add('active');
 
-          cart = {};
-          saveCart();
-          renderCart();
+        // 7. Reset Cart and Button
+        cart = {};
+        saveCart();
+        renderCart();
+        
+        // Reset button so it works next time
+        confirmPayBtn.innerHTML = '<i class="fas fa-lock"></i> Pay <span id="payAmount">₱0.00</span>';
+        confirmPayBtn.disabled = false;
 
-        } catch (e) {
-          console.error("Error saving order: ", e);
-          alert("Failed to send order to the kitchen. Please check your internet connection.");
-          confirmPayBtn.innerHTML = '<i class="fas fa-lock"></i> Pay <span id="payAmount">₱0.00</span>';
-          confirmPayBtn.disabled = false;
-        }
-      }, 1500); // 1.5 second delay
+      } catch (error) {
+        // If Firebase fails (e.g. no internet), catch the error here
+        console.error("Firebase Error: ", error);
+        alert("Failed to send order. Please check your internet connection and try again.");
+        
+        // Reset button so they can try again
+        confirmPayBtn.innerHTML = '<i class="fas fa-lock"></i> Pay <span id="payAmount">₱0.00</span>';
+        confirmPayBtn.disabled = false;
+      }
     });
 
     finishOrderBtn.addEventListener('click', () => { modalOverlay.classList.remove('active'); });
