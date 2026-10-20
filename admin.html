@@ -3,18 +3,57 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Luna's Donut · Admin Dashboard</title>
+  <title>Luna's Donut · Admin Login</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
     body { background: #f4f7f6; padding: 2rem; color: #333; }
-    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+
+    /* =========================================
+       LOGIN SCREEN STYLES
+       ========================================= */
+    .login-container {
+      display: flex; justify-content: center; align-items: center;
+      min-height: 80vh;
+    }
+    .login-box {
+      background: white; padding: 3rem 2rem; border-radius: 2rem;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center;
+    }
+    .login-box i { font-size: 3rem; color: #ff9f6e; margin-bottom: 1rem; }
+    .login-box h2 { color: #2d1b0e; margin-bottom: 0.5rem; }
+    .login-box p { color: #888; margin-bottom: 2rem; font-size: 0.9rem; }
+    
+    .input-group { position: relative; margin-bottom: 1.2rem; }
+    .input-group i { position: absolute; left: 1.2rem; top: 50%; transform: translateY(-50%); color: #b97e5c; font-size: 1.1rem; }
+    .input-group input {
+      width: 100%; padding: 1rem 1rem 1rem 3rem; border: 2px solid #ffe6d5; border-radius: 50px;
+      font-size: 1rem; outline: none; transition: 0.2s; font-weight: 500;
+    }
+    .input-group input:focus { border-color: #ff8a4c; box-shadow: 0 0 0 4px rgba(255, 138, 76, 0.2); }
+
+    .login-btn {
+      width: 100%; background: #ff9f6e; color: #2d1b0e; border: none; border-radius: 50px;
+      padding: 1rem; font-size: 1.1rem; font-weight: 800; cursor: pointer;
+      box-shadow: 0 6px 0 #b95d2b; transition: 0.1s;
+    }
+    .login-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #b95d2b; }
+    
+    .error-msg { color: #d9534f; font-weight: bold; font-size: 0.9rem; margin-top: 1rem; display: none; }
+
+    /* =========================================
+       DASHBOARD STYLES (Hidden by default)
+       ========================================= */
+    #dashboardView { display: none; }
+    
+    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; }
     .header h1 { color: #2d1b0e; display: flex; align-items: center; gap: 0.5rem; }
     
-    .btn-group { display: flex; gap: 1rem; }
-    .btn { text-decoration: none; padding: 0.6rem 1.2rem; border-radius: 50px; font-weight: bold; cursor: pointer; border: none; display: flex; align-items: center; gap: 0.5rem; }
+    .btn-group { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .btn { text-decoration: none; padding: 0.6rem 1.2rem; border-radius: 50px; font-weight: bold; cursor: pointer; border: none; display: flex; align-items: center; gap: 0.5rem; font-size: 0.95rem;}
     .btn-shop { background: #ff9f6e; color: #2d1b0e; box-shadow: 0 4px 0 #b95d2b; }
     .btn-refresh { background: #2e8b57; color: white; box-shadow: 0 4px 0 #1e5c39; }
+    .btn-logout { background: #ffe6d5; color: #a54b1e; box-shadow: 0 4px 0 #ffb88c; }
     .btn:active { transform: translateY(4px); box-shadow: none; }
 
     .dashboard-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
@@ -38,60 +77,135 @@
 </head>
 <body>
 
-  <div class="header">
-    <h1><i class="fas fa-store"></i> Store Dashboard</h1>
-    <div class="btn-group">
-      <button class="btn btn-refresh" onclick="loadOrders()"><i class="fas fa-rotate"></i> Refresh Data</button>
-      <a href="index.html" class="btn btn-shop"><i class="fas fa-arrow-left"></i> Back to Shop</a>
+  <!-- =========================================
+       LOGIN SCREEN
+       ========================================= -->
+  <div class="login-container" id="loginView">
+    <div class="login-box">
+      <i class="fas fa-cookie-bite"></i>
+      <h2>Admin Login</h2>
+      <p>Enter your credentials to manage orders.</p>
+      
+      <div class="input-group">
+        <i class="fas fa-user"></i>
+        <input type="text" id="username" placeholder="Username" value="admin">
+      </div>
+      <div class="input-group">
+        <i class="fas fa-lock"></i>
+        <input type="password" id="password" placeholder="Password" value="luna123">
+      </div>
+      
+      <button class="login-btn" onclick="handleLogin()">Login to Dashboard</button>
+      <div class="error-msg" id="loginError">Incorrect username or password!</div>
     </div>
   </div>
 
-  <div class="dashboard-stats">
-    <div class="stat-card">
-      <h3>Total Orders</h3>
-      <p id="totalOrders">0</p>
+  <!-- =========================================
+       DASHBOARD (Only visible after login)
+       ========================================= -->
+  <div id="dashboardView">
+    <div class="header">
+      <h1><i class="fas fa-store"></i> Store Dashboard</h1>
+      <div class="btn-group">
+        <button class="btn btn-refresh" onclick="loadOrders()"><i class="fas fa-rotate"></i> Refresh</button>
+        <a href="index.html" class="btn btn-shop"><i class="fas fa-arrow-left"></i> Shop</a>
+        <button class="btn btn-logout" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+      </div>
     </div>
-    <div class="stat-card" style="border-left-color: #2e8b57;">
-      <h3>Total Revenue</h3>
-      <p id="totalRevenue">₱0.00</p>
-    </div>
-    <div class="stat-card" style="border-left-color: #ffb88c;">
-      <h3>Pending Orders</h3>
-      <p id="pendingOrders">0</p>
-    </div>
-  </div>
 
-  <div class="orders-table-container">
-    <table>
-      <thead>
-        <tr>
-          <th>Order #</th>
-          <th>Time</th>
-          <th>Customer</th>
-          <th>Address</th>
-          <th>Items</th>
-          <th>Payment</th>
-          <th>Total</th>
-          <th>Status</th>
-        </tr>
-      </thead>
-      <tbody id="ordersTableBody"></tbody>
-    </table>
-    <div id="emptyState" class="empty-state" style="display: none;">
-      <i class="fas fa-receipt"></i>
-      <h2>No orders yet</h2>
-      <p>Place a test order on the shop page, then click "Refresh Data".</p>
+    <div class="dashboard-stats">
+      <div class="stat-card">
+        <h3>Total Orders</h3>
+        <p id="totalOrders">0</p>
+      </div>
+      <div class="stat-card" style="border-left-color: #2e8b57;">
+        <h3>Total Revenue</h3>
+        <p id="totalRevenue">₱0.00</p>
+      </div>
+      <div class="stat-card" style="border-left-color: #ffb88c;">
+        <h3>Pending Orders</h3>
+        <p id="pendingOrders">0</p>
+      </div>
+    </div>
+
+    <div class="orders-table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Order #</th>
+            <th>Time</th>
+            <th>Customer</th>
+            <th>Address</th>
+            <th>Items</th>
+            <th>Payment</th>
+            <th>Total</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="ordersTableBody"></tbody>
+      </table>
+      <div id="emptyState" class="empty-state" style="display: none;">
+        <i class="fas fa-receipt"></i>
+        <h2>No orders yet</h2>
+        <p>Place a test order on the shop page, then click "Refresh".</p>
+      </div>
     </div>
   </div>
 
   <script>
-    const formatPrice = (p) => `₱${p.toFixed(2)}`;
+    // =========================================
+    // 1. AUTHENTICATION LOGIC
+    // =========================================
+    // You can change the admin username and password here!
+    const ADMIN_USER = "admin";
+    const ADMIN_PASS = "luna123";
 
-    // IMPORTANT: This must match the exact same string used in index.html
+    function handleLogin() {
+      const user = document.getElementById('username').value.trim();
+      const pass = document.getElementById('password').value.trim();
+      const errorMsg = document.getElementById('loginError');
+
+      if (user === ADMIN_USER && pass === ADMIN_PASS) {
+        errorMsg.style.display = 'none';
+        // Save login state to session (clears when browser tab is closed)
+        sessionStorage.setItem('luna_admin_logged_in', 'true');
+        showDashboard();
+      } else {
+        errorMsg.style.display = 'block';
+      }
+    }
+
+    function handleLogout() {
+      sessionStorage.removeItem('luna_admin_logged_in');
+      document.getElementById('dashboardView').style.display = 'none';
+      document.getElementById('loginView').style.display = 'flex';
+      document.getElementById('password').value = ''; // clear password field
+    }
+
+    function showDashboard() {
+      document.getElementById('loginView').style.display = 'none';
+      document.getElementById('dashboardView').style.display = 'block';
+      loadOrders(); // Load data immediately
+    }
+
+    // Check if already logged in when page loads
+    window.onload = function() {
+      if (sessionStorage.getItem('luna_admin_logged_in') === 'true') {
+        showDashboard();
+      }
+    };
+
+
+    // =========================================
+    // 2. DASHBOARD DATA LOGIC
+    // =========================================
+    const formatPrice = (p) => `₱${p.toFixed(2)}`;
     const STORAGE_KEY_ORDERS = 'luna_orders'; 
 
     function loadOrders() {
-      // Read from LocalStorage
+      // Only load if logged in to save memory
+      if (sessionStorage.getItem('luna_admin_logged_in') !== 'true') return;
+
       const rawData = localStorage.getItem(STORAGE_KEY_ORDERS);
       const orders = rawData ? JSON.parse(rawData) : [];
       
@@ -156,11 +270,12 @@
       }
     };
 
-    // 1. Load immediately when page opens
-    loadOrders();
-    
-    // 2. Auto-refresh every 5 seconds (in case you leave the tab open)
-    setInterval(loadOrders, 5000);
+    // Auto-refresh every 5 seconds if logged in
+    setInterval(() => {
+      if (sessionStorage.getItem('luna_admin_logged_in') === 'true') {
+        loadOrders();
+      }
+    }, 5000);
   </script>
 </body>
 </html>
