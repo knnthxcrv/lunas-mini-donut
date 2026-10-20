@@ -13,16 +13,13 @@
     .login-container { display: flex; justify-content: center; align-items: center; min-height: 80vh; position: relative; }
     .back-link { position: absolute; top: 0; left: 0; text-decoration: none; color: #a54b1e; font-weight: 700; display: flex; align-items: center; gap: 0.5rem; background: white; padding: 0.6rem 1.2rem; border-radius: 50px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); transition: 0.2s; }
     .back-link:hover { transform: translateY(-2px); }
-    
     .login-box { background: white; padding: 3rem 2rem; border-radius: 2rem; box-shadow: 0 10px 30px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center; }
     .login-box img { width: 90px; height: 90px; border-radius: 50%; object-fit: cover; margin-bottom: 1rem; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
     .login-box h2 { color: #2d1b0e; margin-bottom: 2rem; font-size: 1.8rem; }
-    
     .input-group { position: relative; margin-bottom: 1.2rem; }
     .input-group i { position: absolute; left: 1.2rem; top: 50%; transform: translateY(-50%); color: #b97e5c; font-size: 1.2rem; z-index: 2; }
     .input-group input { width: 100%; padding: 1rem 1rem 1rem 3.2rem; border: 2px solid #ffe6d5; border-radius: 50px; font-size: 1rem; outline: none; font-weight: 500; transition: 0.2s; }
     .input-group input:focus { border-color: #ff8a4c; box-shadow: 0 0 0 4px rgba(255, 138, 76, 0.2); }
-    
     .login-btn { width: 100%; background: #ff9f6e; color: #2d1b0e; border: none; border-radius: 50px; padding: 1.2rem; font-size: 1.1rem; font-weight: 800; cursor: pointer; box-shadow: 0 6px 0 #b95d2b; margin-top: 1rem; transition: 0.1s; }
     .login-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #b95d2b; }
     .error-msg { color: #d9534f; font-weight: bold; font-size: 0.9rem; margin-top: 1rem; display: none; }
@@ -40,8 +37,8 @@
     .btn-refresh { background: #2e8b57; color: white; box-shadow: 0 4px 0 #1e5c39; }
     .btn-logout { background: #ffe6d5; color: #a54b1e; box-shadow: 0 4px 0 #ffb88c; }
 
-    .tabs { display: flex; gap: 1rem; margin-bottom: 2rem; border-bottom: 2px solid #ddd; padding-bottom: 1rem; overflow-x: auto; }
-    .tab-btn { background: none; border: none; font-size: 1rem; font-weight: bold; color: #888; cursor: pointer; padding: 0.5rem 1rem; border-radius: 10px; white-space: nowrap; }
+    .tabs { display: flex; gap: 0.5rem; margin-bottom: 2rem; border-bottom: 2px solid #ddd; padding-bottom: 1rem; overflow-x: auto; }
+    .tab-btn { background: none; border: none; font-size: 0.95rem; font-weight: bold; color: #888; cursor: pointer; padding: 0.5rem 1rem; border-radius: 10px; white-space: nowrap; }
     .tab-btn.active { color: #ff7e3f; background: #fff5ee; }
 
     .dashboard-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
@@ -58,23 +55,22 @@
     .status-pending { background: #ffe6d5; color: #a54b1e; }
     .status-completed { background: #d4edda; color: #155724; }
     .status-rejected { background: #f8d7da; color: #721c24; }
-
     .action-buttons { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
     .btn-complete { background: #2e8b57; color: white; border: none; padding: 0.4rem 0.6rem; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 0.75rem;}
     .btn-reject { background: #d9534f; color: white; border: none; padding: 0.4rem 0.6rem; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 0.75rem;}
-    
     .clear-orders-btn { background: #d9534f; color: white; border: none; padding: 0.7rem 1.2rem; border-radius: 10px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 0 #a94442; display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; font-size: 0.85rem; }
     .empty-state { text-align: center; padding: 3rem; color: #888; }
 
-    /* EDIT MENU */
-    #editMenuView { display: none; }
-    .menu-editor-container { background: white; border-radius: 1rem; padding: 1.5rem; box-shadow: 0 5px 15px rgba(0,0,0,0.05); overflow-x: auto; }
-    .menu-editor-table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; min-width: 600px; }
-    .menu-editor-table th, .menu-editor-table td { padding: 0.8rem; border-bottom: 1px solid #eee; text-align: left; vertical-align: middle; }
-    .menu-editor-table input[type="text"] { width: 100%; padding: 0.6rem; border: 1px solid #ccc; border-radius: 5px; font-family: inherit; font-size: 0.9rem; }
+    /* EDIT ITEMS (TABS 2, 3, 4) */
+    .editor-container { background: white; border-radius: 1rem; padding: 1.5rem; box-shadow: 0 5px 15px rgba(0,0,0,0.05); overflow-x: auto; display: none; }
+    .editor-container.active { display: block; }
+    .editor-table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; min-width: 600px; }
+    .editor-table th, .editor-table td { padding: 0.8rem; border-bottom: 1px solid #eee; text-align: left; vertical-align: middle; }
+    .editor-table input[type="text"], .editor-table input[type="number"] { width: 100%; padding: 0.6rem; border: 1px solid #ccc; border-radius: 5px; font-family: inherit; font-size: 0.9rem; }
     .btn-save-menu { background: #2e8b57; color: white; border: none; padding: 0.8rem 1.5rem; border-radius: 50px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 0 #1e5c39; font-size: 0.9rem; }
+    .btn-add { background: #ff9f6e; color: #2d1b0e; border: none; padding: 0.5rem 1rem; border-radius: 5px; font-weight: bold; cursor: pointer; margin-bottom: 1rem; box-shadow: 0 4px 0 #b95d2b; font-size: 0.85rem; }
+    .btn-del { background: #ff4d4d; color: white; border: none; padding: 0.5rem; border-radius: 5px; cursor: pointer; font-weight: bold; }
     
-    /* TOGGLE SWITCH */
     .switch { position: relative; display: inline-block; width: 40px; height: 22px; }
     .switch input { opacity: 0; width: 0; height: 0; }
     .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
@@ -94,96 +90,116 @@
 </head>
 <body>
 
-  <!-- LOGIN VIEW -->
   <div class="login-container" id="loginView">
     <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> Back</a>
     <div class="login-box">
       <img src="logo.png" alt="Luna's Sweets">
       <h2>Admin Login</h2>
-      
-      <div class="input-group">
-        <i class="fas fa-envelope"></i>
-        <!-- PALITAN ITO KUNG IBA ANG EMAIL MO SA FIREBASE -->
-        <input type="email" id="username" placeholder="Admin Email" value="admin@lunasweets.com">
-      </div>
-      <div class="input-group">
-        <i class="fas fa-lock"></i>
-        <!-- PALITAN ITO KUNG IBA ANG PASSWORD MO SA FIREBASE -->
-        <input type="password" id="password" placeholder="Password" value="luna123">
-      </div>
-      
+      <div class="input-group"><i class="fas fa-envelope"></i><input type="email" id="username" placeholder="Admin Email" value="admin@lunasweets.com"></div>
+      <div class="input-group"><i class="fas fa-lock"></i><input type="password" id="password" placeholder="Password" value="luna123"></div>
       <button class="login-btn" onclick="handleLogin()">Login</button>
       <div class="error-msg" id="loginError">Incorrect Email or Password!</div>
     </div>
   </div>
 
-  <!-- DASHBOARD VIEW -->
   <div id="dashboardView">
     <div class="header">
-      <div class="header-logo">
-        <img src="logo.png" alt="Logo">
-        <h1>Store Dashboard</h1>
-      </div>
+      <div class="header-logo"><img src="logo.png" alt="Logo"><h1>Store Dashboard</h1></div>
       <div class="btn-group">
-        <button class="btn btn-refresh" onclick="loadOrders()"><i class="fas fa-rotate"></i> Refresh</button>
         <a href="index.html" class="btn btn-shop"><i class="fas fa-arrow-left"></i> Shop</a>
         <button class="btn btn-logout" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
       </div>
     </div>
 
+    <!-- 4 TABS -->
     <div class="tabs">
-      <button class="tab-btn active" id="tabOrders" onclick="switchTab('orders')"><i class="fas fa-receipt"></i> Live Orders</button>
-      <button class="tab-btn" id="tabMenu" onclick="switchTab('menu')"><i class="fas fa-pen-to-square"></i> Edit Menu</button>
+      <button class="tab-btn active" id="tabOrders" onclick="switchTab('orders')"><i class="fas fa-receipt"></i> Orders</button>
+      <button class="tab-btn" id="tabMenuCards" onclick="switchTab('menuCards')"><i class="fas fa-list"></i> Menu Cards</button>
+      <button class="tab-btn" id="tabPricing" onclick="switchTab('pricing')"><i class="fas fa-tags"></i> Box Pricing</button>
+      <button class="tab-btn" id="tabFlavors" onclick="switchTab('flavors')"><i class="fas fa-ice-cream"></i> Flavors & Toppings</button>
     </div>
 
+    <!-- TAB 1: ORDERS -->
     <div id="ordersView">
       <div class="dashboard-stats">
         <div class="stat-card"><h3>Total</h3><p id="totalOrders">0</p></div>
         <div class="stat-card" style="border-left-color: #2e8b57;"><h3>Revenue</h3><p id="totalRevenue">₱0.00</p></div>
         <div class="stat-card" style="border-left-color: #ffb88c;"><h3>Pending</h3><p id="pendingOrders">0</p></div>
       </div>
-
       <button class="clear-orders-btn" onclick="clearFinishedOrders()"><i class="fas fa-broom"></i> Clear Finished</button>
-
       <div class="orders-table-container">
         <table>
-          <thead>
-            <tr>
-              <th>Order</th>
-              <th>Customer & Phone</th>
-              <th>Address & Landmark</th>
-              <th>Items & Notes</th>
-              <th>Total</th>
-            </tr>
-          </thead>
+          <thead><tr><th>Order</th><th>Customer & Phone</th><th>Address & Landmark</th><th>Items & Notes</th><th>Total</th></tr></thead>
           <tbody id="ordersTableBody"></tbody>
         </table>
         <div id="emptyState" class="empty-state" style="display: none;"><i class="fas fa-receipt"></i><h2>No orders yet</h2></div>
       </div>
     </div>
 
-    <div id="editMenuView">
-      <div class="menu-editor-container">
-        <h2 style="margin-bottom: 1rem; color: #2d1b0e; font-size: 1.2rem;">Edit Menu Info</h2>
-        <p style="font-size:0.85rem; color:#666; margin-bottom:1rem;">I-edit ang Pangalan, Description, at Icon (Emoji). I-toggle ang switch para gawing "Sold Out".</p>
-        
-        <table class="menu-editor-table">
-          <thead>
-            <tr>
-              <th style="width: 60px; text-align:center;">Icon</th>
-              <th>Name</th>
-              <th>Description</th>
-              <th style="width: 80px; text-align:center;">In Stock</th>
-            </tr>
-          </thead>
-          <tbody id="menuTableBody"></tbody>
-        </table>
-        <button class="btn-save-menu" onclick="saveMenuChanges()"><i class="fas fa-save"></i> Save Changes</button>
-      </div>
+    <!-- TAB 2: MENU CARDS -->
+    <div id="menuCardsView" class="editor-container">
+      <h2 style="margin-bottom: 1rem; color: #2d1b0e; font-size: 1.2rem;">Edit Menu Cards</h2>
+      <p style="font-size:0.85rem; color:#666; margin-bottom:1rem;">I-edit ang Pangalan, Description, at Icon (Emoji). I-toggle ang switch para gawing "Sold Out".</p>
+      <table class="editor-table">
+        <thead><tr><th style="width: 60px; text-align:center;">Icon</th><th>Name</th><th>Description</th><th style="width: 80px; text-align:center;">In Stock</th></tr></thead>
+        <tbody id="menuTableBody"></tbody>
+      </table>
+      <button class="btn-save-menu" onclick="saveMenuCards()"><i class="fas fa-save"></i> Save Cards</button>
     </div>
+
+    <!-- TAB 3: BOX PRICING -->
+    <div id="pricingView" class="editor-container">
+      <h2 style="margin-bottom: 1rem; color: #2d1b0e; font-size: 1.2rem;">Edit Box Pricing</h2>
+      <p style="font-size:0.85rem; color:#666; margin-bottom:1rem;">I-set ang presyo para sa bawat laki ng box (2pcs, 6pcs, 12pcs).</p>
+      <table class="editor-table">
+        <thead><tr><th>Type</th><th>2 pcs (₱)</th><th>6 pcs (₱)</th><th>12 pcs (₱)</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>Classic</strong></td>
+            <td><input type="number" id="price-c-2" value="20"></td>
+            <td><input type="number" id="price-c-6" value="55"></td>
+            <td><input type="number" id="price-c-12" value="120"></td>
+          </tr>
+          <tr>
+            <td><strong>Premium</strong></td>
+            <td><input type="number" id="price-p-2" value="25"></td>
+            <td><input type="number" id="price-p-6" value="60"></td>
+            <td><input type="number" id="price-p-12" value="150"></td>
+          </tr>
+        </tbody>
+      </table>
+      <button class="btn-save-menu" onclick="savePricing()"><i class="fas fa-save"></i> Save Pricing</button>
+    </div>
+
+    <!-- TAB 4: FLAVORS & TOPPINGS -->
+    <div id="flavorsView" class="editor-container">
+      <h2 style="margin-bottom: 1rem; color: #2d1b0e; font-size: 1.2rem;">Edit Flavors & Toppings</h2>
+      <p style="font-size:0.85rem; color:#666; margin-bottom:1rem;">I-edit ang listahan ng flavors at toppings. Paghiwalayin ng kuwit (comma).</p>
+      
+      <div style="margin-bottom: 1.5rem;">
+        <label style="font-weight:bold; font-size:0.9rem;">Classic Flavors:</label>
+        <input type="text" id="classic-flavors-input" style="width:100%; padding:0.6rem; border:1px solid #ccc; border-radius:5px; margin-top:0.3rem;">
+      </div>
+      <div style="margin-bottom: 1.5rem;">
+        <label style="font-weight:bold; font-size:0.9rem;">Classic Toppings:</label>
+        <input type="text" id="classic-toppings-input" style="width:100%; padding:0.6rem; border:1px solid #ccc; border-radius:5px; margin-top:0.3rem;">
+      </div>
+      <hr style="margin: 1.5rem 0; border: 1px dashed #ddd;">
+      <div style="margin-bottom: 1.5rem;">
+        <label style="font-weight:bold; font-size:0.9rem;">Premium Flavors:</label>
+        <input type="text" id="premium-flavors-input" style="width:100%; padding:0.6rem; border:1px solid #ccc; border-radius:5px; margin-top:0.3rem;">
+      </div>
+      <div style="margin-bottom: 1.5rem;">
+        <label style="font-weight:bold; font-size:0.9rem;">Premium Toppings:</label>
+        <input type="text" id="premium-toppings-input" style="width:100%; padding:0.6rem; border:1px solid #ccc; border-radius:5px; margin-top:0.3rem;">
+      </div>
+
+      <button class="btn-save-menu" onclick="saveFlavorsToppings()"><i class="fas fa-save"></i> Save Flavors & Toppings</button>
+    </div>
+
   </div>
 
-  <!-- FIREBASE SDK (WITH AUTHENTICATION) -->
+  <!-- FIREBASE SDK (WITH AUTH) -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getFirestore, collection, onSnapshot, doc, updateDoc, deleteDoc, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -202,196 +218,147 @@
     const db = getFirestore(app);
     const auth = getAuth(app);
 
-    // Expose to regular script
-    window.firebaseOnSnapshot = onSnapshot; 
-    window.firebaseCollection = collection; 
-    window.firebaseDoc = doc; 
-    window.firebaseUpdateDoc = updateDoc; 
-    window.firebaseDeleteDoc = deleteDoc; 
-    window.firebaseQuery = query; 
-    window.firebaseWhere = where; 
-    window.firebaseGetDocs = getDocs; 
-    window.firestoreDb = db;
-    
-    // Auth functions
-    window.firebaseAuth = auth;
-    window.firebaseSignIn = signInWithEmailAndPassword;
-    window.firebaseSignOut = signOut;
-    window.firebaseOnAuthStateChanged = onAuthStateChanged;
+    window.firebaseOnSnapshot = onSnapshot; window.firebaseCollection = collection; window.firebaseDoc = doc; window.firebaseUpdateDoc = updateDoc; window.firebaseDeleteDoc = deleteDoc; window.firebaseQuery = query; window.firebaseWhere = where; window.firebaseGetDocs = getDocs; window.firestoreDb = db;
+    window.firebaseAuth = auth; window.firebaseSignIn = signInWithEmailAndPassword; window.firebaseSignOut = signOut; window.firebaseOnAuthStateChanged = onAuthStateChanged;
   </script>
 
   <script>
-    // ==========================================
-    // AUTHENTICATION LOGIC
-    // ==========================================
-    window.handleLogin = async function() {
-      const email = document.getElementById('username').value.trim();
-      const pass = document.getElementById('password').value.trim();
-      
-      try {
-        document.querySelector('.login-btn').innerHTML = '<i class="fas fa-spinner fa-spin"></i> Logging in...';
-        await window.firebaseSignIn(window.firebaseAuth, email, pass);
-      } catch (error) {
-        document.querySelector('.login-btn').innerHTML = 'Login';
-        document.getElementById('loginError').textContent = "Mali ang Email o Password.";
-        document.getElementById('loginError').style.display = 'block';
-      }
-    }
-
-    window.handleLogout = async function() {
-      try { await window.firebaseSignOut(window.firebaseAuth); } catch (error) { console.error(error); }
-    }
-
-    // Firebase will automatically check if the user is already logged in
-    window.onload = function() {
-      window.firebaseOnAuthStateChanged(window.firebaseAuth, (user) => {
-        if (user) {
-          // Logged in
-          document.getElementById('loginView').style.display = 'none';
-          document.getElementById('dashboardView').style.display = 'block';
-          document.querySelector('.login-btn').innerHTML = 'Login';
-          document.getElementById('loginError').style.display = 'none';
-          loadOrders();
-        } else {
-          // Not logged in
-          document.getElementById('dashboardView').style.display = 'none';
-          document.getElementById('loginView').style.display = 'flex';
-        }
-      });
-    };
-
-    // ==========================================
-    // DASHBOARD LOGIC
-    // ==========================================
-    function switchTab(tab) {
-      document.getElementById('tabOrders').classList.remove('active');
-      document.getElementById('tabMenu').classList.remove('active');
-      document.getElementById('ordersView').style.display = 'none';
-      document.getElementById('editMenuView').style.display = 'none';
-
-      if (tab === 'orders') {
-        document.getElementById('tabOrders').classList.add('active');
-        document.getElementById('ordersView').style.display = 'block';
-        loadOrders();
-      } else {
-        document.getElementById('tabMenu').classList.add('active');
-        document.getElementById('editMenuView').style.display = 'block';
-        loadMenuForEditing();
-      }
-    }
-
-    const formatPrice = (p) => `₱${p.toFixed(2)}`;
-    let unsubscribeOrders = null;
-    let previousOrderCount = -1;
-    const beep = new Audio("https://actions.google.com/sounds/v1/alarms/beep_short.ogg");
-
-    function loadOrders() {
-      if (unsubscribeOrders) unsubscribeOrders();
-      const tableBody = document.getElementById('ordersTableBody');
-      const emptyState = document.getElementById('emptyState');
-      
-      unsubscribeOrders = window.firebaseOnSnapshot(window.firebaseCollection(window.firestoreDb, "orders"), (snapshot) => {
-        let orders = [];
-        snapshot.forEach((doc) => orders.push({ firebaseId: doc.id, ...doc.data() }));
-        orders.sort((a, b) => b.timestamp - a.timestamp);
-
-        // Sound alert para sa bagong order
-        if (previousOrderCount !== -1 && orders.length > previousOrderCount) beep.play().catch(e => console.log("Audio blocked."));
-        previousOrderCount = orders.length;
-
-        document.getElementById('totalOrders').textContent = orders.length;
-        let revenue = 0, pending = 0;
-        orders.forEach(o => { if (o.status !== 'Rejected') revenue += o.total; if (o.status === 'Pending') pending++; });
-        document.getElementById('totalRevenue').textContent = formatPrice(revenue);
-        document.getElementById('pendingOrders').textContent = pending;
-
-        tableBody.innerHTML = '';
-        if (orders.length === 0) { emptyState.style.display = 'block'; return; }
-        else { emptyState.style.display = 'none'; }
-
-        orders.forEach((order) => {
-          const tr = document.createElement('tr');
-          let statusHtml = '';
-          if (order.status === 'Pending') {
-            statusHtml = `<div class="action-buttons"><button class="btn-complete" onclick="window.updateOrderStatus('${order.firebaseId}', 'Completed')">Done</button><button class="btn-reject" onclick="window.updateOrderStatus('${order.firebaseId}', 'Rejected')">Reject</button></div>`;
-          } else if (order.status === 'Completed') statusHtml = `<span class="status-badge status-completed">Done</span>`;
-          else if (order.status === 'Rejected') statusHtml = `<span class="status-badge status-rejected">Rejected</span>`;
-
-          const phoneLink = order.phone ? `<a href="tel:${order.phone}" style="color:#1a73e8; text-decoration:none; font-weight:bold;"><i class="fas fa-phone"></i> ${order.phone}</a>` : 'No phone';
-
-          tr.innerHTML = `
-            <td><strong>#${order.id}</strong><br><span style="font-size:0.75rem; color:#888;">${order.method}</span><br>${statusHtml}</td>
-            <td><strong>${order.name}</strong><br>${phoneLink}</td>
-            <td style="max-width: 180px; font-size:0.8rem;">${order.address}<br><span style="font-style:italic; color:#888;">Landmark: ${order.landmark || 'N/A'}</span></td>
-            <td style="font-size:0.8rem; max-width: 200px;">${order.items}${order.instructions ? `<br><span style="color:#d9534f; font-size:0.75rem; font-weight:bold;">Note: ${order.instructions}</span>` : ''}</td>
-            <td><strong style="color:#b64a12;">${formatPrice(order.total)}</strong></td>
-          `;
-          tableBody.appendChild(tr);
-        });
-      });
-    }
-
-    window.updateOrderStatus = async function(firebaseId, newStatus) {
-      if (newStatus === 'Rejected' && !confirm("Reject this order?")) return;
-      try { await window.firebaseUpdateDoc(window.firebaseDoc(window.firestoreDb, "orders", firebaseId), { status: newStatus }); } catch (e) { alert("Failed."); }
-    };
-
-    async function clearFinishedOrders() {
-      if (!confirm("Remove all Completed and Rejected orders?")) return;
-      try {
-        const q1 = window.firebaseQuery(window.firebaseCollection(window.firestoreDb, "orders"), window.firebaseWhere("status", "==", "Completed"));
-        const q2 = window.firebaseQuery(window.firebaseCollection(window.firestoreDb, "orders"), window.firebaseWhere("status", "==", "Rejected"));
-        const [snap1, snap2] = await Promise.all([window.firebaseGetDocs(q1), window.firebaseGetDocs(q2)]);
-        const del = [];
-        snap1.forEach(d => del.push(window.firebaseDeleteDoc(window.firebaseDoc(window.firestoreDb, "orders", d.id))));
-        snap2.forEach(d => del.push(window.firebaseDeleteDoc(window.firebaseDoc(window.firestoreDb, "orders", d.id))));
-        await Promise.all(del);
-      } catch (e) { alert("Error clearing."); }
-    }
-
-    // ==========================================
-    // EDIT MENU LOGIC
-    // ==========================================
     const STORAGE_KEY_MENU = 'luna_mini_donut_menu';
+    const STORAGE_KEY_SETTINGS = 'luna_mini_donut_settings';
+
     const defaultMenu = [
       { id: 'classic', name: 'Classic Donut', desc: 'Choose 3 flavors', icon: '🍩', type: 'classic', inStock: true },
       { id: 'premium', name: 'Premium Donut', desc: 'Choose 5 flavors', icon: '🍫', type: 'premium', inStock: true },
       { id: 'custom-minimal', name: 'Custom Box (Minimal)', desc: '25pcs Custom Design', icon: '📦', type: 'custom', price: 350, inStock: true },
       { id: 'custom-3d', name: 'Custom Box (3D)', desc: '25pcs 3D Design & Toppers', icon: '🎂', type: 'custom', price: 450, inStock: true }
     ];
-    
-    let editingMenu = [];
 
-    function loadMenuForEditing() {
-      editingMenu = JSON.parse(localStorage.getItem(STORAGE_KEY_MENU)) || [...defaultMenu];
-      renderMenuEditor();
+    const defaultSettings = {
+      prices: { classic: { 2: 20, 6: 55, 12: 120 }, premium: { 2: 25, 6: 60, 12: 150 } },
+      classicFlavors: ['Chocolate', 'Strawberry', 'White Chocolate'],
+      classicToppings: ['Mini mallows', 'Cashew nuts', 'Rainbow sprinkles', 'Rice crispy'],
+      premiumFlavors: ['Chocolate', 'Matcha', 'Strawberry', 'White Chocolate', 'Ube'],
+      premiumToppings: ['Cookies', 'Nips', 'Almond slice', 'Chocolate sprinkles', 'Choco chips', 'Drizzle']
+    };
+
+    // AUTH
+    window.handleLogin = async function() {
+      const email = document.getElementById('username').value.trim();
+      const pass = document.getElementById('password').value.trim();
+      try {
+        document.querySelector('.login-btn').innerHTML = '<i class="fas fa-spinner fa-spin"></i> Logging in...';
+        await window.firebaseSignIn(window.firebaseAuth, email, pass);
+      } catch (error) {
+        document.querySelector('.login-btn').innerHTML = 'Login';
+        document.getElementById('loginError').textContent = "Mali ang Email o Password."; document.getElementById('loginError').style.display = 'block';
+      }
     }
 
-    function renderMenuEditor() {
-      const tbody = document.getElementById('menuTableBody');
-      tbody.innerHTML = '';
-      editingMenu.forEach((item, index) => {
-        const tr = document.createElement('tr');
-        const isChecked = item.inStock === false ? '' : 'checked';
-        tr.innerHTML = `
-          <td style="text-align:center;"><input type="text" value="${item.icon}" onchange="window.updateMenuField(${index}, 'icon', this.value)" style="width:50px; text-align:center;"></td>
-          <td><input type="text" value="${item.name}" onchange="window.updateMenuField(${index}, 'name', this.value)"></td>
-          <td><input type="text" value="${item.desc}" onchange="window.updateMenuField(${index}, 'desc', this.value)"></td>
-          <td style="text-align:center;">
-            <label class="switch">
-              <input type="checkbox" ${isChecked} onchange="window.updateMenuField(${index}, 'inStock', this.checked)">
-              <span class="slider"></span>
-            </label>
-          </td>
-        `;
-        tbody.appendChild(tr);
+    window.handleLogout = async function() { try { await window.firebaseSignOut(window.firebaseAuth); } catch (error) {} }
+
+    window.onload = function() {
+      window.firebaseOnAuthStateChanged(window.firebaseAuth, (user) => {
+        if (user) {
+          document.getElementById('loginView').style.display = 'none'; document.getElementById('dashboardView').style.display = 'block';
+          document.querySelector('.login-btn').innerHTML = 'Login'; document.getElementById('loginError').style.display = 'none';
+          loadOrders();
+        } else {
+          document.getElementById('dashboardView').style.display = 'none'; document.getElementById('loginView').style.display = 'flex';
+        }
+      });
+    };
+
+    // TABS
+    window.switchTab = function(tab) {
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('#dashboardView > div').forEach(div => div.style.display = 'none');
+      
+      if (tab === 'orders') { document.getElementById('tabOrders').classList.add('active'); document.getElementById('ordersView').style.display = 'block'; loadOrders(); }
+      if (tab === 'menuCards') { document.getElementById('tabMenuCards').classList.add('active'); document.getElementById('menuCardsView').style.display = 'block'; loadMenuCards(); }
+      if (tab === 'pricing') { document.getElementById('tabPricing').classList.add('active'); document.getElementById('pricingView').style.display = 'block'; loadPricing(); }
+      if (tab === 'flavors') { document.getElementById('tabFlavors').classList.add('active'); document.getElementById('flavorsView').style.display = 'block'; loadFlavorsToppings(); }
+    }
+
+    // ORDERS
+    const formatPrice = (p) => `₱${p.toFixed(2)}`;
+    let unsubscribeOrders = null; let previousOrderCount = -1; const beep = new Audio("https://actions.google.com/sounds/v1/alarms/beep_short.ogg");
+
+    function loadOrders() {
+      if (unsubscribeOrders) unsubscribeOrders();
+      const tableBody = document.getElementById('ordersTableBody'); const emptyState = document.getElementById('emptyState');
+      unsubscribeOrders = window.firebaseOnSnapshot(window.firebaseCollection(window.firestoreDb, "orders"), (snapshot) => {
+        let orders = []; snapshot.forEach((doc) => orders.push({ firebaseId: doc.id, ...doc.data() })); orders.sort((a, b) => b.timestamp - a.timestamp);
+        if (previousOrderCount !== -1 && orders.length > previousOrderCount) beep.play().catch(e => console.log("Audio blocked."));
+        previousOrderCount = orders.length;
+        document.getElementById('totalOrders').textContent = orders.length;
+        let revenue = 0, pending = 0; orders.forEach(o => { if (o.status !== 'Rejected') revenue += o.total; if (o.status === 'Pending') pending++; });
+        document.getElementById('totalRevenue').textContent = formatPrice(revenue); document.getElementById('pendingOrders').textContent = pending;
+        tableBody.innerHTML = ''; if (orders.length === 0) { emptyState.style.display = 'block'; return; } else { emptyState.style.display = 'none'; }
+        orders.forEach((order) => {
+          const tr = document.createElement('tr'); let statusHtml = '';
+          if (order.status === 'Pending') statusHtml = `<div class="action-buttons"><button class="btn-complete" onclick="window.updateOrderStatus('${order.firebaseId}', 'Completed')">Done</button><button class="btn-reject" onclick="window.updateOrderStatus('${order.firebaseId}', 'Rejected')">Reject</button></div>`;
+          else if (order.status === 'Completed') statusHtml = `<span class="status-badge status-completed">Done</span>`;
+          else if (order.status === 'Rejected') statusHtml = `<span class="status-badge status-rejected">Rejected</span>`;
+          const phoneLink = order.phone ? `<a href="tel:${order.phone}" style="color:#1a73e8; text-decoration:none; font-weight:bold;"><i class="fas fa-phone"></i> ${order.phone}</a>` : 'No phone';
+          tr.innerHTML = `<td><strong>#${order.id}</strong><br><span style="font-size:0.75rem; color:#888;">${order.method}</span><br>${statusHtml}</td><td><strong>${order.name}</strong><br>${phoneLink}</td><td style="max-width: 180px; font-size:0.8rem;">${order.address}<br><span style="font-style:italic; color:#888;">Landmark: ${order.landmark || 'N/A'}</span></td><td style="font-size:0.8rem; max-width: 200px;">${order.items}${order.instructions ? `<br><span style="color:#d9534f; font-size:0.75rem; font-weight:bold;">Note: ${order.instructions}</span>` : ''}</td><td><strong style="color:#b64a12;">${formatPrice(order.total)}</strong></td>`;
+          tableBody.appendChild(tr);
+        });
       });
     }
 
+    window.updateOrderStatus = async function(firebaseId, newStatus) { if (newStatus === 'Rejected' && !confirm("Reject this order?")) return; try { await window.firebaseUpdateDoc(window.firebaseDoc(window.firestoreDb, "orders", firebaseId), { status: newStatus }); } catch (e) { alert("Failed."); } };
+    async function clearFinishedOrders() { if (!confirm("Remove all Completed and Rejected orders?")) return; try { const q1 = window.firebaseQuery(window.firebaseCollection(window.firestoreDb, "orders"), window.firebaseWhere("status", "==", "Completed")); const q2 = window.firebaseQuery(window.firebaseCollection(window.firestoreDb, "orders"), window.firebaseWhere("status", "==", "Rejected")); const [snap1, snap2] = await Promise.all([window.firebaseGetDocs(q1), window.firebaseGetDocs(q2)]); const del = []; snap1.forEach(d => del.push(window.firebaseDeleteDoc(window.firebaseDoc(window.firestoreDb, "orders", d.id)))); snap2.forEach(d => del.push(window.firebaseDeleteDoc(window.firebaseDoc(window.firestoreDb, "orders", d.id)))); await Promise.all(del); } catch (e) { alert("Error clearing."); } }
+
+    // MENU CARDS
+    let editingMenu = [];
+    function loadMenuCards() {
+      editingMenu = JSON.parse(localStorage.getItem(STORAGE_KEY_MENU)) || [...defaultMenu];
+      const tbody = document.getElementById('menuTableBody'); tbody.innerHTML = '';
+      editingMenu.forEach((item, index) => {
+        const tr = document.createElement('tr'); const isChecked = item.inStock === false ? '' : 'checked';
+        tr.innerHTML = `<td style="text-align:center;"><input type="text" value="${item.icon}" onchange="window.updateMenuField(${index}, 'icon', this.value)" style="width:50px; text-align:center;"></td><td><input type="text" value="${item.name}" onchange="window.updateMenuField(${index}, 'name', this.value)"></td><td><input type="text" value="${item.desc}" onchange="window.updateMenuField(${index}, 'desc', this.value)"></td><td style="text-align:center;"><label class="switch"><input type="checkbox" ${isChecked} onchange="window.updateMenuField(${index}, 'inStock', this.checked)"><span class="slider"></span></label></td>`;
+        tbody.appendChild(tr);
+      });
+    }
     window.updateMenuField = (i, f, v) => { editingMenu[i][f] = v; };
-    
-    window.saveMenuChanges = function() {
-      try { localStorage.setItem(STORAGE_KEY_MENU, JSON.stringify(editingMenu)); alert("Menu Saved! Customers will see the changes."); } catch (e) { alert("Failed."); }
+    window.saveMenuCards = function() { try { localStorage.setItem(STORAGE_KEY_MENU, JSON.stringify(editingMenu)); alert("Menu Cards Saved!"); } catch (e) { alert("Failed."); } }
+
+    // PRICING
+    function loadPricing() {
+      const settings = JSON.parse(localStorage.getItem(STORAGE_KEY_SETTINGS)) || defaultSettings;
+      document.getElementById('price-c-2').value = settings.prices.classic[2];
+      document.getElementById('price-c-6').value = settings.prices.classic[6];
+      document.getElementById('price-c-12').value = settings.prices.classic[12];
+      document.getElementById('price-p-2').value = settings.prices.premium[2];
+      document.getElementById('price-p-6').value = settings.prices.premium[6];
+      document.getElementById('price-p-12').value = settings.prices.premium[12];
+    }
+    window.savePricing = function() {
+      let settings = JSON.parse(localStorage.getItem(STORAGE_KEY_SETTINGS)) || defaultSettings;
+      settings.prices.classic[2] = parseFloat(document.getElementById('price-c-2').value);
+      settings.prices.classic[6] = parseFloat(document.getElementById('price-c-6').value);
+      settings.prices.classic[12] = parseFloat(document.getElementById('price-c-12').value);
+      settings.prices.premium[2] = parseFloat(document.getElementById('price-p-2').value);
+      settings.prices.premium[6] = parseFloat(document.getElementById('price-p-6').value);
+      settings.prices.premium[12] = parseFloat(document.getElementById('price-p-12').value);
+      localStorage.setItem(STORAGE_KEY_SETTINGS, JSON.stringify(settings)); alert("Pricing Saved!");
+    }
+
+    // FLAVORS & TOPPINGS
+    function loadFlavorsToppings() {
+      const settings = JSON.parse(localStorage.getItem(STORAGE_KEY_SETTINGS)) || defaultSettings;
+      document.getElementById('classic-flavors-input').value = settings.classicFlavors.join(', ');
+      document.getElementById('classic-toppings-input').value = settings.classicToppings.join(', ');
+      document.getElementById('premium-flavors-input').value = settings.premiumFlavors.join(', ');
+      document.getElementById('premium-toppings-input').value = settings.premiumToppings.join(', ');
+    }
+    window.saveFlavorsToppings = function() {
+      let settings = JSON.parse(localStorage.getItem(STORAGE_KEY_SETTINGS)) || defaultSettings;
+      settings.classicFlavors = document.getElementById('classic-flavors-input').value.split(',').map(s => s.trim()).filter(s => s);
+      settings.classicToppings = document.getElementById('classic-toppings-input').value.split(',').map(s => s.trim()).filter(s => s);
+      settings.premiumFlavors = document.getElementById('premium-flavors-input').value.split(',').map(s => s.trim()).filter(s => s);
+      settings.premiumToppings = document.getElementById('premium-toppings-input').value.split(',').map(s => s.trim()).filter(s => s);
+      localStorage.setItem(STORAGE_KEY_SETTINGS, JSON.stringify(settings)); alert("Flavors & Toppings Saved!");
     }
   </script>
 </body>
