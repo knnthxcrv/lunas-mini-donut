@@ -11,7 +11,6 @@
     
     .delivery-app { max-width: 1300px; width: 100%; background: #ffffff; border-radius: 3.5rem; box-shadow: 0 25px 50px -8px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(255, 184, 140, 0.3); overflow: hidden; display: flex; flex-direction: column; position: relative; }
     
-    /* HEADER */
     .header { background: linear-gradient(135deg, #ffb88c 0%, #ff9f6e 100%); padding: 1.8rem 2.5rem; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; }
     .brand { display: flex; align-items: center; gap: 0.75rem; }
     .brand i { font-size: 2.4rem; color: #4a2c1b; background: #fff1e0; border-radius: 50%; padding: 0.6rem; box-shadow: 0 6px 0 #c26b3b; transform: rotate(10deg); }
@@ -19,11 +18,7 @@
     .brand span { font-size: 0.9rem; font-weight: 500; color: #51301a; background: #fff1e0; padding: 0.25rem 0.8rem; border-radius: 40px; margin-left: 0.5rem; }
     
     .header-right { display: flex; align-items: center; gap: 1rem; }
-    
-    /* ADMIN BUTTON */
-    .admin-btn { 
-      background: #fff1e0; color: #a54b1e; padding: 0.6rem 1rem; border-radius: 50px; font-weight: 700; font-size: 0.85rem; text-decoration: none; display: flex; align-items: center; gap: 0.5rem; border: 1px solid #ffd9c4; transition: 0.2s;
-    }
+    .admin-btn { background: #fff1e0; color: #a54b1e; padding: 0.6rem 1rem; border-radius: 50px; font-weight: 700; font-size: 0.85rem; text-decoration: none; display: flex; align-items: center; gap: 0.5rem; border: 1px solid #ffd9c4; transition: 0.2s; }
     .admin-btn:hover { background: #ffe6d5; transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
 
     .delivery-badge { background: #2d1b0e; color: #ffe6d5; padding: 0.75rem 1.6rem; border-radius: 60px; font-weight: 600; display: flex; align-items: center; gap: 0.8rem; font-size: 1rem; box-shadow: 0 6px 0 #0f0905; }
@@ -122,14 +117,12 @@
 <body>
 
   <div class="delivery-app">
-    <!-- HEADER -->
     <div class="header">
       <div class="brand">
         <i class="fas fa-cookie-bite"></i>
         <h1>Luna's Mini Donut <span>delivery</span></h1>
       </div>
       <div class="header-right">
-        <!-- ADMIN LOGIN BUTTON -->
         <a href="admin.html" class="admin-btn" title="Staff / Admin Access">
           <i class="fas fa-lock"></i> <span>Admin Login</span>
         </a>
@@ -139,7 +132,6 @@
       </div>
     </div>
 
-    <!-- MAIN CONTENT -->
     <div class="main-panel">
       <div class="menu-section">
         <div class="menu-header">
@@ -200,7 +192,6 @@
       <i class="fas fa-heart"></i> Freshly baked mini donuts · Free delivery over ₱500
     </div>
 
-    <!-- PAYMENT MODAL -->
     <div class="modal-overlay" id="paymentModalOverlay">
       <div class="modal-box">
         <div id="checkoutView">
@@ -290,8 +281,10 @@
     const FREE_DELIVERY_THRESHOLD = 500;
     const STORAGE_KEY_CART = 'luna_mini_donut_cart';
     const STORAGE_KEY_ADDR = 'luna_mini_donut_address';
+    const STORAGE_KEY_MENU = 'luna_mini_donut_menu';
 
-    const donuts = [
+    // Default Menu
+    const defaultDonuts = [
       { id: 'glazed', name: 'Glazed Bliss', desc: 'Classic honey glaze', price: 79, icon: '🍩' },
       { id: 'chocolate', name: 'Choco Dream', desc: 'Dark chocolate sprinkle', price: 89, icon: '🍫' },
       { id: 'strawberry', name: 'Berry Love', desc: 'Strawberry icing', price: 85, icon: '🍓' },
@@ -299,6 +292,9 @@
       { id: 'vanilla', name: 'Vanilla Cloud', desc: 'Vanilla bean glaze', price: 79, icon: '🍦' },
       { id: 'pistachio', name: 'Pistachio', desc: 'Roasted pistachio', price: 99, icon: '🥜' }
     ];
+
+    // Load menu from localStorage if admin edited it, otherwise use default
+    let donuts = JSON.parse(localStorage.getItem(STORAGE_KEY_MENU)) || defaultDonuts;
 
     let cart = {};
     let currentTotal = 0;
@@ -334,6 +330,7 @@
         if (savedCart) {
           const parsed = JSON.parse(savedCart);
           Object.keys(parsed).forEach(id => {
+            // Only add to cart if the donut still exists in the menu
             if (donuts.some(d => d.id === id) && Number.isInteger(parsed[id]) && parsed[id] > 0) {
               cart[id] = parsed[id];
             }
@@ -350,6 +347,10 @@
 
     function renderMenu() {
       donutGrid.innerHTML = '';
+      if (donuts.length === 0) {
+        donutGrid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #888; padding: 2rem;">No donuts available right now. Check back later!</p>';
+        return;
+      }
       donuts.forEach(donut => {
         const card = document.createElement('div');
         card.className = 'donut-card' + (cart[donut.id] ? ' selected' : '');
@@ -537,6 +538,15 @@
     finishOrderBtn.addEventListener('click', () => { modalOverlay.classList.remove('active'); });
 
     window.onload = function() {
+      // Listen for changes from the admin page (if opened in another tab)
+      window.addEventListener('storage', (e) => {
+        if (e.key === STORAGE_KEY_MENU) {
+          donuts = JSON.parse(e.newValue) || defaultDonuts;
+          renderMenu();
+          renderCart(); // Refresh cart in case items were deleted
+        }
+      });
+
       loadState();
       renderMenu();
       renderCart();
