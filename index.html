@@ -116,11 +116,19 @@
     .total-breakdown div { display: flex; justify-content: space-between; font-size: 0.9rem; color: var(--text-dark); margin-bottom: 0.4rem; }
     .total-breakdown .final-total { font-size: 1.1rem; font-weight: 800; border-top: 1px solid var(--primary-light); padding-top: 0.4rem; margin-top: 0.4rem; color: var(--secondary); }
 
-    .payment-dynamic-fields { display: none; background: var(--bg); border: 1px dashed var(--primary-light); padding: 1rem; border-radius: 1rem; margin-bottom: 1.5rem; }
+    /* QR CODE SCAN STYLES */
+    .payment-dynamic-fields { display: none; background: var(--bg); border: 1px dashed var(--primary-light); padding: 1rem; border-radius: 1rem; margin-bottom: 1.5rem; text-align: center; }
     .payment-dynamic-fields.active { display: block; }
-    .payment-dynamic-fields input { width: 100%; padding: 0.8rem; border: 1px solid var(--primary-light); border-radius: 10px; margin-bottom: 0.8rem; outline: none; font-size: 0.95rem; }
-    .payment-dynamic-fields small { color: var(--text-light); display: block; margin-bottom: 0.3rem; font-weight: 600; }
-    .receipt-upload { background: white; border: 1px solid var(--primary-light); padding: 0.8rem; border-radius: 10px; margin-bottom: 0.8rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.5rem; font-weight: 600; color: var(--primary); }
+    
+    .qr-container { background: white; padding: 1rem; border-radius: 1rem; display: inline-block; margin-bottom: 1rem; border: 2px solid var(--primary-light); }
+    .qr-container img { width: 150px; height: 150px; object-fit: contain; }
+    .gcash-number { font-size: 1.2rem; font-weight: 800; color: var(--text-dark); margin-bottom: 0.5rem; letter-spacing: 1px;}
+    .gcash-name { font-size: 0.9rem; color: var(--text-light); margin-bottom: 1rem; }
+    
+    .upload-receipt-box { background: white; border: 2px dashed var(--primary); padding: 1rem; border-radius: 10px; cursor: pointer; transition: 0.2s; margin-top: 1rem; }
+    .upload-receipt-box:hover { background: #f3e8ff; }
+    .upload-receipt-box i { font-size: 1.5rem; color: var(--primary); margin-bottom: 0.5rem; display: block; }
+    .upload-receipt-box span { font-weight: 600; color: var(--primary); font-size: 0.9rem; }
     
     .confirm-pay-btn { width: 100%; background: var(--primary); color: white; border: none; border-radius: 50px; padding: 1rem; font-size: 1.1rem; font-weight: 800; cursor: pointer; box-shadow: 0 6px 0 #7e22ce; }
     .success-screen { display: none; text-align: center; padding: 1rem 0; }
@@ -218,6 +226,7 @@
       <i class="fas fa-shopping-bag"></i> <span id="floatingCartTotal">₱0.00</span>
     </div>
 
+    <!-- MAP MODAL -->
     <div class="modal-overlay" id="mapModal">
       <div class="modal-box" style="max-width: 500px;">
         <div class="modal-header"><h2><i class="fas fa-map-marker-alt"></i> Pin Location</h2><button class="close-modal" onclick="closeModal('mapModal')"><i class="fas fa-xmark"></i></button></div>
@@ -227,6 +236,7 @@
       </div>
     </div>
 
+    <!-- TRACKING MODAL -->
     <div class="modal-overlay" id="trackingModal">
       <div class="modal-box" style="max-width: 400px; text-align: center;">
         <div class="modal-header" style="margin-bottom: 0;"><h2><i class="fas fa-search"></i> Track Order</h2><button class="close-modal" onclick="closeModal('trackingModal')"><i class="fas fa-xmark"></i></button></div>
@@ -237,6 +247,7 @@
       </div>
     </div>
 
+    <!-- CUSTOMIZE MODAL -->
     <div class="modal-overlay" id="customizeModal">
       <div class="modal-box">
         <div class="modal-header">
@@ -260,6 +271,7 @@
       </div>
     </div>
 
+    <!-- CHECKOUT MODAL -->
     <div class="modal-overlay" id="paymentModalOverlay">
       <div class="modal-box">
         <div id="checkoutView">
@@ -278,14 +290,24 @@
             <div class="pay-option" onclick="selectPayment('maya', this)"><input type="radio" name="payment" value="maya"><label><i class="fas fa-mobile-screen"></i> Maya</label></div>
           </div>
           
-          <!-- GCASH / MAYA FIELDS -->
+          <!-- GCASH / MAYA QR SCANNER -->
           <div class="payment-dynamic-fields" id="eWalletFields">
-            <small>Enter your Mobile Number</small><input type="text" placeholder="Mobile Number" id="ewalletNumber" value="09171234567">
-            <small>Enter your MPIN</small><input type="password" placeholder="MPIN" id="ewalletPin" maxlength="4" value="1234">
-            <small>Upload Payment Receipt (Required)</small>
+            <p style="font-weight: 600; color: var(--text-dark); margin-bottom: 0.5rem;">Scan to Pay:</p>
+            
+            <div class="qr-container">
+              <!-- PALITAN ITO NG PANGALAN NG QR CODE MO SA GITHUB -->
+              <img src="gcash_qr.png" alt="GCash QR Code" onerror="this.src='https://via.placeholder.com/150?text=QR+Code'">
+            </div>
+            
+            <div class="gcash-number">0994 140 7636</div>
+            <div class="gcash-name">Luna's Sweets</div>
+            
+            <p style="font-size: 0.8rem; color: #be123c; margin-bottom: 1rem; font-weight: bold;">⚠️ I-screenshot ang resibo pagkatapos magbayad.</p>
+
             <input type="file" accept="image/*" id="receiptUpload" style="display:none;" onchange="handleReceiptUpload(event)">
-            <div class="receipt-upload" onclick="document.getElementById('receiptUpload').click()">
-              <i class="fas fa-camera"></i> <span id="receiptStatus">Tap to upload screenshot</span>
+            <div class="upload-receipt-box" onclick="document.getElementById('receiptUpload').click()">
+              <i class="fas fa-cloud-upload-alt"></i>
+              <span id="receiptStatus">Upload Payment Receipt Here</span>
             </div>
           </div>
 
@@ -301,7 +323,7 @@
         </div>
 
         <div class="success-screen" id="successView">
-          <i class="fas fa-circle-check"></i><h2>Payment Successful!</h2><p style="color:var(--text-light);">Your donuts are being prepared.</p>
+          <i class="fas fa-circle-check"></i><h2>Order Placed!</h2><p style="color:var(--text-light);">Your donuts are being prepared.</p>
           <div class="receipt-box">
             <strong>Receipt #<span id="receiptOrderNum">00000</span></strong>
             <div style="display: flex; justify-content: space-between; margin-bottom: 0.3rem;"><span>Customer:</span> <span id="receiptName">Name</span></div>
@@ -570,7 +592,7 @@
       reader.onload = function(e) {
         uploadedReceiptBase64 = e.target.result;
         document.getElementById('receiptStatus').textContent = "Receipt Uploaded!";
-        document.querySelector('.receipt-upload').style.color = "#10b981"; // Green
+        document.getElementById('receiptStatus').style.color = "#10b981"; // Green
       };
       reader.readAsDataURL(file);
     }
@@ -620,7 +642,6 @@
 
     confirmPayBtn.addEventListener('click', async () => {
       if (selectedPaymentMethod === 'gcash' || selectedPaymentMethod === 'maya') {
-        if (document.getElementById('ewalletNumber').value.length < 10) { alert('Enter valid mobile number.'); return; }
         if (!uploadedReceiptBase64) { alert('Please upload your payment receipt.'); return; }
       }
       
@@ -664,8 +685,8 @@
           
           cart = {}; saveCart(); renderCart();
           uploadedReceiptBase64 = ''; // Reset
-          document.getElementById('receiptStatus').textContent = 'Tap to upload screenshot';
-          document.querySelector('.receipt-upload').style.color = "var(--primary)";
+          document.getElementById('receiptStatus').textContent = 'Upload Payment Receipt Here';
+          document.getElementById('receiptStatus').style.color = "var(--primary)";
           
         } catch (error) { 
           alert("Failed to save order."); 
