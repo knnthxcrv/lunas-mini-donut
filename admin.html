@@ -112,7 +112,7 @@
 
     <div class="tabs">
       <button class="tab-btn active" id="tabOrders" onclick="switchTab('orders')"><i class="fas fa-receipt"></i> Live Orders</button>
-      <button class="tab-btn" id="tabMenu" onclick="switchTab('menu')"><i class="fas fa-pen-to-square"></i> Manage Menu</button>
+      <button class="tab-btn" id="tabMenu" onclick="switchTab('menu')"><i class="fas fa-pen-to-square"></i> Edit Menu</button>
     </div>
 
     <div id="ordersView">
@@ -143,12 +143,13 @@
 
     <div id="editMenuView">
       <div class="menu-editor-container">
-        <h2 style="margin-bottom: 1rem; color: #2d1b0e; font-size: 1.2rem;">Manage Menu Items</h2>
-        <p style="font-size:0.85rem; color:#666; margin-bottom:1rem;">I-toggle ang switch para gawing "Sold Out" ang isang item.</p>
+        <h2 style="margin-bottom: 1rem; color: #2d1b0e; font-size: 1.2rem;">Edit Menu Info</h2>
+        <p style="font-size:0.85rem; color:#666; margin-bottom:1rem;">I-edit ang Pangalan, Description, at Icon (Emoji). I-toggle ang switch para gawing "Sold Out".</p>
         
         <table class="menu-editor-table">
           <thead>
             <tr>
+              <th style="width: 60px; text-align:center;">Icon</th>
               <th>Name</th>
               <th>Description</th>
               <th style="width: 80px; text-align:center;">In Stock</th>
@@ -292,7 +293,7 @@
       } catch (e) { alert("Error clearing."); }
     }
 
-    // ADMIN EDIT MENU (Updates In-Stock status)
+    // EDIT MENU (UPDATED)
     const STORAGE_KEY_MENU = 'luna_mini_donut_menu';
     const defaultMenu = [
       { id: 'classic', name: 'Classic Donut', desc: 'Choose 3 flavors', icon: '🍩', type: 'classic', inStock: true },
@@ -300,6 +301,7 @@
       { id: 'custom-minimal', name: 'Custom Box (Minimal)', desc: '25pcs Custom Design', icon: '📦', type: 'custom', price: 350, inStock: true },
       { id: 'custom-3d', name: 'Custom Box (3D)', desc: '25pcs 3D Design & Toppers', icon: '🎂', type: 'custom', price: 450, inStock: true }
     ];
+    
     let editingMenu = [];
 
     function loadMenuForEditing() {
@@ -314,8 +316,9 @@
         const tr = document.createElement('tr');
         const isChecked = item.inStock === false ? '' : 'checked';
         tr.innerHTML = `
-          <td><strong>${item.name}</strong></td>
-          <td style="font-size:0.8rem; color:#666;">${item.desc}</td>
+          <td style="text-align:center;"><input type="text" value="${item.icon}" onchange="updateMenuField(${index}, 'icon', this.value)" style="width:50px; text-align:center;"></td>
+          <td><input type="text" value="${item.name}" onchange="updateMenuField(${index}, 'name', this.value)"></td>
+          <td><input type="text" value="${item.desc}" onchange="updateMenuField(${index}, 'desc', this.value)"></td>
           <td style="text-align:center;">
             <label class="switch">
               <input type="checkbox" ${isChecked} onchange="updateMenuField(${index}, 'inStock', this.checked)">
