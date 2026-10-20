@@ -32,7 +32,6 @@
     .donut-card { background: #fffbf7; border-radius: 2rem; padding: 1.5rem 1rem 1.2rem; box-shadow: 0 8px 0 #f0d5c0, 0 12px 20px -8px rgba(160, 100, 60, 0.2); transition: 0.15s; display: flex; flex-direction: column; align-items: center; text-align: center; border: 1px solid #ffe2cf; cursor: pointer; position: relative; }
     .donut-card.custom-box { border: 2px dashed #ff9f6e; background: #fff4ec; }
     .donut-card.sold-out { opacity: 0.6; cursor: not-allowed; filter: grayscale(1); }
-    .sold-out-badge { position: absolute; top: 10px; left: 50%; transform: translateX(-50%); background: #d9534f; color: white; padding: 0.2rem 0.8rem; border-radius: 20px; font-size: 0.7rem; font-weight: bold; z-index: 10; }
     
     .donut-icon { font-size: 3.8rem; line-height: 1; filter: drop-shadow(0 6px 4px rgba(0,0,0,0.1)); margin-bottom: 0.5rem; display: flex; justify-content: center; align-items: center; height: 70px; width: 70px; border-radius: 50%; overflow: hidden; }
     .donut-card h3 { font-size: 1.2rem; font-weight: 700; color: #391e0e; margin-bottom: 0.3rem; }
@@ -140,7 +139,7 @@
   <div class="delivery-app">
     <div class="header">
       <div class="brand">
-        <i class="fas fa-cookie-bite"></i>
+        <img src="logo.png" alt="Logo">
         <h1>Luna's Sweets <span>delivery</span></h1>
       </div>
       <div class="header-right">
@@ -191,12 +190,10 @@
       </div>
     </div>
 
-    <!-- FLOATING CART -->
     <div class="floating-cart" id="floatingCart" onclick="scrollToCart()">
       <i class="fas fa-shopping-bag"></i> <span id="floatingCartTotal">₱0.00</span>
     </div>
 
-    <!-- MAP MODAL -->
     <div class="modal-overlay" id="mapModal">
       <div class="modal-box" style="max-width: 500px;">
         <div class="modal-header"><h2><i class="fas fa-map-marker-alt"></i> Pin Location</h2><button class="close-modal" onclick="closeModal('mapModal')"><i class="fas fa-xmark"></i></button></div>
@@ -206,7 +203,6 @@
       </div>
     </div>
 
-    <!-- TRACKING MODAL -->
     <div class="modal-overlay" id="trackingModal">
       <div class="modal-box" style="max-width: 400px; text-align: center;">
         <div class="modal-header" style="margin-bottom: 0;"><h2><i class="fas fa-search"></i> Track Order</h2><button class="close-modal" onclick="closeModal('trackingModal')"><i class="fas fa-xmark"></i></button></div>
@@ -217,35 +213,29 @@
       </div>
     </div>
 
-    <!-- CUSTOMIZATION MODAL -->
     <div class="modal-overlay" id="customizeModal">
       <div class="modal-box">
         <div class="modal-header">
           <h2 id="customizeTitle"><i class="fas fa-donut"></i> Customize</h2>
           <button class="close-modal" onclick="closeModal('customizeModal')"><i class="fas fa-xmark"></i></button>
         </div>
-        
         <div class="option-group" id="boxSizeGroup">
           <div class="option-title">1. Choose Box Size</div>
           <div id="sizeOptions"></div>
         </div>
-
         <div class="option-group" id="flavorGroup">
           <div class="option-title">2. Choose Flavor(s)</div>
           <div id="flavorCheckboxes"></div>
         </div>
-
         <div class="option-group" id="toppingsGroup">
           <div class="option-title">3. Add Toppings (Optional)</div>
           <div id="toppingCheckboxes"></div>
         </div>
-
         <div class="modal-total" id="customTotalText">Total: ₱20.00</div>
         <button class="confirm-pay-btn" style="background: #ff9f6e; color: #2d1b0e; box-shadow: 0 6px 0 #b95d2b;" onclick="addCustomToCart()"><i class="fas fa-cart-plus"></i> Add to Box</button>
       </div>
     </div>
 
-    <!-- CHECKOUT MODAL -->
     <div class="modal-overlay" id="paymentModalOverlay">
       <div class="modal-box">
         <div id="checkoutView">
@@ -303,12 +293,8 @@
     const STORAGE_KEY_MENU = 'luna_mini_donut_menu';
     const STORAGE_KEY_SETTINGS = 'luna_mini_donut_settings';
 
-    // DEFAULT SETTINGS (Kung wala pang binago sa Admin)
     const defaultSettings = {
-      prices: {
-        classic: { 2: 20, 6: 55, 12: 120 },
-        premium: { 2: 25, 6: 60, 12: 150 }
-      },
+      prices: { classic: { 2: 20, 6: 55, 12: 120 }, premium: { 2: 25, 6: 60, 12: 150 } },
       classicFlavors: ['Chocolate', 'Strawberry', 'White Chocolate'],
       classicToppings: ['Mini mallows', 'Cashew nuts', 'Rainbow sprinkles', 'Rice crispy'],
       premiumFlavors: ['Chocolate', 'Matcha', 'Strawberry', 'White Chocolate', 'Ube'],
@@ -394,18 +380,12 @@
         document.getElementById('toppingsGroup').style.display = 'block';
         document.getElementById('customizeTitle').innerHTML = `<i class="fas fa-donut"></i> ${item.name}`;
         
-        // Render Sizes dynamically based on settings
         const sizeContainer = document.getElementById('sizeOptions');
         sizeContainer.innerHTML = '';
         const sizes = Object.keys(settings.prices[selectedType]);
         sizes.forEach((size, idx) => {
           const price = settings.prices[selectedType][size];
-          sizeContainer.innerHTML += `
-            <label class="radio-label ${idx === 0 ? 'selected' : ''}" onclick="selectBox(${size}, this)">
-              <span><input type="radio" name="boxSize" value="${size}" ${idx === 0 ? 'checked' : ''}> ${size} pcs</span>
-              <span>₱${price}</span>
-            </label>
-          `;
+          sizeContainer.innerHTML += `<label class="radio-label ${idx === 0 ? 'selected' : ''}" onclick="selectBox(${size}, this)"><span><input type="radio" name="boxSize" value="${size}" ${idx === 0 ? 'checked' : ''}> ${size} pcs</span><span>₱${price}</span></label>`;
         });
 
         renderFlavorToppings();
@@ -418,10 +398,8 @@
       const fContainer = document.getElementById('flavorCheckboxes');
       const tContainer = document.getElementById('toppingCheckboxes');
       fContainer.innerHTML = ''; tContainer.innerHTML = '';
-
       const fList = selectedType === 'classic' ? settings.classicFlavors : settings.premiumFlavors;
       const tList = selectedType === 'classic' ? settings.classicToppings : settings.premiumToppings;
-
       fList.forEach(f => { fContainer.innerHTML += `<label class="checkbox-label"><input type="checkbox" value="${f}" onchange="calculateCustomPrice()"> ${f}</label>`; });
       tList.forEach(t => { tContainer.innerHTML += `<label class="checkbox-label"><input type="checkbox" value="${t}" onchange="calculateCustomPrice()"> ${t}</label>`; });
     }
@@ -436,7 +414,7 @@
     window.calculateCustomPrice = () => {
       if (selectedType === 'custom') return;
       let basePrice = settings.prices[selectedType][selectedSize];
-      const toppingPrice = 5; // Fixed 5 pesos per topping
+      const toppingPrice = 5;
       let toppingsCount = document.querySelectorAll('#toppingCheckboxes input:checked').length;
       document.getElementById('customTotalText').textContent = `Total: ${formatPrice(basePrice + (toppingsCount * toppingPrice))}`;
     }
@@ -450,13 +428,11 @@
         let toppings = Array.from(document.querySelectorAll('#toppingCheckboxes input:checked')).map(cb => cb.value);
         let flavors = Array.from(document.querySelectorAll('#flavorCheckboxes input:checked')).map(cb => cb.value);
         if (flavors.length === 0) { alert("Please choose at least 1 flavor."); return; }
-
         let basePrice = settings.prices[selectedType][selectedSize];
         let toppingPrice = 5;
         let total = basePrice + (toppings.length * toppingPrice);
         let details = `${selectedSize}pcs (${flavors.join(', ')})` + (toppings.length > 0 ? ` + ${toppings.join(', ')}` : '');
         const key = `${selectedType}_${selectedSize}_${flavors.join('_')}_${toppings.join('_')}`;
-        
         if (!cart[key]) cart[key] = { name: customizingItem.name, price: total, qty: 1, details: details };
         else cart[key].qty += 1;
       }
@@ -466,18 +442,13 @@
     function renderCart() {
       cartContainer.querySelectorAll('.cart-item').forEach(el => el.remove());
       const cartKeys = Object.keys(cart); currentTotal = 0;
-      if (cartKeys.length === 0) {
-        emptyCartMsg.style.display = 'block'; totalAmountEl.textContent = '₱0.00'; clearBoxBtn.disabled = true; floatingCart.classList.remove('active');
-      } else {
+      if (cartKeys.length === 0) { emptyCartMsg.style.display = 'block'; totalAmountEl.textContent = '₱0.00'; clearBoxBtn.disabled = true; floatingCart.classList.remove('active'); }
+      else {
         emptyCartMsg.style.display = 'none'; clearBoxBtn.disabled = false; floatingCart.classList.add('active');
         cartKeys.forEach(key => {
           const item = cart[key]; const itemTotal = item.price * item.qty; currentTotal += itemTotal;
           const itemEl = document.createElement('div'); itemEl.className = 'cart-item';
-          itemEl.innerHTML = `
-            <div class="cart-item-info"><span class="item-name">${item.name}</span><span class="item-details">${item.details}</span></div>
-            <div class="qty-stepper"><button class="qty-btn" onclick="window.changeQty('${key}', -1)"><i class="fas fa-minus"></i></button><span class="qty-value">${item.qty}</span><button class="qty-btn" onclick="window.changeQty('${key}', 1)"><i class="fas fa-plus"></i></button></div>
-            <div class="item-price">${formatPrice(itemTotal)}</div><button class="remove-item-btn" onclick="window.removeItem('${key}')"><i class="fas fa-xmark"></i></button>
-          `;
+          itemEl.innerHTML = `<div class="cart-item-info"><span class="item-name">${item.name}</span><span class="item-details">${item.details}</span></div><div class="qty-stepper"><button class="qty-btn" onclick="window.changeQty('${key}', -1)"><i class="fas fa-minus"></i></button><span class="qty-value">${item.qty}</span><button class="qty-btn" onclick="window.changeQty('${key}', 1)"><i class="fas fa-plus"></i></button></div><div class="item-price">${formatPrice(itemTotal)}</div><button class="remove-item-btn" onclick="window.removeItem('${key}')"><i class="fas fa-xmark"></i></button>`;
           cartContainer.insertBefore(itemEl, emptyCartMsg);
         });
       }
@@ -494,7 +465,6 @@
     window.removeItem = (key) => { delete cart[key]; saveCart(); renderCart(); }
     clearBoxBtn.addEventListener('click', () => { cart = {}; saveCart(); renderCart(); });
 
-    // MAP
     window.openMapModal = () => {
       document.getElementById('mapModal').classList.add('active');
       if (!map) {
@@ -514,20 +484,15 @@
       customerLandmarkInput.value = `Pinned on Map`; closeModal('mapModal');
     }
 
-    // TRACKING
     window.openTrackingModal = () => { document.getElementById('trackingModal').classList.add('active'); document.getElementById('trackResult').style.display = 'none'; }
     window.trackOrder = async () => {
       const id = document.getElementById('trackOrderId').value.trim(); if (!id) return;
       const q = window.firebaseQuery(window.firebaseCollection(window.firestoreDb, "orders"), window.firebaseWhere("id", "==", parseInt(id)));
       const snap = await window.firebaseGetDocs(q); const resDiv = document.getElementById('trackResult'); resDiv.style.display = 'block';
       if (snap.empty) resDiv.innerHTML = `<p style="color:#d9534f; text-align:center;">Order not found.</p>`;
-      else {
-        let order; snap.forEach(d => order = d.data());
-        resDiv.innerHTML = `<p><strong>Status:</strong> <span style="color:${order.status==='Pending'?'#ff7e3f':'#2e8b57'}; font-weight:bold;">${order.status}</span></p><p style="font-size:0.9rem; margin-top:0.5rem;">Name: ${order.name}</p><p style="font-size:0.9rem;">Total: ₱${order.total.toFixed(2)}</p>`;
-      }
+      else { let order; snap.forEach(d => order = d.data()); resDiv.innerHTML = `<p><strong>Status:</strong> <span style="color:${order.status==='Pending'?'#ff7e3f':'#2e8b57'}; font-weight:bold;">${order.status}</span></p><p style="font-size:0.9rem; margin-top:0.5rem;">Name: ${order.name}</p><p style="font-size:0.9rem;">Total: ₱${order.total.toFixed(2)}</p>`; }
     }
 
-    // CHECKOUT
     window.selectPayment = (method, el) => {
       selectedPaymentMethod = method; document.querySelectorAll('.pay-option').forEach(opt => opt.classList.remove('selected')); el.classList.add('selected');
       document.querySelector(`input[value="${method}"]`).checked = true; eWalletFields.classList.remove('active'); if (method === 'gcash' || method === 'maya') eWalletFields.classList.add('active');
