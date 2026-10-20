@@ -41,6 +41,10 @@
     .tab-btn { background: none; border: none; font-size: 0.95rem; font-weight: bold; color: #888; cursor: pointer; padding: 0.5rem 1rem; border-radius: 10px; white-space: nowrap; }
     .tab-btn.active { color: #ff7e3f; background: #fff5ee; }
 
+    /* TAB VIEWS - NAKA-SET NA ANG MGA DISPLAY */
+    .view-section { display: none; }
+    .view-section.active { display: block; }
+
     .dashboard-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
     .stat-card { background: white; padding: 1rem; border-radius: 1rem; box-shadow: 0 5px 15px rgba(0,0,0,0.05); border-left: 5px solid #ff8a4c; }
     .stat-card h3 { font-size: 0.75rem; color: #888; text-transform: uppercase; }
@@ -64,8 +68,7 @@
     .empty-state { text-align: center; padding: 3rem; color: #888; }
 
     /* EDIT ITEMS */
-    .editor-container { background: white; border-radius: 1rem; padding: 1.5rem; box-shadow: 0 5px 15px rgba(0,0,0,0.05); overflow-x: auto; display: none; }
-    .editor-container.active { display: block; }
+    .editor-container { background: white; border-radius: 1rem; padding: 1.5rem; box-shadow: 0 5px 15px rgba(0,0,0,0.05); overflow-x: auto; }
     .editor-table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; min-width: 600px; }
     .editor-table th, .editor-table td { padding: 0.8rem; border-bottom: 1px solid #eee; text-align: left; vertical-align: middle; }
     .editor-table input[type="text"], .editor-table input[type="number"] { width: 100%; padding: 0.6rem; border: 1px solid #ccc; border-radius: 5px; font-family: inherit; font-size: 0.9rem; }
@@ -121,7 +124,7 @@
     </div>
 
     <!-- TAB 1: ORDERS -->
-    <div id="ordersView">
+    <div id="ordersView" class="view-section active">
       <div class="dashboard-stats">
         <div class="stat-card"><h3>Total</h3><p id="totalOrders">0</p></div>
         <div class="stat-card" style="border-left-color: #2e8b57;"><h3>Revenue</h3><p id="totalRevenue">₱0.00</p></div>
@@ -138,67 +141,73 @@
     </div>
 
     <!-- TAB 2: MENU CARDS -->
-    <div id="menuCardsView" class="editor-container">
+    <div id="menuCardsView" class="view-section">
       <button class="btn btn-back" onclick="switchTab('orders')"><i class="fas fa-arrow-left"></i> Back to Orders</button>
-      <h2 style="margin-bottom: 1rem; color: #2d1b0e; font-size: 1.2rem;">Edit Menu Cards</h2>
-      <p style="font-size:0.85rem; color:#666; margin-bottom:1rem;">I-edit ang Pangalan, Description, at Icon (Emoji). I-toggle ang switch para gawing "Sold Out".</p>
-      <table class="editor-table">
-        <thead><tr><th style="width: 60px; text-align:center;">Icon</th><th>Name</th><th>Description</th><th style="width: 80px; text-align:center;">In Stock</th></tr></thead>
-        <tbody id="menuTableBody"></tbody>
-      </table>
-      <button class="btn-save-menu" onclick="saveMenuCards()"><i class="fas fa-save"></i> Save Cards</button>
+      <div class="editor-container">
+        <h2 style="margin-bottom: 1rem; color: #2d1b0e; font-size: 1.2rem;">Edit Menu Cards</h2>
+        <p style="font-size:0.85rem; color:#666; margin-bottom:1rem;">I-edit ang Pangalan, Description, at Icon (Emoji). I-toggle ang switch para gawing "Sold Out".</p>
+        <table class="editor-table">
+          <thead><tr><th style="width: 60px; text-align:center;">Icon</th><th>Name</th><th>Description</th><th style="width: 80px; text-align:center;">In Stock</th></tr></thead>
+          <tbody id="menuTableBody"></tbody>
+        </table>
+        <button class="btn-save-menu" onclick="saveMenuCards()"><i class="fas fa-save"></i> Save Cards</button>
+      </div>
     </div>
 
     <!-- TAB 3: BOX PRICING -->
-    <div id="pricingView" class="editor-container">
+    <div id="pricingView" class="view-section">
       <button class="btn btn-back" onclick="switchTab('orders')"><i class="fas fa-arrow-left"></i> Back to Orders</button>
-      <h2 style="margin-bottom: 1rem; color: #2d1b0e; font-size: 1.2rem;">Edit Box Pricing</h2>
-      <p style="font-size:0.85rem; color:#666; margin-bottom:1rem;">I-set ang presyo para sa bawat laki ng box (2pcs, 6pcs, 12pcs).</p>
-      <table class="editor-table">
-        <thead><tr><th>Type</th><th>2 pcs (₱)</th><th>6 pcs (₱)</th><th>12 pcs (₱)</th></tr></thead>
-        <tbody>
-          <tr>
-            <td><strong>Classic</strong></td>
-            <td><input type="number" id="price-c-2" value="20"></td>
-            <td><input type="number" id="price-c-6" value="55"></td>
-            <td><input type="number" id="price-c-12" value="120"></td>
-          </tr>
-          <tr>
-            <td><strong>Premium</strong></td>
-            <td><input type="number" id="price-p-2" value="25"></td>
-            <td><input type="number" id="price-p-6" value="60"></td>
-            <td><input type="number" id="price-p-12" value="150"></td>
-          </tr>
-        </tbody>
-      </table>
-      <button class="btn-save-menu" onclick="savePricing()"><i class="fas fa-save"></i> Save Pricing</button>
+      <div class="editor-container">
+        <h2 style="margin-bottom: 1rem; color: #2d1b0e; font-size: 1.2rem;">Edit Box Pricing</h2>
+        <p style="font-size:0.85rem; color:#666; margin-bottom:1rem;">I-set ang presyo para sa bawat laki ng box (2pcs, 6pcs, 12pcs).</p>
+        <table class="editor-table">
+          <thead><tr><th>Type</th><th>2 pcs (₱)</th><th>6 pcs (₱)</th><th>12 pcs (₱)</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><strong>Classic</strong></td>
+              <td><input type="number" id="price-c-2" value="20"></td>
+              <td><input type="number" id="price-c-6" value="55"></td>
+              <td><input type="number" id="price-c-12" value="120"></td>
+            </tr>
+            <tr>
+              <td><strong>Premium</strong></td>
+              <td><input type="number" id="price-p-2" value="25"></td>
+              <td><input type="number" id="price-p-6" value="60"></td>
+              <td><input type="number" id="price-p-12" value="150"></td>
+            </tr>
+          </tbody>
+        </table>
+        <button class="btn-save-menu" onclick="savePricing()"><i class="fas fa-save"></i> Save Pricing</button>
+      </div>
     </div>
 
     <!-- TAB 4: FLAVORS & TOPPINGS -->
-    <div id="flavorsView" class="editor-container">
+    <div id="flavorsView" class="view-section">
       <button class="btn btn-back" onclick="switchTab('orders')"><i class="fas fa-arrow-left"></i> Back to Orders</button>
-      <h2 style="margin-bottom: 1rem; color: #2d1b0e; font-size: 1.2rem;">Edit Flavors & Toppings</h2>
-      <p style="font-size:0.85rem; color:#666; margin-bottom:1rem;">I-edit ang listahan ng flavors at toppings. Paghiwalayin ng kuwit (comma).</p>
-      
-      <div style="margin-bottom: 1.5rem;">
-        <label style="font-weight:bold; font-size:0.9rem;">Classic Flavors:</label>
-        <input type="text" id="classic-flavors-input" style="width:100%; padding:0.6rem; border:1px solid #ccc; border-radius:5px; margin-top:0.3rem;">
-      </div>
-      <div style="margin-bottom: 1.5rem;">
-        <label style="font-weight:bold; font-size:0.9rem;">Classic Toppings:</label>
-        <input type="text" id="classic-toppings-input" style="width:100%; padding:0.6rem; border:1px solid #ccc; border-radius:5px; margin-top:0.3rem;">
-      </div>
-      <hr style="margin: 1.5rem 0; border: 1px dashed #ddd;">
-      <div style="margin-bottom: 1.5rem;">
-        <label style="font-weight:bold; font-size:0.9rem;">Premium Flavors:</label>
-        <input type="text" id="premium-flavors-input" style="width:100%; padding:0.6rem; border:1px solid #ccc; border-radius:5px; margin-top:0.3rem;">
-      </div>
-      <div style="margin-bottom: 1.5rem;">
-        <label style="font-weight:bold; font-size:0.9rem;">Premium Toppings:</label>
-        <input type="text" id="premium-toppings-input" style="width:100%; padding:0.6rem; border:1px solid #ccc; border-radius:5px; margin-top:0.3rem;">
-      </div>
+      <div class="editor-container">
+        <h2 style="margin-bottom: 1rem; color: #2d1b0e; font-size: 1.2rem;">Edit Flavors & Toppings</h2>
+        <p style="font-size:0.85rem; color:#666; margin-bottom:1rem;">I-edit ang listahan ng flavors at toppings. Paghiwalayin ng kuwit (comma).</p>
+        
+        <div style="margin-bottom: 1.5rem;">
+          <label style="font-weight:bold; font-size:0.9rem;">Classic Flavors:</label>
+          <input type="text" id="classic-flavors-input" style="width:100%; padding:0.6rem; border:1px solid #ccc; border-radius:5px; margin-top:0.3rem;">
+        </div>
+        <div style="margin-bottom: 1.5rem;">
+          <label style="font-weight:bold; font-size:0.9rem;">Classic Toppings:</label>
+          <input type="text" id="classic-toppings-input" style="width:100%; padding:0.6rem; border:1px solid #ccc; border-radius:5px; margin-top:0.3rem;">
+        </div>
+        <hr style="margin: 1.5rem 0; border: 1px dashed #ddd;">
+        <div style="margin-bottom: 1.5rem;">
+          <label style="font-weight:bold; font-size:0.9rem;">Premium Flavors:</label>
+          <input type="text" id="premium-flavors-input" style="width:100%; padding:0.6rem; border:1px solid #ccc; border-radius:5px; margin-top:0.3rem;">
+        </div>
+        <div style="margin-bottom: 1.5rem;">
+          <label style="font-weight:bold; font-size:0.9rem;">Premium Toppings:</label>
+          <input type="text" id="premium-toppings-input" style="width:100%; padding:0.6rem; border:1px solid #ccc; border-radius:5px; margin-top:0.3rem;">
+        </div>
 
-      <button class="btn-save-menu" onclick="saveFlavorsToppings()"><i class="fas fa-save"></i> Save Flavors & Toppings</button>
+        <button class="btn-save-menu" onclick="saveFlavorsToppings()"><i class="fas fa-save"></i> Save Flavors & Toppings</button>
+      </div>
     </div>
 
   </div>
@@ -272,15 +281,35 @@
       });
     };
 
-    // TABS
+    // TABS NAVIGATION (INAYOS)
     window.switchTab = function(tab) {
+      // 1. Alisin ang active state sa lahat ng tab buttons
       document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-      document.querySelectorAll('#dashboardView > div').forEach(div => div.style.display = 'none');
       
-      if (tab === 'orders') { document.getElementById('tabOrders').classList.add('active'); document.getElementById('ordersView').style.display = 'block'; loadOrders(); }
-      if (tab === 'menuCards') { document.getElementById('tabMenuCards').classList.add('active'); document.getElementById('menuCardsView').style.display = 'block'; loadMenuCards(); }
-      if (tab === 'pricing') { document.getElementById('tabPricing').classList.add('active'); document.getElementById('pricingView').style.display = 'block'; loadPricing(); }
-      if (tab === 'flavors') { document.getElementById('tabFlavors').classList.add('active'); document.getElementById('flavorsView').style.display = 'block'; loadFlavorsToppings(); }
+      // 2. Itago lahat ng views
+      document.querySelectorAll('.view-section').forEach(view => view.classList.remove('active'));
+      
+      // 3. Ipakita kung ano ang pinindot
+      if (tab === 'orders') { 
+        document.getElementById('tabOrders').classList.add('active'); 
+        document.getElementById('ordersView').classList.add('active'); 
+        loadOrders(); 
+      }
+      if (tab === 'menuCards') { 
+        document.getElementById('tabMenuCards').classList.add('active'); 
+        document.getElementById('menuCardsView').classList.add('active'); 
+        loadMenuCards(); 
+      }
+      if (tab === 'pricing') { 
+        document.getElementById('tabPricing').classList.add('active'); 
+        document.getElementById('pricingView').classList.add('active'); 
+        loadPricing(); 
+      }
+      if (tab === 'flavors') { 
+        document.getElementById('tabFlavors').classList.add('active'); 
+        document.getElementById('flavorsView').classList.add('active'); 
+        loadFlavorsToppings(); 
+      }
     }
 
     // ORDERS
