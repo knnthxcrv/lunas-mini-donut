@@ -13,9 +13,8 @@
     .login-container { display: flex; justify-content: center; align-items: center; min-height: 80vh; position: relative; }
     .back-link { position: absolute; top: 0; left: 0; text-decoration: none; color: #a54b1e; font-weight: 700; display: flex; align-items: center; gap: 0.5rem; background: white; padding: 0.6rem 1.2rem; border-radius: 50px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); transition: 0.2s; }
     .back-link:hover { transform: translateY(-2px); }
-    
     .login-box { background: white; padding: 3rem 2rem; border-radius: 2rem; box-shadow: 0 10px 30px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center; }
-    .login-box > i { font-size: 3rem; color: #ff9f6e; margin-bottom: 1rem; display: inline-block; }
+    .login-box img { width: 90px; height: 90px; border-radius: 50%; object-fit: cover; margin-bottom: 1rem; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
     .login-box h2 { color: #2d1b0e; margin-bottom: 2rem; font-size: 1.8rem; }
     
     .input-group { position: relative; margin-bottom: 1.2rem; }
@@ -30,7 +29,10 @@
     /* DASHBOARD */
     #dashboardView { display: none; }
     .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; }
-    .header h1 { color: #2d1b0e; display: flex; align-items: center; gap: 0.5rem; font-size: 1.5rem; }
+    .header-logo { display: flex; align-items: center; gap: 10px; }
+    .header-logo img { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; }
+    .header h1 { color: #2d1b0e; display: flex; align-items: center; gap: 0.5rem; font-size: 1.5rem; margin: 0; }
+    
     .btn-group { display: flex; gap: 0.5rem; flex-wrap: wrap; }
     .btn { text-decoration: none; padding: 0.5rem 1rem; border-radius: 50px; font-weight: bold; cursor: pointer; border: none; display: flex; align-items: center; gap: 0.4rem; font-size: 0.85rem;}
     .btn-shop { background: #ff9f6e; color: #2d1b0e; box-shadow: 0 4px 0 #b95d2b; }
@@ -93,11 +95,10 @@
 </head>
 <body>
 
-  <!-- LOGIN VIEW -->
   <div class="login-container" id="loginView">
     <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> Back</a>
     <div class="login-box">
-      <i class="fas fa-cookie-bite"></i>
+      <img src="logo.png" alt="Luna's Sweets">
       <h2>Admin Login</h2>
       <div class="input-group"><i class="fas fa-envelope"></i><input type="email" id="username" placeholder="Admin Email" value="admin@lunasweets.com"></div>
       <div class="input-group"><i class="fas fa-lock"></i><input type="password" id="password" placeholder="Password" value="luna123"></div>
@@ -106,10 +107,9 @@
     </div>
   </div>
 
-  <!-- DASHBOARD VIEW -->
   <div id="dashboardView">
     <div class="header">
-      <h1><i class="fas fa-store"></i> Store Dashboard</h1>
+      <div class="header-logo"><img src="logo.png" alt="Logo"><h1>Store Dashboard</h1></div>
       <div class="btn-group">
         <a href="index.html" class="btn btn-shop"><i class="fas fa-arrow-left"></i> Shop</a>
         <button class="btn btn-logout" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
@@ -123,7 +123,6 @@
       <button class="tab-btn" id="tabFlavors" onclick="switchTab('flavors')"><i class="fas fa-ice-cream"></i> Flavors & Toppings</button>
     </div>
 
-    <!-- TAB 1: ORDERS -->
     <div id="ordersView" class="view-section active">
       <div class="dashboard-stats">
         <div class="stat-card"><h3>Total</h3><p id="totalOrders">0</p></div>
@@ -140,7 +139,6 @@
       </div>
     </div>
 
-    <!-- TAB 2: MENU CARDS -->
     <div id="menuCardsView" class="view-section">
       <button class="btn btn-back" onclick="switchTab('orders')"><i class="fas fa-arrow-left"></i> Back to Orders</button>
       <div class="editor-container">
@@ -154,7 +152,6 @@
       </div>
     </div>
 
-    <!-- TAB 3: BOX PRICING -->
     <div id="pricingView" class="view-section">
       <button class="btn btn-back" onclick="switchTab('orders')"><i class="fas fa-arrow-left"></i> Back to Orders</button>
       <div class="editor-container">
@@ -181,7 +178,6 @@
       </div>
     </div>
 
-    <!-- TAB 4: FLAVORS & TOPPINGS -->
     <div id="flavorsView" class="view-section">
       <button class="btn btn-back" onclick="switchTab('orders')"><i class="fas fa-arrow-left"></i> Back to Orders</button>
       <div class="editor-container">
@@ -212,7 +208,6 @@
 
   </div>
 
-  <!-- FIREBASE SDK (WITH AUTH) -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getFirestore, collection, onSnapshot, doc, updateDoc, deleteDoc, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -254,7 +249,6 @@
       premiumToppings: ['Cookies', 'Nips', 'Almond slice', 'Chocolate sprinkles', 'Choco chips', 'Drizzle']
     };
 
-    // AUTH
     window.handleLogin = async function() {
       const email = document.getElementById('username').value.trim();
       const pass = document.getElementById('password').value.trim();
@@ -281,38 +275,16 @@
       });
     };
 
-    // TABS NAVIGATION (INAYOS)
     window.switchTab = function(tab) {
-      // 1. Alisin ang active state sa lahat ng tab buttons
       document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-      
-      // 2. Itago lahat ng views
       document.querySelectorAll('.view-section').forEach(view => view.classList.remove('active'));
       
-      // 3. Ipakita kung ano ang pinindot
-      if (tab === 'orders') { 
-        document.getElementById('tabOrders').classList.add('active'); 
-        document.getElementById('ordersView').classList.add('active'); 
-        loadOrders(); 
-      }
-      if (tab === 'menuCards') { 
-        document.getElementById('tabMenuCards').classList.add('active'); 
-        document.getElementById('menuCardsView').classList.add('active'); 
-        loadMenuCards(); 
-      }
-      if (tab === 'pricing') { 
-        document.getElementById('tabPricing').classList.add('active'); 
-        document.getElementById('pricingView').classList.add('active'); 
-        loadPricing(); 
-      }
-      if (tab === 'flavors') { 
-        document.getElementById('tabFlavors').classList.add('active'); 
-        document.getElementById('flavorsView').classList.add('active'); 
-        loadFlavorsToppings(); 
-      }
+      if (tab === 'orders') { document.getElementById('tabOrders').classList.add('active'); document.getElementById('ordersView').classList.add('active'); loadOrders(); }
+      if (tab === 'menuCards') { document.getElementById('tabMenuCards').classList.add('active'); document.getElementById('menuCardsView').classList.add('active'); loadMenuCards(); }
+      if (tab === 'pricing') { document.getElementById('tabPricing').classList.add('active'); document.getElementById('pricingView').classList.add('active'); loadPricing(); }
+      if (tab === 'flavors') { document.getElementById('tabFlavors').classList.add('active'); document.getElementById('flavorsView').classList.add('active'); loadFlavorsToppings(); }
     }
 
-    // ORDERS
     const formatPrice = (p) => `₱${p.toFixed(2)}`;
     let unsubscribeOrders = null; let previousOrderCount = -1; const beep = new Audio("https://actions.google.com/sounds/v1/alarms/beep_short.ogg");
 
@@ -342,7 +314,6 @@
     window.updateOrderStatus = async function(firebaseId, newStatus) { if (newStatus === 'Rejected' && !confirm("Reject this order?")) return; try { await window.firebaseUpdateDoc(window.firebaseDoc(window.firestoreDb, "orders", firebaseId), { status: newStatus }); } catch (e) { alert("Failed."); } };
     async function clearFinishedOrders() { if (!confirm("Remove all Completed and Rejected orders?")) return; try { const q1 = window.firebaseQuery(window.firebaseCollection(window.firestoreDb, "orders"), window.firebaseWhere("status", "==", "Completed")); const q2 = window.firebaseQuery(window.firebaseCollection(window.firestoreDb, "orders"), window.firebaseWhere("status", "==", "Rejected")); const [snap1, snap2] = await Promise.all([window.firebaseGetDocs(q1), window.firebaseGetDocs(q2)]); const del = []; snap1.forEach(d => del.push(window.firebaseDeleteDoc(window.firebaseDoc(window.firestoreDb, "orders", d.id)))); snap2.forEach(d => del.push(window.firebaseDeleteDoc(window.firebaseDoc(window.firestoreDb, "orders", d.id)))); await Promise.all(del); } catch (e) { alert("Error clearing."); } }
 
-    // MENU CARDS
     let editingMenu = [];
     function loadMenuCards() {
       editingMenu = JSON.parse(localStorage.getItem(STORAGE_KEY_MENU)) || [...defaultMenu];
@@ -356,34 +327,22 @@
     window.updateMenuField = (i, f, v) => { editingMenu[i][f] = v; };
     window.saveMenuCards = function() { try { localStorage.setItem(STORAGE_KEY_MENU, JSON.stringify(editingMenu)); alert("Menu Cards Saved!"); } catch (e) { alert("Failed."); } }
 
-    // PRICING
     function loadPricing() {
       const settings = JSON.parse(localStorage.getItem(STORAGE_KEY_SETTINGS)) || defaultSettings;
-      document.getElementById('price-c-2').value = settings.prices.classic[2];
-      document.getElementById('price-c-6').value = settings.prices.classic[6];
-      document.getElementById('price-c-12').value = settings.prices.classic[12];
-      document.getElementById('price-p-2').value = settings.prices.premium[2];
-      document.getElementById('price-p-6').value = settings.prices.premium[6];
-      document.getElementById('price-p-12').value = settings.prices.premium[12];
+      document.getElementById('price-c-2').value = settings.prices.classic[2]; document.getElementById('price-c-6').value = settings.prices.classic[6]; document.getElementById('price-c-12').value = settings.prices.classic[12];
+      document.getElementById('price-p-2').value = settings.prices.premium[2]; document.getElementById('price-p-6').value = settings.prices.premium[6]; document.getElementById('price-p-12').value = settings.prices.premium[12];
     }
     window.savePricing = function() {
       let settings = JSON.parse(localStorage.getItem(STORAGE_KEY_SETTINGS)) || defaultSettings;
-      settings.prices.classic[2] = parseFloat(document.getElementById('price-c-2').value);
-      settings.prices.classic[6] = parseFloat(document.getElementById('price-c-6').value);
-      settings.prices.classic[12] = parseFloat(document.getElementById('price-c-12').value);
-      settings.prices.premium[2] = parseFloat(document.getElementById('price-p-2').value);
-      settings.prices.premium[6] = parseFloat(document.getElementById('price-p-6').value);
-      settings.prices.premium[12] = parseFloat(document.getElementById('price-p-12').value);
+      settings.prices.classic[2] = parseFloat(document.getElementById('price-c-2').value); settings.prices.classic[6] = parseFloat(document.getElementById('price-c-6').value); settings.prices.classic[12] = parseFloat(document.getElementById('price-c-12').value);
+      settings.prices.premium[2] = parseFloat(document.getElementById('price-p-2').value); settings.prices.premium[6] = parseFloat(document.getElementById('price-p-6').value); settings.prices.premium[12] = parseFloat(document.getElementById('price-p-12').value);
       localStorage.setItem(STORAGE_KEY_SETTINGS, JSON.stringify(settings)); alert("Pricing Saved!");
     }
 
-    // FLAVORS & TOPPINGS
     function loadFlavorsToppings() {
       const settings = JSON.parse(localStorage.getItem(STORAGE_KEY_SETTINGS)) || defaultSettings;
-      document.getElementById('classic-flavors-input').value = settings.classicFlavors.join(', ');
-      document.getElementById('classic-toppings-input').value = settings.classicToppings.join(', ');
-      document.getElementById('premium-flavors-input').value = settings.premiumFlavors.join(', ');
-      document.getElementById('premium-toppings-input').value = settings.premiumToppings.join(', ');
+      document.getElementById('classic-flavors-input').value = settings.classicFlavors.join(', '); document.getElementById('classic-toppings-input').value = settings.classicToppings.join(', ');
+      document.getElementById('premium-flavors-input').value = settings.premiumFlavors.join(', '); document.getElementById('premium-toppings-input').value = settings.premiumToppings.join(', ');
     }
     window.saveFlavorsToppings = function() {
       let settings = JSON.parse(localStorage.getItem(STORAGE_KEY_SETTINGS)) || defaultSettings;
