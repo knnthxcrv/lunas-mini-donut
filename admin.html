@@ -8,11 +8,14 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
     body { background: #f4f7f6; padding: 2rem; color: #333; }
-    
     .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
     .header h1 { color: #2d1b0e; display: flex; align-items: center; gap: 0.5rem; }
-    .header a { text-decoration: none; background: #ff9f6e; color: #2d1b0e; padding: 0.6rem 1.2rem; border-radius: 50px; font-weight: bold; box-shadow: 0 4px 0 #b95d2b; }
-    .header a:active { transform: translateY(4px); box-shadow: none; }
+    
+    .btn-group { display: flex; gap: 1rem; }
+    .btn { text-decoration: none; padding: 0.6rem 1.2rem; border-radius: 50px; font-weight: bold; cursor: pointer; border: none; display: flex; align-items: center; gap: 0.5rem; }
+    .btn-shop { background: #ff9f6e; color: #2d1b0e; box-shadow: 0 4px 0 #b95d2b; }
+    .btn-refresh { background: #2e8b57; color: white; box-shadow: 0 4px 0 #1e5c39; }
+    .btn:active { transform: translateY(4px); box-shadow: none; }
 
     .dashboard-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
     .stat-card { background: white; padding: 1.5rem; border-radius: 1rem; box-shadow: 0 5px 15px rgba(0,0,0,0.05); border-left: 5px solid #ff8a4c; }
@@ -26,7 +29,6 @@
     tr:hover { background: #fafafa; }
     
     .status-badge { padding: 0.3rem 0.8rem; border-radius: 50px; font-size: 0.8rem; font-weight: bold; background: #ffe6d5; color: #a54b1e; }
-    
     .btn-complete { background: #2e8b57; color: white; border: none; padding: 0.5rem 1rem; border-radius: 5px; cursor: pointer; font-weight: bold; }
     .btn-complete:hover { background: #1e5c39; }
 
@@ -38,7 +40,10 @@
 
   <div class="header">
     <h1><i class="fas fa-store"></i> Store Dashboard</h1>
-    <a href="index.html"><i class="fas fa-arrow-left"></i> Back to Shop</a>
+    <div class="btn-group">
+      <button class="btn btn-refresh" onclick="loadOrders()"><i class="fas fa-rotate"></i> Refresh Data</button>
+      <a href="index.html" class="btn btn-shop"><i class="fas fa-arrow-left"></i> Back to Shop</a>
+    </div>
   </div>
 
   <div class="dashboard-stats">
@@ -70,24 +75,25 @@
           <th>Status</th>
         </tr>
       </thead>
-      <tbody id="ordersTableBody">
-        <!-- Orders will be injected here by JS -->
-      </tbody>
+      <tbody id="ordersTableBody"></tbody>
     </table>
     <div id="emptyState" class="empty-state" style="display: none;">
       <i class="fas fa-receipt"></i>
       <h2>No orders yet</h2>
-      <p>When a customer places an order on the main page, it will appear here.</p>
+      <p>Place a test order on the shop page, then click "Refresh Data".</p>
     </div>
   </div>
 
   <script>
-    // Format Price
     const formatPrice = (p) => `₱${p.toFixed(2)}`;
 
+    // IMPORTANT: This must match the exact same string used in index.html
+    const STORAGE_KEY_ORDERS = 'luna_orders'; 
+
     function loadOrders() {
-      // Get orders from LocalStorage
-      const orders = JSON.parse(localStorage.getItem('luna_orders') || '[]');
+      // Read from LocalStorage
+      const rawData = localStorage.getItem(STORAGE_KEY_ORDERS);
+      const orders = rawData ? JSON.parse(rawData) : [];
       
       const tableBody = document.getElementById('ordersTableBody');
       const emptyState = document.getElementById('emptyState');
@@ -132,7 +138,7 @@
           <td><strong style="color:#b64a12;">${formatPrice(order.total)}</strong></td>
           <td>
             ${order.status === 'Pending' 
-              ? `<button class="btn-complete" onclick="completeOrder(${index})">Mark Done</button>` 
+              ? `<button class="btn-complete" onclick="window.completeOrder(${index})">Mark Done</button>` 
               : `<span class="status-badge" style="background:#d4edda; color:#155724;">Completed</span>`
             }
           </td>
@@ -141,20 +147,19 @@
       });
     }
 
-    // Function to mark an order as completed
     window.completeOrder = function(index) {
-      const orders = JSON.parse(localStorage.getItem('luna_orders') || '[]');
+      const orders = JSON.parse(localStorage.getItem(STORAGE_KEY_ORDERS) || '[]');
       if (orders[index]) {
         orders[index].status = 'Completed';
-        localStorage.setItem('luna_orders', JSON.stringify(orders));
-        loadOrders(); // Refresh table
+        localStorage.setItem(STORAGE_KEY_ORDERS, JSON.stringify(orders));
+        loadOrders();
       }
     };
 
-    // Load orders when page opens
+    // 1. Load immediately when page opens
     loadOrders();
     
-    // Auto-refresh every 5 seconds (so you see new orders live if on another tab)
+    // 2. Auto-refresh every 5 seconds (in case you leave the tab open)
     setInterval(loadOrders, 5000);
   </script>
 </body>
