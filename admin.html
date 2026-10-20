@@ -10,7 +10,9 @@
     body { background: #f4f7f6; padding: 2rem; color: #333; }
 
     /* LOGIN SCREEN */
-    .login-container { display: flex; justify-content: center; align-items: center; min-height: 80vh; }
+    .login-container { display: flex; justify-content: center; align-items: center; min-height: 80vh; position: relative; }
+    .back-link { position: absolute; top: 0; left: 0; text-decoration: none; color: #a54b1e; font-weight: 700; display: flex; align-items: center; gap: 0.5rem; background: white; padding: 0.6rem 1.2rem; border-radius: 50px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); transition: 0.2s; }
+    .back-link:hover { background: #fff8f0; transform: translateY(-2px); }
     .login-box { background: white; padding: 3rem 2rem; border-radius: 2rem; box-shadow: 0 10px 30px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center; }
     .login-box i { font-size: 3rem; color: #ff9f6e; margin-bottom: 1rem; }
     .login-box h2 { color: #2d1b0e; margin-bottom: 0.5rem; }
@@ -73,6 +75,7 @@
 
   <!-- LOGIN VIEW -->
   <div class="login-container" id="loginView">
+    <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> Back to Shop</a>
     <div class="login-box">
       <i class="fas fa-cookie-bite"></i>
       <h2>Admin Login</h2>
@@ -101,10 +104,9 @@
       </div>
     </div>
 
-    <!-- TABS -->
     <div class="tabs">
       <button class="tab-btn active" id="tabOrders" onclick="switchTab('orders')"><i class="fas fa-receipt"></i> Live Orders</button>
-      <button class="tab-btn" id="tabMenu" onclick="switchTab('menu')"><i class="fas fa-pen-to-square"></i> Edit Menu</button>
+      <button class="tab-btn" id="tabMenu" onclick="switchTab('menu')"><i class="fas fa-pen-to-square"></i> Edit Flavors</button>
     </div>
 
     <!-- TAB 1: LIVE ORDERS -->
@@ -124,7 +126,6 @@
         </div>
       </div>
 
-      <!-- CLEAR COMPLETED ORDERS BUTTON -->
       <button class="clear-orders-btn" onclick="clearCompletedOrders()">
         <i class="fas fa-broom"></i> Clear Completed Orders
       </button>
@@ -153,21 +154,20 @@
       </div>
     </div>
 
-    <!-- TAB 2: EDIT MENU -->
+    <!-- TAB 2: EDIT FLAVORS -->
     <div id="editMenuView">
       <div class="menu-editor-container">
-        <h2 style="margin-bottom: 1rem; color: #2d1b0e;">Edit Donut Menu</h2>
-        <p style="color: #666; margin-bottom: 1.5rem; font-size: 0.9rem;">Changes made here will instantly update the shop page for customers (on the same device).</p>
+        <h2 style="margin-bottom: 1rem; color: #2d1b0e;">Edit Donut Flavors</h2>
+        <p style="color: #666; margin-bottom: 1.5rem; font-size: 0.9rem;">Prices are fixed (Classic ₱20 / Premium ₱25). You can only edit the flavors, descriptions, and icons here.</p>
         
-        <button class="add-donut-btn" onclick="addNewDonutRow()"><i class="fas fa-plus"></i> Add New Donut</button>
+        <button class="add-donut-btn" onclick="addNewDonutRow()"><i class="fas fa-plus"></i> Add New Flavor</button>
         
         <table class="menu-editor-table">
           <thead>
             <tr>
               <th>Emoji</th>
-              <th>Donut Name</th>
+              <th>Flavor Name</th>
               <th>Description</th>
-              <th>Price (₱)</th>
               <th>Action</th>
             </tr>
           </thead>
@@ -175,7 +175,7 @@
             <!-- Menu rows will be injected by JS -->
           </tbody>
         </table>
-        <button class="btn-save-menu" onclick="saveMenuChanges()"><i class="fas fa-save"></i> Save Menu Changes</button>
+        <button class="btn-save-menu" onclick="saveMenuChanges()"><i class="fas fa-save"></i> Save Flavor Changes</button>
       </div>
     </div>
 
@@ -225,7 +225,6 @@
     // 2. TAB SWITCHING
     // =========================================
     function switchTab(tab) {
-      // Reset tabs
       document.getElementById('tabOrders').classList.remove('active');
       document.getElementById('tabMenu').classList.remove('active');
       document.getElementById('ordersView').style.display = 'none';
@@ -266,7 +265,6 @@
       const totalRevenueEl = document.getElementById('totalRevenue');
       const pendingOrdersEl = document.getElementById('pendingOrders');
 
-      // Update Stats
       totalOrdersEl.textContent = orders.length;
       let revenue = 0;
       let pending = 0;
@@ -295,7 +293,7 @@
           <td style="color:#666; font-size:0.9rem;">${order.time}</td>
           <td><strong>${order.name}</strong></td>
           <td style="max-width: 150px; font-size:0.9rem;">${order.address}</td>
-          <td style="font-size:0.9rem;">${order.items}</td>
+          <td style="font-size:0.9rem; max-width: 250px;">${order.items}</td>
           <td><span style="background:#f0f0f0; padding: 0.3rem 0.6rem; border-radius: 5px; font-size:0.8rem; font-weight:bold;">${order.method}</span></td>
           <td><strong style="color:#b64a12;">${formatPrice(order.total)}</strong></td>
           <td>
@@ -322,30 +320,28 @@
       if (!confirm("Are you sure you want to remove all Completed orders? Pending orders will not be deleted.")) return;
       
       let orders = JSON.parse(localStorage.getItem(STORAGE_KEY_ORDERS) || '[]');
-      // Keep only Pending orders
       orders = orders.filter(o => o.status !== 'Completed');
       localStorage.setItem(STORAGE_KEY_ORDERS, JSON.stringify(orders));
       loadOrders();
     }
 
     // =========================================
-    // 4. EDIT MENU LOGIC
+    // 4. EDIT FLAVORS LOGIC
     // =========================================
     const STORAGE_KEY_MENU = 'luna_mini_donut_menu';
-    const defaultDonuts = [
-      { id: 'glazed', name: 'Glazed Bliss', desc: 'Classic honey glaze', price: 79, icon: '🍩' },
-      { id: 'chocolate', name: 'Choco Dream', desc: 'Dark chocolate sprinkle', price: 89, icon: '🍫' },
-      { id: 'strawberry', name: 'Berry Love', desc: 'Strawberry icing', price: 85, icon: '🍓' },
-      { id: 'caramel', name: 'Caramel Crunch', desc: 'Salted caramel & toffee', price: 95, icon: '🍯' },
-      { id: 'vanilla', name: 'Vanilla Cloud', desc: 'Vanilla bean glaze', price: 79, icon: '🍦' },
-      { id: 'pistachio', name: 'Pistachio', desc: 'Roasted pistachio', price: 99, icon: '🥜' }
+    const defaultFlavors = [
+      { id: 'glazed', name: 'Glazed Bliss', desc: 'Classic sweet glaze', icon: '🍩' },
+      { id: 'chocolate', name: 'Choco Dream', desc: 'Rich chocolate flavor', icon: '🍫' },
+      { id: 'strawberry', name: 'Berry Love', desc: 'Sweet strawberry taste', icon: '🍓' },
+      { id: 'caramel', name: 'Caramel Crunch', desc: 'Salted caramel twist', icon: '🍯' },
+      { id: 'vanilla', name: 'Vanilla Cloud', desc: 'Smooth vanilla bean', icon: '🍦' },
+      { id: 'pistachio', name: 'Pistachio', desc: 'Nutty pistachio', icon: '🥜' }
     ];
 
     let editingMenu = [];
 
     function loadMenuForEditing() {
-      // Load from storage or use default
-      editingMenu = JSON.parse(localStorage.getItem(STORAGE_KEY_MENU)) || [...defaultDonuts];
+      editingMenu = JSON.parse(localStorage.getItem(STORAGE_KEY_MENU)) || [...defaultFlavors];
       renderMenuEditor();
     }
 
@@ -359,7 +355,6 @@
           <td><input type="text" value="${donut.icon}" onchange="updateMenuField(${index}, 'icon', this.value)" style="width: 50px; text-align:center;"></td>
           <td><input type="text" value="${donut.name}" onchange="updateMenuField(${index}, 'name', this.value)"></td>
           <td><input type="text" value="${donut.desc}" onchange="updateMenuField(${index}, 'desc', this.value)"></td>
-          <td><input type="number" value="${donut.price}" onchange="updateMenuField(${index}, 'price', parseFloat(this.value))" style="width: 100px;"></td>
           <td><button class="btn-delete-row" onclick="deleteMenuRow(${index})"><i class="fas fa-trash"></i></button></td>
         `;
         tbody.appendChild(tr);
@@ -371,29 +366,25 @@
     };
 
     window.deleteMenuRow = function(index) {
-      if (confirm("Delete this donut from the menu?")) {
+      if (confirm("Delete this flavor from the menu?")) {
         editingMenu.splice(index, 1);
         renderMenuEditor();
       }
     };
 
     window.addNewDonutRow = function() {
-      // Generate a random ID for the new donut
-      const newId = 'donut_' + Date.now();
-      editingMenu.push({ id: newId, name: 'New Donut', desc: 'Delicious!', price: 50, icon: '🍩' });
+      const newId = 'flavor_' + Date.now();
+      editingMenu.push({ id: newId, name: 'New Flavor', desc: 'Delicious taste!', icon: '🍩' });
       renderMenuEditor();
     };
 
     function saveMenuChanges() {
-      // Validation: ensure no empty names or invalid prices
       for (let d of editingMenu) {
-        if (!d.name.trim()) { alert("Donut names cannot be empty."); return; }
-        if (isNaN(d.price) || d.price < 0) { alert("Please enter a valid price."); return; }
+        if (!d.name.trim()) { alert("Flavor names cannot be empty."); return; }
       }
 
       localStorage.setItem(STORAGE_KEY_MENU, JSON.stringify(editingMenu));
-      alert("Menu saved successfully! Customers will see the updated menu.");
-      // Optional: reset to defaults button?
+      alert("Flavors saved successfully! Customers will see the updated list.");
     }
 
     // Auto-refresh orders every 5 seconds if on the orders tab
