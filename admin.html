@@ -3,52 +3,30 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Luna's Donut · Admin Login</title>
+  <title>Luna's Donut · Admin Dashboard</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
     body { background: #f4f7f6; padding: 2rem; color: #333; }
 
-    /* =========================================
-       LOGIN SCREEN STYLES
-       ========================================= */
-    .login-container {
-      display: flex; justify-content: center; align-items: center;
-      min-height: 80vh;
-    }
-    .login-box {
-      background: white; padding: 3rem 2rem; border-radius: 2rem;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center;
-    }
+    /* LOGIN SCREEN */
+    .login-container { display: flex; justify-content: center; align-items: center; min-height: 80vh; }
+    .login-box { background: white; padding: 3rem 2rem; border-radius: 2rem; box-shadow: 0 10px 30px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center; }
     .login-box i { font-size: 3rem; color: #ff9f6e; margin-bottom: 1rem; }
     .login-box h2 { color: #2d1b0e; margin-bottom: 0.5rem; }
     .login-box p { color: #888; margin-bottom: 2rem; font-size: 0.9rem; }
-    
     .input-group { position: relative; margin-bottom: 1.2rem; }
     .input-group i { position: absolute; left: 1.2rem; top: 50%; transform: translateY(-50%); color: #b97e5c; font-size: 1.1rem; }
-    .input-group input {
-      width: 100%; padding: 1rem 1rem 1rem 3rem; border: 2px solid #ffe6d5; border-radius: 50px;
-      font-size: 1rem; outline: none; transition: 0.2s; font-weight: 500;
-    }
+    .input-group input { width: 100%; padding: 1rem 1rem 1rem 3rem; border: 2px solid #ffe6d5; border-radius: 50px; font-size: 1rem; outline: none; transition: 0.2s; font-weight: 500; }
     .input-group input:focus { border-color: #ff8a4c; box-shadow: 0 0 0 4px rgba(255, 138, 76, 0.2); }
-
-    .login-btn {
-      width: 100%; background: #ff9f6e; color: #2d1b0e; border: none; border-radius: 50px;
-      padding: 1rem; font-size: 1.1rem; font-weight: 800; cursor: pointer;
-      box-shadow: 0 6px 0 #b95d2b; transition: 0.1s;
-    }
+    .login-btn { width: 100%; background: #ff9f6e; color: #2d1b0e; border: none; border-radius: 50px; padding: 1rem; font-size: 1.1rem; font-weight: 800; cursor: pointer; box-shadow: 0 6px 0 #b95d2b; transition: 0.1s; }
     .login-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #b95d2b; }
-    
     .error-msg { color: #d9534f; font-weight: bold; font-size: 0.9rem; margin-top: 1rem; display: none; }
 
-    /* =========================================
-       DASHBOARD STYLES (Hidden by default)
-       ========================================= */
+    /* DASHBOARD */
     #dashboardView { display: none; }
-    
     .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; }
     .header h1 { color: #2d1b0e; display: flex; align-items: center; gap: 0.5rem; }
-    
     .btn-group { display: flex; gap: 1rem; flex-wrap: wrap; }
     .btn { text-decoration: none; padding: 0.6rem 1.2rem; border-radius: 50px; font-weight: bold; cursor: pointer; border: none; display: flex; align-items: center; gap: 0.5rem; font-size: 0.95rem;}
     .btn-shop { background: #ff9f6e; color: #2d1b0e; box-shadow: 0 4px 0 #b95d2b; }
@@ -56,36 +34,49 @@
     .btn-logout { background: #ffe6d5; color: #a54b1e; box-shadow: 0 4px 0 #ffb88c; }
     .btn:active { transform: translateY(4px); box-shadow: none; }
 
+    /* TABS */
+    .tabs { display: flex; gap: 1rem; margin-bottom: 2rem; border-bottom: 2px solid #ddd; padding-bottom: 1rem; }
+    .tab-btn { background: none; border: none; font-size: 1.1rem; font-weight: bold; color: #888; cursor: pointer; padding: 0.5rem 1rem; border-radius: 10px; }
+    .tab-btn.active { color: #ff7e3f; background: #fff5ee; }
+
+    /* ORDERS TAB */
     .dashboard-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
     .stat-card { background: white; padding: 1.5rem; border-radius: 1rem; box-shadow: 0 5px 15px rgba(0,0,0,0.05); border-left: 5px solid #ff8a4c; }
     .stat-card h3 { font-size: 0.9rem; color: #888; text-transform: uppercase; margin-bottom: 0.5rem; }
     .stat-card p { font-size: 2rem; font-weight: 800; color: #2d1b0e; }
 
-    .orders-table-container { background: white; border-radius: 1rem; box-shadow: 0 5px 15px rgba(0,0,0,0.05); overflow-x: auto; }
+    .orders-table-container { background: white; border-radius: 1rem; box-shadow: 0 5px 15px rgba(0,0,0,0.05); overflow-x: auto; margin-bottom: 2rem;}
     table { width: 100%; border-collapse: collapse; text-align: left; }
     th, td { padding: 1rem; border-bottom: 1px solid #eee; }
     th { background: #fff8f0; color: #6b3f27; font-weight: 700; white-space: nowrap; }
     tr:hover { background: #fafafa; }
-    
     .status-badge { padding: 0.3rem 0.8rem; border-radius: 50px; font-size: 0.8rem; font-weight: bold; background: #ffe6d5; color: #a54b1e; }
     .btn-complete { background: #2e8b57; color: white; border: none; padding: 0.5rem 1rem; border-radius: 5px; cursor: pointer; font-weight: bold; }
-    .btn-complete:hover { background: #1e5c39; }
-
     .empty-state { text-align: center; padding: 3rem; color: #888; }
-    .empty-state i { font-size: 3rem; color: #ccc; margin-bottom: 1rem; }
+    
+    .clear-orders-btn { background: #d9534f; color: white; border: none; padding: 0.8rem 1.5rem; border-radius: 10px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 0 #a94442; display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; }
+    .clear-orders-btn:active { transform: translateY(4px); box-shadow: none; }
+
+    /* EDIT MENU TAB */
+    #editMenuView { display: none; }
+    .menu-editor-container { background: white; border-radius: 1rem; padding: 2rem; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+    .menu-editor-table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; }
+    .menu-editor-table th, .menu-editor-table td { padding: 0.8rem; border-bottom: 1px solid #eee; text-align: left; }
+    .menu-editor-table input { width: 100%; padding: 0.6rem; border: 1px solid #ccc; border-radius: 5px; font-family: inherit; }
+    .btn-save-menu { background: #2e8b57; color: white; border: none; padding: 1rem 2rem; border-radius: 50px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 0 #1e5c39; font-size: 1rem; }
+    .btn-save-menu:active { transform: translateY(4px); box-shadow: none; }
+    .btn-delete-row { background: #ff4d4d; color: white; border: none; padding: 0.5rem 0.8rem; border-radius: 5px; cursor: pointer; font-weight: bold; }
+    .add-donut-btn { background: #ff9f6e; color: #2d1b0e; border: none; padding: 0.6rem 1.2rem; border-radius: 5px; font-weight: bold; cursor: pointer; margin-bottom: 1rem; box-shadow: 0 4px 0 #b95d2b; }
   </style>
 </head>
 <body>
 
-  <!-- =========================================
-       LOGIN SCREEN
-       ========================================= -->
+  <!-- LOGIN VIEW -->
   <div class="login-container" id="loginView">
     <div class="login-box">
       <i class="fas fa-cookie-bite"></i>
       <h2>Admin Login</h2>
-      <p>Enter your credentials to manage orders.</p>
-      
+      <p>Enter your credentials to manage orders and menu.</p>
       <div class="input-group">
         <i class="fas fa-user"></i>
         <input type="text" id="username" placeholder="Username" value="admin">
@@ -94,69 +85,106 @@
         <i class="fas fa-lock"></i>
         <input type="password" id="password" placeholder="Password" value="luna123">
       </div>
-      
       <button class="login-btn" onclick="handleLogin()">Login to Dashboard</button>
       <div class="error-msg" id="loginError">Incorrect username or password!</div>
     </div>
   </div>
 
-  <!-- =========================================
-       DASHBOARD (Only visible after login)
-       ========================================= -->
+  <!-- DASHBOARD VIEW -->
   <div id="dashboardView">
     <div class="header">
       <h1><i class="fas fa-store"></i> Store Dashboard</h1>
       <div class="btn-group">
-        <button class="btn btn-refresh" onclick="loadOrders()"><i class="fas fa-rotate"></i> Refresh</button>
+        <button class="btn btn-refresh" onclick="refreshAll()"><i class="fas fa-rotate"></i> Refresh</button>
         <a href="index.html" class="btn btn-shop"><i class="fas fa-arrow-left"></i> Shop</a>
         <button class="btn btn-logout" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
       </div>
     </div>
 
-    <div class="dashboard-stats">
-      <div class="stat-card">
-        <h3>Total Orders</h3>
-        <p id="totalOrders">0</p>
+    <!-- TABS -->
+    <div class="tabs">
+      <button class="tab-btn active" id="tabOrders" onclick="switchTab('orders')"><i class="fas fa-receipt"></i> Live Orders</button>
+      <button class="tab-btn" id="tabMenu" onclick="switchTab('menu')"><i class="fas fa-pen-to-square"></i> Edit Menu</button>
+    </div>
+
+    <!-- TAB 1: LIVE ORDERS -->
+    <div id="ordersView">
+      <div class="dashboard-stats">
+        <div class="stat-card">
+          <h3>Total Orders</h3>
+          <p id="totalOrders">0</p>
+        </div>
+        <div class="stat-card" style="border-left-color: #2e8b57;">
+          <h3>Total Revenue</h3>
+          <p id="totalRevenue">₱0.00</p>
+        </div>
+        <div class="stat-card" style="border-left-color: #ffb88c;">
+          <h3>Pending Orders</h3>
+          <p id="pendingOrders">0</p>
+        </div>
       </div>
-      <div class="stat-card" style="border-left-color: #2e8b57;">
-        <h3>Total Revenue</h3>
-        <p id="totalRevenue">₱0.00</p>
-      </div>
-      <div class="stat-card" style="border-left-color: #ffb88c;">
-        <h3>Pending Orders</h3>
-        <p id="pendingOrders">0</p>
+
+      <!-- CLEAR COMPLETED ORDERS BUTTON -->
+      <button class="clear-orders-btn" onclick="clearCompletedOrders()">
+        <i class="fas fa-broom"></i> Clear Completed Orders
+      </button>
+
+      <div class="orders-table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Order #</th>
+              <th>Time</th>
+              <th>Customer</th>
+              <th>Address</th>
+              <th>Items</th>
+              <th>Payment</th>
+              <th>Total</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="ordersTableBody"></tbody>
+        </table>
+        <div id="emptyState" class="empty-state" style="display: none;">
+          <i class="fas fa-receipt"></i>
+          <h2>No orders yet</h2>
+          <p>Place a test order on the shop page, then click "Refresh".</p>
+        </div>
       </div>
     </div>
 
-    <div class="orders-table-container">
-      <table>
-        <thead>
-          <tr>
-            <th>Order #</th>
-            <th>Time</th>
-            <th>Customer</th>
-            <th>Address</th>
-            <th>Items</th>
-            <th>Payment</th>
-            <th>Total</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody id="ordersTableBody"></tbody>
-      </table>
-      <div id="emptyState" class="empty-state" style="display: none;">
-        <i class="fas fa-receipt"></i>
-        <h2>No orders yet</h2>
-        <p>Place a test order on the shop page, then click "Refresh".</p>
+    <!-- TAB 2: EDIT MENU -->
+    <div id="editMenuView">
+      <div class="menu-editor-container">
+        <h2 style="margin-bottom: 1rem; color: #2d1b0e;">Edit Donut Menu</h2>
+        <p style="color: #666; margin-bottom: 1.5rem; font-size: 0.9rem;">Changes made here will instantly update the shop page for customers (on the same device).</p>
+        
+        <button class="add-donut-btn" onclick="addNewDonutRow()"><i class="fas fa-plus"></i> Add New Donut</button>
+        
+        <table class="menu-editor-table">
+          <thead>
+            <tr>
+              <th>Emoji</th>
+              <th>Donut Name</th>
+              <th>Description</th>
+              <th>Price (₱)</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="menuTableBody">
+            <!-- Menu rows will be injected by JS -->
+          </tbody>
+        </table>
+        <button class="btn-save-menu" onclick="saveMenuChanges()"><i class="fas fa-save"></i> Save Menu Changes</button>
       </div>
     </div>
+
   </div>
 
   <script>
     // =========================================
-    // 1. AUTHENTICATION LOGIC
+    // 1. AUTHENTICATION
     // =========================================
-    // You can change the admin username and password here!
     const ADMIN_USER = "admin";
     const ADMIN_PASS = "luna123";
 
@@ -167,7 +195,6 @@
 
       if (user === ADMIN_USER && pass === ADMIN_PASS) {
         errorMsg.style.display = 'none';
-        // Save login state to session (clears when browser tab is closed)
         sessionStorage.setItem('luna_admin_logged_in', 'true');
         showDashboard();
       } else {
@@ -179,33 +206,57 @@
       sessionStorage.removeItem('luna_admin_logged_in');
       document.getElementById('dashboardView').style.display = 'none';
       document.getElementById('loginView').style.display = 'flex';
-      document.getElementById('password').value = ''; // clear password field
+      document.getElementById('password').value = '';
     }
 
     function showDashboard() {
       document.getElementById('loginView').style.display = 'none';
       document.getElementById('dashboardView').style.display = 'block';
-      loadOrders(); // Load data immediately
+      refreshAll();
     }
 
-    // Check if already logged in when page loads
     window.onload = function() {
       if (sessionStorage.getItem('luna_admin_logged_in') === 'true') {
         showDashboard();
       }
     };
 
+    // =========================================
+    // 2. TAB SWITCHING
+    // =========================================
+    function switchTab(tab) {
+      // Reset tabs
+      document.getElementById('tabOrders').classList.remove('active');
+      document.getElementById('tabMenu').classList.remove('active');
+      document.getElementById('ordersView').style.display = 'none';
+      document.getElementById('editMenuView').style.display = 'none';
+
+      if (tab === 'orders') {
+        document.getElementById('tabOrders').classList.add('active');
+        document.getElementById('ordersView').style.display = 'block';
+        loadOrders();
+      } else {
+        document.getElementById('tabMenu').classList.add('active');
+        document.getElementById('editMenuView').style.display = 'block';
+        loadMenuForEditing();
+      }
+    }
+
+    function refreshAll() {
+      if (document.getElementById('ordersView').style.display !== 'none') {
+        loadOrders();
+      } else if (document.getElementById('editMenuView').style.display !== 'none') {
+        loadMenuForEditing();
+      }
+    }
 
     // =========================================
-    // 2. DASHBOARD DATA LOGIC
+    // 3. ORDERS LOGIC
     // =========================================
+    const STORAGE_KEY_ORDERS = 'luna_orders';
     const formatPrice = (p) => `₱${p.toFixed(2)}`;
-    const STORAGE_KEY_ORDERS = 'luna_orders'; 
 
     function loadOrders() {
-      // Only load if logged in to save memory
-      if (sessionStorage.getItem('luna_admin_logged_in') !== 'true') return;
-
       const rawData = localStorage.getItem(STORAGE_KEY_ORDERS);
       const orders = rawData ? JSON.parse(rawData) : [];
       
@@ -217,7 +268,6 @@
 
       // Update Stats
       totalOrdersEl.textContent = orders.length;
-      
       let revenue = 0;
       let pending = 0;
 
@@ -229,7 +279,6 @@
       totalRevenueEl.textContent = formatPrice(revenue);
       pendingOrdersEl.textContent = pending;
 
-      // Clear table
       tableBody.innerHTML = '';
 
       if (orders.length === 0) {
@@ -239,7 +288,6 @@
         emptyState.style.display = 'none';
       }
 
-      // Populate Table
       orders.forEach((order, index) => {
         const tr = document.createElement('tr');
         tr.innerHTML = `
@@ -270,9 +318,87 @@
       }
     };
 
-    // Auto-refresh every 5 seconds if logged in
+    function clearCompletedOrders() {
+      if (!confirm("Are you sure you want to remove all Completed orders? Pending orders will not be deleted.")) return;
+      
+      let orders = JSON.parse(localStorage.getItem(STORAGE_KEY_ORDERS) || '[]');
+      // Keep only Pending orders
+      orders = orders.filter(o => o.status !== 'Completed');
+      localStorage.setItem(STORAGE_KEY_ORDERS, JSON.stringify(orders));
+      loadOrders();
+    }
+
+    // =========================================
+    // 4. EDIT MENU LOGIC
+    // =========================================
+    const STORAGE_KEY_MENU = 'luna_mini_donut_menu';
+    const defaultDonuts = [
+      { id: 'glazed', name: 'Glazed Bliss', desc: 'Classic honey glaze', price: 79, icon: '🍩' },
+      { id: 'chocolate', name: 'Choco Dream', desc: 'Dark chocolate sprinkle', price: 89, icon: '🍫' },
+      { id: 'strawberry', name: 'Berry Love', desc: 'Strawberry icing', price: 85, icon: '🍓' },
+      { id: 'caramel', name: 'Caramel Crunch', desc: 'Salted caramel & toffee', price: 95, icon: '🍯' },
+      { id: 'vanilla', name: 'Vanilla Cloud', desc: 'Vanilla bean glaze', price: 79, icon: '🍦' },
+      { id: 'pistachio', name: 'Pistachio', desc: 'Roasted pistachio', price: 99, icon: '🥜' }
+    ];
+
+    let editingMenu = [];
+
+    function loadMenuForEditing() {
+      // Load from storage or use default
+      editingMenu = JSON.parse(localStorage.getItem(STORAGE_KEY_MENU)) || [...defaultDonuts];
+      renderMenuEditor();
+    }
+
+    function renderMenuEditor() {
+      const tbody = document.getElementById('menuTableBody');
+      tbody.innerHTML = '';
+
+      editingMenu.forEach((donut, index) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><input type="text" value="${donut.icon}" onchange="updateMenuField(${index}, 'icon', this.value)" style="width: 50px; text-align:center;"></td>
+          <td><input type="text" value="${donut.name}" onchange="updateMenuField(${index}, 'name', this.value)"></td>
+          <td><input type="text" value="${donut.desc}" onchange="updateMenuField(${index}, 'desc', this.value)"></td>
+          <td><input type="number" value="${donut.price}" onchange="updateMenuField(${index}, 'price', parseFloat(this.value))" style="width: 100px;"></td>
+          <td><button class="btn-delete-row" onclick="deleteMenuRow(${index})"><i class="fas fa-trash"></i></button></td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    window.updateMenuField = function(index, field, value) {
+      editingMenu[index][field] = value;
+    };
+
+    window.deleteMenuRow = function(index) {
+      if (confirm("Delete this donut from the menu?")) {
+        editingMenu.splice(index, 1);
+        renderMenuEditor();
+      }
+    };
+
+    window.addNewDonutRow = function() {
+      // Generate a random ID for the new donut
+      const newId = 'donut_' + Date.now();
+      editingMenu.push({ id: newId, name: 'New Donut', desc: 'Delicious!', price: 50, icon: '🍩' });
+      renderMenuEditor();
+    };
+
+    function saveMenuChanges() {
+      // Validation: ensure no empty names or invalid prices
+      for (let d of editingMenu) {
+        if (!d.name.trim()) { alert("Donut names cannot be empty."); return; }
+        if (isNaN(d.price) || d.price < 0) { alert("Please enter a valid price."); return; }
+      }
+
+      localStorage.setItem(STORAGE_KEY_MENU, JSON.stringify(editingMenu));
+      alert("Menu saved successfully! Customers will see the updated menu.");
+      // Optional: reset to defaults button?
+    }
+
+    // Auto-refresh orders every 5 seconds if on the orders tab
     setInterval(() => {
-      if (sessionStorage.getItem('luna_admin_logged_in') === 'true') {
+      if (sessionStorage.getItem('luna_admin_logged_in') === 'true' && document.getElementById('ordersView').style.display !== 'none') {
         loadOrders();
       }
     }, 5000);
