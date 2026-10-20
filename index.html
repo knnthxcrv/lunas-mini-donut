@@ -32,26 +32,29 @@
     
     /* MAIN LAYOUT */
     .main-panel { display: flex; flex-direction: row; flex-wrap: wrap; padding: 2rem 2.5rem 2.5rem; gap: 2.2rem; }
-    .menu-section { flex: 2; min-width: 320px; }
-    .menu-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 1.5rem; }
-    .menu-header h2 { font-size: 1.9rem; font-weight: 700; color: var(--text-dark); display: flex; align-items: center; gap: 0.6rem; }
-    .menu-header p { color: var(--text-light); font-weight: 500; background: var(--primary-light); padding: 0.4rem 1.2rem; border-radius: 50px; }
+    .menu-section { flex: 2.5; min-width: 320px; } /* Pinalaki ang menu section */
     
-    /* DONUT GRID */
-    .donut-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 1.4rem; }
-    .donut-card { background: #ffffff; border-radius: 2rem; padding: 1.5rem 1rem 1.2rem; box-shadow: 0 8px 0 var(--primary-light), 0 12px 20px -8px rgba(168, 85, 247, 0.2); transition: 0.15s; display: flex; flex-direction: column; align-items: center; text-align: center; border: 1px solid var(--secondary-light); cursor: pointer; position: relative; }
-    .donut-card.custom-box { border: 2px dashed var(--primary); background: var(--bg); }
+    /* GALLERY GRID */
+    .donut-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1.5rem; }
+    .donut-card { background: #ffffff; border-radius: 1.5rem; padding: 0; box-shadow: 0 8px 0 var(--primary-light), 0 12px 20px -8px rgba(168, 85, 247, 0.2); transition: 0.2s; display: flex; flex-direction: column; overflow: hidden; border: 1px solid var(--secondary-light); cursor: pointer; position: relative; }
+    .donut-card:hover { transform: translateY(-5px); box-shadow: 0 12px 0 var(--primary-light), 0 18px 25px -8px rgba(168, 85, 247, 0.3); }
     
-    /* IMAGE STYLES */
-    .donut-icon { font-size: 3.8rem; line-height: 1; filter: drop-shadow(0 6px 4px rgba(0,0,0,0.1)); margin-bottom: 0.5rem; display: flex; justify-content: center; align-items: center; height: 100px; width: 100%; border-radius: 1rem; overflow: hidden; background: #fff; }
-    .donut-img { width: 100%; height: 100%; object-fit: cover; }
+    /* MALAKING PICTURE SA TAAS */
+    .donut-image-box { width: 100%; height: 180px; background: #f8f4fb; display: flex; justify-content: center; align-items: center; overflow: hidden; position: relative; }
+    .donut-image-box img { width: 100%; height: 100%; object-fit: cover; transition: 0.3s; }
+    .donut-card:hover .donut-image-box img { transform: scale(1.05); }
+    .donut-image-box .fallback-icon { font-size: 5rem; }
 
-    .donut-card h3 { font-size: 1.2rem; font-weight: 700; color: var(--text-dark); margin-bottom: 0.3rem; }
-    .donut-desc { font-size: 0.75rem; color: var(--text-light); margin-bottom: 0.6rem; font-weight: 500; min-height: 2.2em; }
-    .price-range { font-weight: 800; font-size: 1rem; color: #ffffff; background: var(--secondary); padding: 0.35rem 1rem; border-radius: 40px; display: inline-block; margin-top: 0.3rem; }
+    /* DETALYE SA ILALIM */
+    .donut-details { padding: 1.2rem; text-align: center; display: flex; flex-direction: column; align-items: center; flex: 1; justify-content: space-between; }
+    .donut-card h3 { font-size: 1.2rem; font-weight: 800; color: var(--text-dark); margin-bottom: 0.3rem; }
+    .donut-desc { font-size: 0.8rem; color: var(--text-light); margin-bottom: 0.8rem; font-weight: 500; }
+    .price-range { font-weight: 800; font-size: 1.1rem; color: #ffffff; background: var(--secondary); padding: 0.4rem 1.2rem; border-radius: 40px; margin-bottom: 1rem; }
+    .add-btn { width: 100%; background: var(--bg); color: var(--primary); border: 2px solid var(--primary); border-radius: 50px; padding: 0.6rem; font-weight: 700; cursor: pointer; transition: 0.2s; }
+    .add-btn:hover { background: var(--primary); color: white; }
 
     /* ORDER PANEL */
-    .order-panel { flex: 1.2; min-width: 300px; background: #faf5ff; border-radius: 2.5rem; padding: 2rem 1.8rem; box-shadow: inset 0 0 0 1px var(--primary-light), 0 15px 25px -10px rgba(168, 85, 247, 0.2); display: flex; flex-direction: column; }
+    .order-panel { flex: 1.2; min-width: 300px; background: #faf5ff; border-radius: 2.5rem; padding: 2rem 1.8rem; box-shadow: inset 0 0 0 1px var(--primary-light), 0 15px 25px -10px rgba(168, 85, 247, 0.2); display: flex; flex-direction: column; height: fit-content; position: sticky; top: 20px; }
     .order-panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.8rem; flex-wrap: wrap; gap: 0.5rem; }
     .order-panel h2 { font-size: 1.7rem; font-weight: 700; color: var(--text-dark); display: flex; align-items: center; gap: 0.7rem; }
     .clear-btn { background: var(--primary-light); border: 2px solid var(--primary); color: var(--text-dark); font-weight: 700; font-size: 0.8rem; padding: 0.5rem 1.1rem; border-radius: 50px; cursor: pointer; }
@@ -85,9 +88,9 @@
     .order-btn { background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); border: none; border-radius: 60px; padding: 1.2rem; font-weight: 800; font-size: 1.2rem; color: white; display: flex; align-items: center; justify-content: center; gap: 0.9rem; cursor: pointer; box-shadow: 0 8px 0 #7e22ce; }
     
     /* MODALS */
-    .modal-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(59, 7, 100, 0.7); backdrop-filter: blur(5px); display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: 0.3s; z-index: 100; }
+    .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(59, 7, 100, 0.7); backdrop-filter: blur(5px); display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: 0.3s; z-index: 100; padding: 1rem;}
     .modal-overlay.active { opacity: 1; pointer-events: auto; }
-    .modal-box { background: #ffffff; width: 90%; max-width: 450px; border-radius: 2.5rem; padding: 2rem; box-shadow: 0 20px 40px rgba(0,0,0,0.2); transform: translateY(20px); transition: 0.3s; max-height: 90vh; overflow-y: auto; }
+    .modal-box { background: #ffffff; width: 100%; max-width: 450px; border-radius: 2.5rem; padding: 2rem; box-shadow: 0 20px 40px rgba(0,0,0,0.2); transform: translateY(20px); transition: 0.3s; max-height: 90vh; overflow-y: auto; }
     .modal-overlay.active .modal-box { transform: translateY(0); }
     .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
     .modal-header h2 { font-size: 1.4rem; color: var(--text-dark); display: flex; align-items: center; gap: 0.5rem; }
@@ -119,12 +122,10 @@
     /* QR CODE SCAN STYLES */
     .payment-dynamic-fields { display: none; background: var(--bg); border: 1px dashed var(--primary-light); padding: 1rem; border-radius: 1rem; margin-bottom: 1.5rem; text-align: center; }
     .payment-dynamic-fields.active { display: block; }
-    
     .qr-container { background: white; padding: 1rem; border-radius: 1rem; display: inline-block; margin-bottom: 1rem; border: 2px solid var(--primary-light); }
     .qr-container img { width: 150px; height: 150px; object-fit: contain; }
     .gcash-number { font-size: 1.2rem; font-weight: 800; color: var(--text-dark); margin-bottom: 0.5rem; letter-spacing: 1px;}
     .gcash-name { font-size: 0.9rem; color: var(--text-light); margin-bottom: 1rem; }
-    
     .upload-receipt-box { background: white; border: 2px dashed var(--primary); padding: 1rem; border-radius: 10px; cursor: pointer; transition: 0.2s; margin-top: 1rem; }
     .upload-receipt-box:hover { background: #f3e8ff; }
     .upload-receipt-box i { font-size: 1.5rem; color: var(--primary); margin-bottom: 0.5rem; display: block; }
@@ -142,6 +143,11 @@
     #map { height: 300px; width: 100%; border-radius: 1rem; margin-bottom: 1rem; border: 2px solid var(--primary-light); }
     .map-instruction { font-size: 0.85rem; color: var(--text-dark); margin-bottom: 0.5rem; font-weight: 600; text-align: center; }
 
+    @media (max-width: 900px) {
+      .main-panel { flex-direction: column; }
+      .order-panel { position: static; width: 100%; }
+    }
+
     @media (max-width: 768px) {
       body { padding: 0; background: #ffffff; }
       .delivery-app { border-radius: 0; box-shadow: none; min-height: 100vh; padding-bottom: 80px; }
@@ -151,10 +157,12 @@
       .brand img { width: 45px; height: 45px; }
       .admin-btn span { display: none; }
       .admin-btn { padding: 0.6rem; border-radius: 50%; }
-      .main-panel { padding: 1rem; flex-direction: column; gap: 1.5rem; }
+      .main-panel { padding: 1rem; gap: 1.5rem; }
       .donut-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
-      .donut-card { padding: 1rem 0.5rem; border-radius: 1.5rem; }
-      .donut-icon { height: 80px; width: 100%; }
+      .donut-card { border-radius: 1.5rem; }
+      .donut-image-box { height: 120px; }
+      .donut-image-box .fallback-icon { font-size: 3rem; }
+      .donut-details { padding: 0.8rem; }
       .donut-card h3 { font-size: 1rem; }
       .order-panel { border-radius: 2rem; padding: 1.5rem 1rem; }
       .cart-item { border-radius: 1.5rem; flex-wrap: wrap; padding: 0.8rem; }
@@ -183,9 +191,10 @@
     <div class="main-panel">
       <div class="menu-section">
         <div class="menu-header">
-          <h2><i class="fas fa-donut"></i> Menu</h2>
+          <h2><i class="fas fa-donut"></i> Our Menu</h2>
           <p>tap to customize</p>
         </div>
+        <!-- GALLERY GRID -->
         <div class="donut-grid" id="donutGrid"></div>
       </div>
 
@@ -293,15 +302,11 @@
           <!-- GCASH / MAYA QR SCANNER -->
           <div class="payment-dynamic-fields" id="eWalletFields">
             <p style="font-weight: 600; color: var(--text-dark); margin-bottom: 0.5rem;">Scan to Pay:</p>
-            
             <div class="qr-container">
-              <!-- PALITAN ITO NG PANGALAN NG QR CODE MO SA GITHUB -->
               <img src="gcash_qr.png" alt="GCash QR Code" onerror="this.src='https://via.placeholder.com/150?text=QR+Code'">
             </div>
-            
             <div class="gcash-number">0994 140 7636</div>
             <div class="gcash-name">Luna's Sweets</div>
-            
             <p style="font-size: 0.8rem; color: #be123c; margin-bottom: 1rem; font-weight: bold;">⚠️ I-screenshot ang resibo pagkatapos magbayad.</p>
 
             <input type="file" accept="image/*" id="receiptUpload" style="display:none;" onchange="handleReceiptUpload(event)">
@@ -357,7 +362,7 @@
 
   <script>
     const FREE_DELIVERY_THRESHOLD = 500;
-    const DELIVERY_FEE = 50; // Fixed delivery fee kung hindi umabot ng 500
+    const DELIVERY_FEE = 50;
     const STORAGE_KEY_CART = 'luna_mini_donut_cart';
     const STORAGE_KEY_ADDR = 'luna_mini_donut_address';
     const STORAGE_KEY_MENU = 'luna_mini_donut_menu';
@@ -387,7 +392,6 @@
     let selectedType = 'classic';
     let selectedSize = 2;
     
-    // CHECKOUT VARIABLES
     let currentDiscount = 0;
     let currentDeliveryFee = 0;
     let currentSubtotal = 0;
@@ -425,23 +429,33 @@
     function saveCart() { try { localStorage.setItem(STORAGE_KEY_CART, JSON.stringify(cart)); } catch (e) {} }
     function saveCustomerDetails() { try { localStorage.setItem(STORAGE_KEY_ADDR, customerAddressInput.value.trim()); } catch (e) {} }
 
+    // UPDATED RENDER MENU (GALLERY STYLE)
     function renderMenu() {
       donutGrid.innerHTML = '';
       menuItems.forEach(item => {
         if (item.inStock === false) return;
-        const card = document.createElement('div');
-        card.className = `donut-card ${item.type === 'custom' ? 'custom-box' : ''}`;
         
-        let iconHtml = '';
+        const card = document.createElement('div');
+        card.className = 'donut-card';
+        
+        let imageHtml = '';
         if (item.image && item.image.trim() !== '') {
-          iconHtml = `<div class="donut-icon"><img src="${item.image}" class="donut-img" alt="${item.name}"></div>`;
+          imageHtml = `<div class="donut-image-box"><img src="${item.image}" alt="${item.name}"></div>`;
         } else {
-          iconHtml = `<div class="donut-icon" style="font-size:3rem">${item.icon || '🍩'}</div>`;
+          imageHtml = `<div class="donut-image-box"><div class="fallback-icon">${item.icon || '🍩'}</div></div>`;
         }
 
-        let priceHtml = item.type === 'custom' ? `₱${item.price}` : `₱${settings.prices[item.type][2]} / ₱${settings.prices[item.type][12]}`;
-        card.innerHTML = `${iconHtml}<h3>${item.name}</h3><div class="donut-desc">${item.desc}</div><div class="price-range">${priceHtml}</div>`;
-        card.addEventListener('click', () => openCustomizer(item));
+        let priceHtml = item.type === 'custom' ? `₱${item.price}` : `Starts at ₱${settings.prices[item.type][2]}`;
+        
+        card.innerHTML = `
+          ${imageHtml}
+          <div class="donut-details">
+            <h3>${item.name}</h3>
+            <div class="donut-desc">${item.desc}</div>
+            <div class="price-range">${priceHtml}</div>
+            <button class="add-btn" onclick="event.stopPropagation(); openCustomizer(${JSON.stringify(item).replace(/"/g, '&quot;')})">Add to Cart</button>
+          </div>
+        `;
         donutGrid.appendChild(card);
       });
     }
@@ -549,6 +563,7 @@
     window.removeItem = (key) => { delete cart[key]; saveCart(); renderCart(); }
     clearBoxBtn.addEventListener('click', () => { cart = {}; saveCart(); renderCart(); });
 
+    // REST OF THE CODE (MAP, CHECKOUT, TRACKING) REMAINS EXACTLY THE SAME...
     window.openMapModal = () => {
       document.getElementById('mapModal').classList.add('active');
       if (!map) {
@@ -577,7 +592,6 @@
       else { let order; snap.forEach(d => order = d.data()); resDiv.innerHTML = `<p><strong>Status:</strong> <span style="color:${order.status==='Pending'?'#ff7e3f':'#2e8b57'}; font-weight:bold;">${order.status}</span></p><p style="font-size:0.9rem; margin-top:0.5rem;">Name: ${order.name}</p><p style="font-size:0.9rem;">Total: ₱${order.total.toFixed(2)}</p>`; }
     }
 
-    // CHECKOUT LOGIC (PROMO, DELIVERY FEE, RECEIPT)
     window.selectPayment = (method, el) => {
       selectedPaymentMethod = method; document.querySelectorAll('.pay-option').forEach(opt => opt.classList.remove('selected')); el.classList.add('selected');
       document.querySelector(`input[value="${method}"]`).checked = true; eWalletFields.classList.remove('active'); if (method === 'gcash' || method === 'maya') eWalletFields.classList.add('active');
@@ -586,13 +600,26 @@
     window.handleReceiptUpload = (event) => {
       const file = event.target.files[0];
       if (!file) return;
-      if (file.size > 2000000) { alert("Image too large. Max 2MB."); return; }
       
       const reader = new FileReader();
       reader.onload = function(e) {
-        uploadedReceiptBase64 = e.target.result;
-        document.getElementById('receiptStatus').textContent = "Receipt Uploaded!";
-        document.getElementById('receiptStatus').style.color = "#10b981"; // Green
+        const img = new Image();
+        img.onload = function() {
+          const canvas = document.createElement('canvas');
+          const MAX_WIDTH = 800; 
+          const scaleSize = MAX_WIDTH / img.width;
+          canvas.width = MAX_WIDTH;
+          canvas.height = img.height * scaleSize;
+          
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          
+          uploadedReceiptBase64 = canvas.toDataURL('image/jpeg', 0.7);
+          
+          document.getElementById('receiptStatus').textContent = "Receipt Uploaded!";
+          document.getElementById('receiptStatus').style.color = "#10b981";
+        };
+        img.src = e.target.result;
       };
       reader.readAsDataURL(file);
     }
@@ -600,15 +627,13 @@
     window.applyPromo = () => {
       const code = document.getElementById('promoCodeInput').value.trim().toUpperCase();
       if (code === 'LUNA10') {
-        currentDiscount = currentSubtotal * 0.10; // 10% discount
+        currentDiscount = currentSubtotal * 0.10;
         document.getElementById('discountRow').style.display = 'flex';
         document.getElementById('checkoutDiscount').textContent = `-₱${currentDiscount.toFixed(2)}`;
         document.getElementById('promoCodeInput').value = '';
         updateCheckoutTotal();
         alert("Promo applied! 10% off.");
-      } else {
-        alert("Invalid Promo Code.");
-      }
+      } else { alert("Invalid Promo Code."); }
     }
 
     function updateCheckoutTotal() {
@@ -621,7 +646,6 @@
     orderBtn.addEventListener('click', () => {
       if (!customerNameInput.value.trim() || !customerPhoneInput.value.trim() || !customerAddressInput.value.trim()) { alert('Please fill in Name, Phone, and Address.'); return; }
       
-      // Compute totals
       currentSubtotal = currentTotal;
       currentDiscount = 0;
       currentDeliveryFee = currentSubtotal >= FREE_DELIVERY_THRESHOLD ? 0 : DELIVERY_FEE;
@@ -656,18 +680,9 @@
         let finalTotal = currentSubtotal + currentDeliveryFee - currentDiscount;
 
         const orderData = { 
-          id: orderNum, 
-          name: customerNameInput.value.trim(), 
-          phone: customerPhoneInput.value.trim(), 
-          address: customerAddressInput.value.trim(), 
-          landmark: landmark, 
-          instructions: specialInstructionsInput.value.trim(), 
-          items: itemsList, 
-          total: finalTotal, 
-          method: methodName, 
-          status: 'Pending', 
-          timestamp: Date.now(),
-          receipt: uploadedReceiptBase64 // Isasama ang resibo sa order
+          id: orderNum, name: customerNameInput.value.trim(), phone: customerPhoneInput.value.trim(), address: customerAddressInput.value.trim(), 
+          landmark: landmark, instructions: specialInstructionsInput.value.trim(), items: itemsList, total: finalTotal, method: methodName, 
+          status: 'Pending', timestamp: Date.now(), receipt: uploadedReceiptBase64
         };
 
         try {
@@ -678,18 +693,16 @@
           document.getElementById('receiptPhone').textContent = orderData.phone; 
           document.getElementById('receiptTotal').textContent = formatPrice(finalTotal);
           
-          checkoutView.style.display = 'none'; 
-          successView.classList.add('active'); 
-          confirmPayBtn.innerHTML = '<i class="fas fa-lock"></i> Pay <span id="payAmount">₱0.00</span>'; 
-          confirmPayBtn.disabled = false; 
+          checkoutView.style.display = 'none'; successView.classList.add('active'); 
+          confirmPayBtn.innerHTML = '<i class="fas fa-lock"></i> Pay <span id="payAmount">₱0.00</span>'; confirmPayBtn.disabled = false; 
           
           cart = {}; saveCart(); renderCart();
-          uploadedReceiptBase64 = ''; // Reset
+          uploadedReceiptBase64 = ''; 
           document.getElementById('receiptStatus').textContent = 'Upload Payment Receipt Here';
           document.getElementById('receiptStatus').style.color = "var(--primary)";
           
         } catch (error) { 
-          alert("Failed to save order."); 
+          alert("Failed to save order. Error: " + error.message); 
           confirmPayBtn.innerHTML = '<i class="fas fa-lock"></i> Pay <span id="payAmount">₱0.00</span>'; confirmPayBtn.disabled = false; 
         }
       }, 1500);
