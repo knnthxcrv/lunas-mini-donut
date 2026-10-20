@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Luna's Donut · Admin Dashboard</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+    body { background: #f4f7f6; padding: 2rem; color: #333; }
+    
+    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+    .header h1 { color: #2d1b0e; display: flex; align-items: center; gap: 0.5rem; }
+    .header a { text-decoration: none; background: #ff9f6e; color: #2d1b0e; padding: 0.6rem 1.2rem; border-radius: 50px; font-weight: bold; box-shadow: 0 4px 0 #b95d2b; }
+    .header a:active { transform: translateY(4px); box-shadow: none; }
+
+    .dashboard-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+    .stat-card { background: white; padding: 1.5rem; border-radius: 1rem; box-shadow: 0 5px 15px rgba(0,0,0,0.05); border-left: 5px solid #ff8a4c; }
+    .stat-card h3 { font-size: 0.9rem; color: #888; text-transform: uppercase; margin-bottom: 0.5rem; }
+    .stat-card p { font-size: 2rem; font-weight: 800; color: #2d1b0e; }
+
+    .orders-table-container { background: white; border-radius: 1rem; box-shadow: 0 5px 15px rgba(0,0,0,0.05); overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; text-align: left; }
+    th, td { padding: 1rem; border-bottom: 1px solid #eee; }
+    th { background: #fff8f0; color: #6b3f27; font-weight: 700; white-space: nowrap; }
+    tr:hover { background: #fafafa; }
+    
+    .status-badge { padding: 0.3rem 0.8rem; border-radius: 50px; font-size: 0.8rem; font-weight: bold; background: #ffe6d5; color: #a54b1e; }
+    
+    .btn-complete { background: #2e8b57; color: white; border: none; padding: 0.5rem 1rem; border-radius: 5px; cursor: pointer; font-weight: bold; }
+    .btn-complete:hover { background: #1e5c39; }
+
+    .empty-state { text-align: center; padding: 3rem; color: #888; }
+    .empty-state i { font-size: 3rem; color: #ccc; margin-bottom: 1rem; }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <h1><i class="fas fa-store"></i> Store Dashboard</h1>
+    <a href="index.html"><i class="fas fa-arrow-left"></i> Back to Shop</a>
+  </div>
+
+  <div class="dashboard-stats">
+    <div class="stat-card">
+      <h3>Total Orders</h3>
+      <p id="totalOrders">0</p>
+    </div>
+    <div class="stat-card" style="border-left-color: #2e8b57;">
+      <h3>Total Revenue</h3>
+      <p id="totalRevenue">₱0.00</p>
+    </div>
+    <div class="stat-card" style="border-left-color: #ffb88c;">
+      <h3>Pending Orders</h3>
+      <p id="pendingOrders">0</p>
+    </div>
+  </div>
+
+  <div class="orders-table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>Order #</th>
+          <th>Time</th>
+          <th>Customer</th>
+          <th>Address</th>
+          <th>Items</th>
+          <th>Payment</th>
+          <th>Total</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="ordersTableBody">
+        <!-- Orders will be injected here by JS -->
+      </tbody>
+    </table>
+    <div id="emptyState" class="empty-state" style="display: none;">
+      <i class="fas fa-receipt"></i>
+      <h2>No orders yet</h2>
+      <p>When a customer places an order on the main page, it will appear here.</p>
+    </div>
+  </div>
+
+  <script>
+    // Format Price
+    const formatPrice = (p) => `₱${p.toFixed(2)}`;
+
+    function loadOrders() {
+      // Get orders from LocalStorage
+      const orders = JSON.parse(localStorage.getItem('luna_orders') || '[]');
+      
+      const tableBody = document.getElementById('ordersTableBody');
+      const emptyState = document.getElementById('emptyState');
+      const totalOrdersEl = document.getElementById('totalOrders');
+      const totalRevenueEl = document.getElementById('totalRevenue');
+      const pendingOrdersEl = document.getElementById('pendingOrders');
+
+      // Update Stats
+      totalOrdersEl.textContent = orders.length;
+      
+      let revenue = 0;
+      let pending = 0;
+
+      orders.forEach(o => {
+        revenue += o.total;
+        if (o.status === 'Pending') pending++;
+      });
+
+      totalRevenueEl.textContent = formatPrice(revenue);
+      pendingOrdersEl.textContent = pending;
+
+      // Clear table
+      tableBody.innerHTML = '';
+
+      if (orders.length === 0) {
+        emptyState.style.display = 'block';
+        return;
+      } else {
+        emptyState.style.display = 'none';
+      }
+
+      // Populate Table
+      orders.forEach((order, index) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><strong>#${order.id}</strong></td>
+          <td style="color:#666; font-size:0.9rem;">${order.time}</td>
+          <td><strong>${order.name}</strong></td>
+          <td style="max-width: 150px; font-size:0.9rem;">${order.address}</td>
+          <td style="font-size:0.9rem;">${order.items}</td>
+          <td><span style="background:#f0f0f0; padding: 0.3rem 0.6rem; border-radius: 5px; font-size:0.8rem; font-weight:bold;">${order.method}</span></td>
+          <td><strong style="color:#b64a12;">${formatPrice(order.total)}</strong></td>
+          <td>
+            ${order.status === 'Pending' 
+              ? `<button class="btn-complete" onclick="completeOrder(${index})">Mark Done</button>` 
+              : `<span class="status-badge" style="background:#d4edda; color:#155724;">Completed</span>`
+            }
+          </td>
+        `;
+        tableBody.appendChild(tr);
+      });
+    }
+
+    // Function to mark an order as completed
+    window.completeOrder = function(index) {
+      const orders = JSON.parse(localStorage.getItem('luna_orders') || '[]');
+      if (orders[index]) {
+        orders[index].status = 'Completed';
+        localStorage.setItem('luna_orders', JSON.stringify(orders));
+        loadOrders(); // Refresh table
+      }
+    };
+
+    // Load orders when page opens
+    loadOrders();
+    
+    // Auto-refresh every 5 seconds (so you see new orders live if on another tab)
+    setInterval(loadOrders, 5000);
+  </script>
+</body>
+</html>
