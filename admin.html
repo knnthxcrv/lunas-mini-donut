@@ -80,7 +80,7 @@
 
     /* EDIT ITEMS */
     .editor-container { background: white; border-radius: 1rem; padding: 1.5rem; box-shadow: 0 5px 15px rgba(168,85,247,0.1); overflow-x: auto; }
-    .editor-table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; min-width: 600px; }
+    .editor-table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; min-width: 700px; }
     .editor-table th, .editor-table td { padding: 0.8rem; border-bottom: 1px solid #eee; text-align: left; vertical-align: middle; }
     .editor-table input[type="text"], .editor-table input[type="number"] { width: 100%; padding: 0.6rem; border: 1px solid var(--primary-light); border-radius: 5px; font-family: inherit; font-size: 0.9rem; }
     .btn-save-menu { background: var(--primary); color: white; border: none; padding: 0.8rem 1.5rem; border-radius: 50px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 0 #7e22ce; font-size: 0.9rem; }
@@ -91,6 +91,12 @@
     .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
     input:checked + .slider { background-color: var(--primary); }
     input:checked + .slider:before { transform: translateX(18px); }
+
+    /* IMAGE UPLOAD STYLES */
+    .img-preview { width: 45px; height: 45px; object-fit: cover; border-radius: 8px; border: 2px solid var(--primary-light); background: var(--bg); display: block; margin: 0 auto; }
+    .upload-btn-wrapper { position: relative; overflow: hidden; display: inline-block; cursor: pointer; margin-top: 5px; }
+    .upload-btn-wrapper input[type=file] { font-size: 100px; position: absolute; left: 0; top: 0; opacity: 0; cursor: pointer; }
+    .btn-upload { border: 1px solid var(--primary); color: var(--primary); background-color: white; padding: 0.3rem 0.5rem; border-radius: 5px; font-size: 0.7rem; font-weight: bold; cursor: pointer; text-align: center; }
 
     @media (max-width: 768px) {
       body { padding: 1rem; }
@@ -152,9 +158,17 @@
       <button class="btn btn-back" onclick="switchTab('orders')"><i class="fas fa-arrow-left"></i> Back to Orders</button>
       <div class="editor-container">
         <h2 style="margin-bottom: 1rem; color: var(--text-dark); font-size: 1.2rem;">Edit Menu Cards</h2>
-        <p style="font-size:0.85rem; color:var(--text-light); margin-bottom:1rem;">I-edit ang Pangalan, Description, at Icon (Emoji). I-toggle ang switch para gawing "Sold Out".</p>
+        <p style="font-size:0.85rem; color:var(--text-light); margin-bottom:1rem;">I-upload ang totoong picture ng item at i-edit ang detalye.</p>
         <table class="editor-table">
-          <thead><tr><th style="width: 60px; text-align:center;">Icon</th><th>Name</th><th>Description</th><th style="width: 80px; text-align:center;">In Stock</th></tr></thead>
+          <thead>
+            <tr>
+              <th style="width: 80px; text-align:center;">Image</th>
+              <th style="width: 50px; text-align:center;">Icon</th>
+              <th>Name</th>
+              <th>Description</th>
+              <th style="width: 80px; text-align:center;">In Stock</th>
+            </tr>
+          </thead>
           <tbody id="menuTableBody"></tbody>
         </table>
         <button class="btn-save-menu" onclick="saveMenuCards()"><i class="fas fa-save"></i> Save Cards</button>
@@ -244,10 +258,10 @@
     const STORAGE_KEY_SETTINGS = 'luna_mini_donut_settings';
 
     const defaultMenu = [
-      { id: 'classic', name: 'Classic Donut', desc: 'Choose 3 flavors', icon: '🍩', type: 'classic', inStock: true },
-      { id: 'premium', name: 'Premium Donut', desc: 'Choose 5 flavors', icon: '🍫', type: 'premium', inStock: true },
-      { id: 'custom-minimal', name: 'Custom Box (Minimal)', desc: '25pcs Custom Design', icon: '📦', type: 'custom', price: 350, inStock: true },
-      { id: 'custom-3d', name: 'Custom Box (3D)', desc: '25pcs 3D Design & Toppers', icon: '🎂', type: 'custom', price: 450, inStock: true }
+      { id: 'classic', name: 'Classic Donut', desc: 'Choose 3 flavors', icon: '🍩', image: '', type: 'classic', inStock: true },
+      { id: 'premium', name: 'Premium Donut', desc: 'Choose 5 flavors', icon: '🍫', image: '', type: 'premium', inStock: true },
+      { id: 'custom-minimal', name: 'Custom Box (Minimal)', desc: '25pcs Custom Design', icon: '📦', image: '', type: 'custom', price: 350, inStock: true },
+      { id: 'custom-3d', name: 'Custom Box (3D)', desc: '25pcs 3D Design & Toppers', icon: '🎂', image: '', type: 'custom', price: 450, inStock: true }
     ];
 
     const defaultSettings = {
@@ -329,12 +343,40 @@
       const tbody = document.getElementById('menuTableBody'); tbody.innerHTML = '';
       editingMenu.forEach((item, index) => {
         const tr = document.createElement('tr'); const isChecked = item.inStock === false ? '' : 'checked';
-        tr.innerHTML = `<td style="text-align:center;"><input type="text" value="${item.icon}" onchange="window.updateMenuField(${index}, 'icon', this.value)" style="width:50px; text-align:center;"></td><td><input type="text" value="${item.name}" onchange="window.updateMenuField(${index}, 'name', this.value)"></td><td><input type="text" value="${item.desc}" onchange="window.updateMenuField(${index}, 'desc', this.value)"></td><td style="text-align:center;"><label class="switch"><input type="checkbox" ${isChecked} onchange="window.updateMenuField(${index}, 'inStock', this.checked)"><span class="slider"></span></label></td>`;
+        let imgHtml = item.image ? `<img src="${item.image}" class="img-preview" id="preview-${index}">` : `<div class="img-preview" style="display:flex;align-items:center;justify-content:center;font-size:0.6rem;color:#888;" id="preview-${index}">No Img</div>`;
+        
+        tr.innerHTML = `
+          <td style="text-align:center;">
+            ${imgHtml}
+            <div class="upload-btn-wrapper">
+              <button class="btn-upload"><i class="fas fa-upload"></i></button>
+              <input type="file" accept="image/*" onchange="window.handleImageUpload(event, ${index})" />
+            </div>
+          </td>
+          <td style="text-align:center;"><input type="text" value="${item.icon}" onchange="window.updateMenuField(${index}, 'icon', this.value)" style="width:50px; text-align:center;"></td>
+          <td><input type="text" value="${item.name}" onchange="window.updateMenuField(${index}, 'name', this.value)"></td>
+          <td><input type="text" value="${item.desc}" onchange="window.updateMenuField(${index}, 'desc', this.value)"></td>
+          <td style="text-align:center;"><label class="switch"><input type="checkbox" ${isChecked} onchange="window.updateMenuField(${index}, 'inStock', this.checked)"><span class="slider"></span></label></td>
+        `;
         tbody.appendChild(tr);
       });
     }
+
+    window.handleImageUpload = function(event, index) {
+      const file = event.target.files[0];
+      if (!file) return;
+      if (file.size > 1000000) { alert("Image is too large! Max 1MB."); return; }
+      
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        editingMenu[index].image = e.target.result;
+        document.getElementById(`preview-${index}`).outerHTML = `<img src="${e.target.result}" class="img-preview" id="preview-${index}">`;
+      };
+      reader.readAsDataURL(file);
+    };
+
     window.updateMenuField = (i, f, v) => { editingMenu[i][f] = v; };
-    window.saveMenuCards = function() { try { localStorage.setItem(STORAGE_KEY_MENU, JSON.stringify(editingMenu)); alert("Menu Cards Saved!"); } catch (e) { alert("Failed."); } }
+    window.saveMenuCards = function() { try { localStorage.setItem(STORAGE_KEY_MENU, JSON.stringify(editingMenu)); alert("Menu Cards Saved!"); } catch (e) { alert("Failed. Storage might be full."); } }
 
     function loadPricing() {
       const settings = JSON.parse(localStorage.getItem(STORAGE_KEY_SETTINGS)) || defaultSettings;
