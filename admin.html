@@ -331,7 +331,6 @@
           else if (order.status === 'Rejected') statusHtml = `<span class="status-badge status-rejected">Rejected</span>`;
           const phoneLink = order.phone ? `<a href="tel:${order.phone}" style="color:#1a73e8; text-decoration:none; font-weight:bold;"><i class="fas fa-phone"></i> ${order.phone}</a>` : 'No phone';
           
-          // RECEIPT VIEWER
           let receiptHtml = '-';
           if (order.receipt) {
             receiptHtml = `<img src="${order.receipt}" class="receipt-thumb" onclick="window.openImage('${order.receipt}')" title="View Receipt">`;
@@ -365,7 +364,6 @@
       editingMenu.forEach((item, index) => {
         const tr = document.createElement('tr'); const isChecked = item.inStock === false ? '' : 'checked';
         
-        // IMAGE PREVIEW OR NO IMAGE
         let imgHtml = item.image ? `<img src="${item.image}" class="img-preview" id="preview-${index}">` : `<div class="img-preview" style="display:flex;align-items:center;justify-content:center;font-size:0.6rem;color:#888;" id="preview-${index}">No Img</div>`;
         
         tr.innerHTML = `
@@ -385,15 +383,31 @@
       });
     }
 
+    // I-COMPRESS ANG IMAGE BAGO I-SAVE PARA UMABOT SA LOCALSTORAGE AT FIREBASE
     window.handleImageUpload = function(event, index) {
       const file = event.target.files[0];
       if (!file) return;
-      if (file.size > 1000000) { alert("Image too large! Max 1MB."); return; }
       
       const reader = new FileReader();
       reader.onload = function(e) {
-        editingMenu[index].image = e.target.result;
-        document.getElementById(`preview-${index}`).outerHTML = `<img src="${e.target.result}" class="img-preview" id="preview-${index}">`;
+        const img = new Image();
+        img.onload = function() {
+          const canvas = document.createElement('canvas');
+          const MAX_WIDTH = 600; // Pinaliit natin ang resolution
+          const scaleSize = MAX_WIDTH / img.width;
+          canvas.width = MAX_WIDTH;
+          canvas.height = img.height * scaleSize;
+          
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          
+          // Gawing JPEG na may 70% quality para maging ~50KB na lang
+          const compressedBase64 = canvas.toDataURL('image/jpeg', 0.7);
+          
+          editingMenu[index].image = compressedBase64;
+          document.getElementById(`preview-${index}`).outerHTML = `<img src="${compressedBase64}" class="img-preview" id="preview-${index}">`;
+        };
+        img.src = e.target.result;
       };
       reader.readAsDataURL(file);
     };
