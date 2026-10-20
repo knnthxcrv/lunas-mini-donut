@@ -62,7 +62,7 @@
     .stat-card p { font-size: 1.5rem; font-weight: 800; color: var(--text-dark); }
 
     .orders-table-container { background: white; border-radius: 1rem; box-shadow: 0 5px 15px rgba(168,85,247,0.1); overflow-x: auto; margin-bottom: 2rem;}
-    table { width: 100%; border-collapse: collapse; text-align: left; min-width: 900px; }
+    table { width: 100%; border-collapse: collapse; text-align: left; min-width: 1000px; }
     th, td { padding: 0.8rem; border-bottom: 1px solid #eee; font-size: 0.9rem; vertical-align: top; }
     th { background: #faf5ff; color: var(--text-dark); font-weight: 700; white-space: nowrap; }
     
@@ -92,11 +92,12 @@
     input:checked + .slider { background-color: var(--primary); }
     input:checked + .slider:before { transform: translateX(18px); }
 
-    /* IMAGE UPLOAD STYLES */
+    /* IMAGE UPLOAD & RECEIPT STYLES */
     .img-preview { width: 45px; height: 45px; object-fit: cover; border-radius: 8px; border: 2px solid var(--primary-light); background: var(--bg); display: block; margin: 0 auto; }
     .upload-btn-wrapper { position: relative; overflow: hidden; display: inline-block; cursor: pointer; margin-top: 5px; }
     .upload-btn-wrapper input[type=file] { font-size: 100px; position: absolute; left: 0; top: 0; opacity: 0; cursor: pointer; }
     .btn-upload { border: 1px solid var(--primary); color: var(--primary); background-color: white; padding: 0.3rem 0.5rem; border-radius: 5px; font-size: 0.7rem; font-weight: bold; cursor: pointer; text-align: center; }
+    .receipt-thumb { width: 50px; height: 50px; border-radius: 5px; cursor: pointer; object-fit: cover; border: 1px solid var(--primary-light); }
 
     @media (max-width: 768px) {
       body { padding: 1rem; }
@@ -147,7 +148,7 @@
       <button class="clear-orders-btn" onclick="clearFinishedOrders()"><i class="fas fa-broom"></i> Clear Finished</button>
       <div class="orders-table-container">
         <table>
-          <thead><tr><th>Order</th><th>Customer & Phone</th><th>Address & Landmark</th><th>Items & Notes</th><th>Total</th></tr></thead>
+          <thead><tr><th>Order</th><th>Customer & Phone</th><th>Address & Landmark</th><th>Items & Notes</th><th>Receipt</th><th>Total</th></tr></thead>
           <tbody id="ordersTableBody"></tbody>
         </table>
         <div id="emptyState" class="empty-state" style="display: none;"><i class="fas fa-receipt"></i><h2>No orders yet</h2></div>
@@ -322,16 +323,36 @@
         let revenue = 0, pending = 0; orders.forEach(o => { if (o.status !== 'Rejected') revenue += o.total; if (o.status === 'Pending') pending++; });
         document.getElementById('totalRevenue').textContent = formatPrice(revenue); document.getElementById('pendingOrders').textContent = pending;
         tableBody.innerHTML = ''; if (orders.length === 0) { emptyState.style.display = 'block'; return; } else { emptyState.style.display = 'none'; }
+        
         orders.forEach((order) => {
           const tr = document.createElement('tr'); let statusHtml = '';
           if (order.status === 'Pending') statusHtml = `<div class="action-buttons"><button class="btn-complete" onclick="window.updateOrderStatus('${order.firebaseId}', 'Completed')">Done</button><button class="btn-reject" onclick="window.updateOrderStatus('${order.firebaseId}', 'Rejected')">Reject</button></div>`;
           else if (order.status === 'Completed') statusHtml = `<span class="status-badge status-completed">Done</span>`;
           else if (order.status === 'Rejected') statusHtml = `<span class="status-badge status-rejected">Rejected</span>`;
           const phoneLink = order.phone ? `<a href="tel:${order.phone}" style="color:#1a73e8; text-decoration:none; font-weight:bold;"><i class="fas fa-phone"></i> ${order.phone}</a>` : 'No phone';
-          tr.innerHTML = `<td><strong>#${order.id}</strong><br><span style="font-size:0.75rem; color:#888;">${order.method}</span><br>${statusHtml}</td><td><strong>${order.name}</strong><br>${phoneLink}</td><td style="max-width: 180px; font-size:0.8rem;">${order.address}<br><span style="font-style:italic; color:#888;">Landmark: ${order.landmark || 'N/A'}</span></td><td style="font-size:0.8rem; max-width: 200px;">${order.items}${order.instructions ? `<br><span style="color:#d9534f; font-size:0.75rem; font-weight:bold;">Note: ${order.instructions}</span>` : ''}</td><td><strong style="color:#b64a12;">${formatPrice(order.total)}</strong></td>`;
+          
+          // RECEIPT VIEWER
+          let receiptHtml = '-';
+          if (order.receipt) {
+            receiptHtml = `<img src="${order.receipt}" class="receipt-thumb" onclick="window.openImage('${order.receipt}')" title="View Receipt">`;
+          }
+
+          tr.innerHTML = `
+            <td><strong>#${order.id}</strong><br><span style="font-size:0.75rem; color:#888;">${order.method}</span><br>${statusHtml}</td>
+            <td><strong>${order.name}</strong><br>${phoneLink}</td>
+            <td style="max-width: 180px; font-size:0.8rem;">${order.address}<br><span style="font-style:italic; color:#888;">Landmark: ${order.landmark || 'N/A'}</span></td>
+            <td style="font-size:0.8rem; max-width: 200px;">${order.items}${order.instructions ? `<br><span style="color:#d9534f; font-size:0.75rem; font-weight:bold;">Note: ${order.instructions}</span>` : ''}</td>
+            <td>${receiptHtml}</td>
+            <td><strong style="color:#b64a12;">${formatPrice(order.total)}</strong></td>
+          `;
           tableBody.appendChild(tr);
         });
       });
+    }
+
+    window.openImage = function(base64Data) {
+      const newWindow = window.open();
+      newWindow.document.write(`<img src="${base64Data}" style="max-width:100%; height:auto;">`);
     }
 
     window.updateOrderStatus = async function(firebaseId, newStatus) { if (newStatus === 'Rejected' && !confirm("Reject this order?")) return; try { await window.firebaseUpdateDoc(window.firebaseDoc(window.firestoreDb, "orders", firebaseId), { status: newStatus }); } catch (e) { alert("Failed."); } };
@@ -343,6 +364,8 @@
       const tbody = document.getElementById('menuTableBody'); tbody.innerHTML = '';
       editingMenu.forEach((item, index) => {
         const tr = document.createElement('tr'); const isChecked = item.inStock === false ? '' : 'checked';
+        
+        // IMAGE PREVIEW OR NO IMAGE
         let imgHtml = item.image ? `<img src="${item.image}" class="img-preview" id="preview-${index}">` : `<div class="img-preview" style="display:flex;align-items:center;justify-content:center;font-size:0.6rem;color:#888;" id="preview-${index}">No Img</div>`;
         
         tr.innerHTML = `
@@ -365,7 +388,7 @@
     window.handleImageUpload = function(event, index) {
       const file = event.target.files[0];
       if (!file) return;
-      if (file.size > 1000000) { alert("Image is too large! Max 1MB."); return; }
+      if (file.size > 1000000) { alert("Image too large! Max 1MB."); return; }
       
       const reader = new FileReader();
       reader.onload = function(e) {
