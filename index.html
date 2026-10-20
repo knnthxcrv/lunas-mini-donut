@@ -3,167 +3,305 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Luna's Donut · Admin Dashboard</title>
+  <title>Luna's Mini Donut · Delivery</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
-    body { background: #f4f7f6; padding: 2rem; color: #333; }
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, system-ui, sans-serif; -webkit-tap-highlight-color: transparent; }
+    body { background: #fff8f0; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 1.5rem; }
+    .delivery-app { max-width: 1300px; width: 100%; background: #ffffff; border-radius: 3.5rem; box-shadow: 0 25px 50px -8px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(255, 184, 140, 0.3); overflow: hidden; display: flex; flex-direction: column; position: relative; }
     
-    /* LOGIN */
-    .login-container { display: flex; justify-content: center; align-items: center; min-height: 80vh; position: relative; }
-    .back-link { position: absolute; top: 0; left: 0; text-decoration: none; color: #a54b1e; font-weight: 700; display: flex; align-items: center; gap: 0.5rem; background: white; padding: 0.6rem 1.2rem; border-radius: 50px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); transition: 0.2s; }
-    .back-link:hover { transform: translateY(-2px); }
-    .login-box { background: white; padding: 3rem 2rem; border-radius: 2rem; box-shadow: 0 10px 30px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center; }
-    .login-box > i { font-size: 3rem; color: #ff9f6e; margin-bottom: 1rem; display: inline-block; }
-    .login-box h2 { color: #2d1b0e; margin-bottom: 2rem; font-size: 1.8rem; }
-    .input-group { position: relative; margin-bottom: 1.2rem; }
-    .input-group i { position: absolute; left: 1.2rem; top: 50%; transform: translateY(-50%); color: #b97e5c; font-size: 1.2rem; z-index: 2; }
-    .input-group input { width: 100%; padding: 1rem 1rem 1rem 3.2rem; border: 2px solid #ffe6d5; border-radius: 50px; font-size: 1rem; outline: none; font-weight: 500; transition: 0.2s; }
-    .input-group input:focus { border-color: #ff8a4c; box-shadow: 0 0 0 4px rgba(255, 138, 76, 0.2); }
-    .login-btn { width: 100%; background: #ff9f6e; color: #2d1b0e; border: none; border-radius: 50px; padding: 1.2rem; font-size: 1.1rem; font-weight: 800; cursor: pointer; box-shadow: 0 6px 0 #b95d2b; margin-top: 1rem; }
-    .login-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #b95d2b; }
-    .error-msg { color: #d9534f; font-weight: bold; font-size: 0.9rem; margin-top: 1rem; display: none; }
-
-    /* DASHBOARD */
-    #dashboardView { display: none; }
-    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; }
-    .header h1 { color: #2d1b0e; display: flex; align-items: center; gap: 0.5rem; font-size: 1.5rem; }
-    .btn-group { display: flex; gap: 0.5rem; flex-wrap: wrap; }
-    .btn { text-decoration: none; padding: 0.5rem 1rem; border-radius: 50px; font-weight: bold; cursor: pointer; border: none; display: flex; align-items: center; gap: 0.4rem; font-size: 0.85rem;}
-    .btn-shop { background: #ff9f6e; color: #2d1b0e; box-shadow: 0 4px 0 #b95d2b; }
-    .btn-refresh { background: #2e8b57; color: white; box-shadow: 0 4px 0 #1e5c39; }
-    .btn-logout { background: #ffe6d5; color: #a54b1e; box-shadow: 0 4px 0 #ffb88c; }
-
-    .tabs { display: flex; gap: 1rem; margin-bottom: 2rem; border-bottom: 2px solid #ddd; padding-bottom: 1rem; overflow-x: auto; }
-    .tab-btn { background: none; border: none; font-size: 1rem; font-weight: bold; color: #888; cursor: pointer; padding: 0.5rem 1rem; border-radius: 10px; white-space: nowrap; }
-    .tab-btn.active { color: #ff7e3f; background: #fff5ee; }
-
-    .dashboard-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
-    .stat-card { background: white; padding: 1rem; border-radius: 1rem; box-shadow: 0 5px 15px rgba(0,0,0,0.05); border-left: 5px solid #ff8a4c; }
-    .stat-card h3 { font-size: 0.75rem; color: #888; text-transform: uppercase; }
-    .stat-card p { font-size: 1.5rem; font-weight: 800; color: #2d1b0e; }
-
-    .orders-table-container { background: white; border-radius: 1rem; box-shadow: 0 5px 15px rgba(0,0,0,0.05); overflow-x: auto; margin-bottom: 2rem;}
-    table { width: 100%; border-collapse: collapse; text-align: left; min-width: 900px; }
-    th, td { padding: 0.8rem; border-bottom: 1px solid #eee; font-size: 0.9rem; vertical-align: top; }
-    th { background: #fff8f0; color: #6b3f27; font-weight: 700; white-space: nowrap; }
+    /* HEADER */
+    .header { background: linear-gradient(135deg, #ffb88c 0%, #ff9f6e 100%); padding: 1.8rem 2.5rem; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; }
+    .brand { display: flex; align-items: center; gap: 0.75rem; }
+    .brand i { font-size: 2.4rem; color: #4a2c1b; background: #fff1e0; border-radius: 50%; padding: 0.6rem; box-shadow: 0 6px 0 #c26b3b; transform: rotate(10deg); }
+    .brand h1 { font-size: 2rem; font-weight: 800; color: #3b1e0e; letter-spacing: -0.5px; text-shadow: 2px 2px 0 #ffd9b5; }
+    .brand span { font-size: 0.9rem; font-weight: 500; color: #51301a; background: #fff1e0; padding: 0.25rem 0.8rem; border-radius: 40px; margin-left: 0.5rem; }
+    .header-right { display: flex; align-items: center; gap: 1rem; }
+    .admin-btn { background: #fff1e0; color: #a54b1e; padding: 0.6rem 1rem; border-radius: 50px; font-weight: 700; font-size: 0.85rem; text-decoration: none; display: flex; align-items: center; gap: 0.5rem; border: 1px solid #ffd9c4; transition: 0.2s; cursor: pointer;}
     
-    .status-badge { padding: 0.3rem 0.6rem; border-radius: 50px; font-size: 0.75rem; font-weight: bold; display: inline-block;}
-    .status-pending { background: #ffe6d5; color: #a54b1e; }
-    .status-completed { background: #d4edda; color: #155724; }
-    .status-rejected { background: #f8d7da; color: #721c24; }
-
-    .action-buttons { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
-    .btn-complete { background: #2e8b57; color: white; border: none; padding: 0.4rem 0.6rem; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 0.75rem;}
-    .btn-reject { background: #d9534f; color: white; border: none; padding: 0.4rem 0.6rem; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 0.75rem;}
+    /* MAIN LAYOUT */
+    .main-panel { display: flex; flex-direction: row; flex-wrap: wrap; padding: 2rem 2.5rem 2.5rem; gap: 2.2rem; }
+    .menu-section { flex: 2; min-width: 320px; }
+    .menu-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 1.5rem; }
+    .menu-header h2 { font-size: 1.9rem; font-weight: 700; color: #2d1b0e; display: flex; align-items: center; gap: 0.6rem; }
+    .menu-header p { color: #b16d47; font-weight: 500; background: #ffede1; padding: 0.4rem 1.2rem; border-radius: 50px; }
     
-    .clear-orders-btn { background: #d9534f; color: white; border: none; padding: 0.7rem 1.2rem; border-radius: 10px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 0 #a94442; display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; font-size: 0.85rem; }
-    .empty-state { text-align: center; padding: 3rem; color: #888; }
-
-    /* EDIT MENU */
-    #editMenuView { display: none; }
-    .menu-editor-container { background: white; border-radius: 1rem; padding: 1.5rem; box-shadow: 0 5px 15px rgba(0,0,0,0.05); overflow-x: auto; }
-    .menu-editor-table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; min-width: 600px; }
-    .menu-editor-table th, .menu-editor-table td { padding: 0.8rem; border-bottom: 1px solid #eee; text-align: left; vertical-align: middle; }
-    .menu-editor-table input[type="text"] { width: 100%; padding: 0.6rem; border: 1px solid #ccc; border-radius: 5px; font-family: inherit; font-size: 0.9rem; }
-    .btn-save-menu { background: #2e8b57; color: white; border: none; padding: 0.8rem 1.5rem; border-radius: 50px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 0 #1e5c39; font-size: 0.9rem; }
+    /* DONUT GRID */
+    .donut-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 1.4rem; }
+    .donut-card { background: #fffbf7; border-radius: 2rem; padding: 1.5rem 1rem 1.2rem; box-shadow: 0 8px 0 #f0d5c0, 0 12px 20px -8px rgba(160, 100, 60, 0.2); transition: 0.15s; display: flex; flex-direction: column; align-items: center; text-align: center; border: 1px solid #ffe2cf; cursor: pointer; position: relative; }
+    .donut-card.custom-box { border: 2px dashed #ff9f6e; background: #fff4ec; }
+    .donut-card.sold-out { opacity: 0.6; cursor: not-allowed; filter: grayscale(1); }
+    .sold-out-badge { position: absolute; top: 10px; left: 50%; transform: translateX(-50%); background: #d9534f; color: white; padding: 0.2rem 0.8rem; border-radius: 20px; font-size: 0.7rem; font-weight: bold; z-index: 10; }
     
-    /* TOGGLE SWITCH */
-    .switch { position: relative; display: inline-block; width: 40px; height: 22px; }
-    .switch input { opacity: 0; width: 0; height: 0; }
-    .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
-    .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
-    input:checked + .slider { background-color: #2e8b57; }
-    input:checked + .slider:before { transform: translateX(18px); }
+    .donut-icon { font-size: 3.8rem; line-height: 1; filter: drop-shadow(0 6px 4px rgba(0,0,0,0.1)); margin-bottom: 0.5rem; display: flex; justify-content: center; align-items: center; height: 70px; width: 70px; border-radius: 50%; overflow: hidden; }
+    .donut-img { width: 100%; height: 100%; object-fit: cover; }
+    .donut-card h3 { font-size: 1.2rem; font-weight: 700; color: #391e0e; margin-bottom: 0.3rem; }
+    .donut-desc { font-size: 0.75rem; color: #8f5e3f; margin-bottom: 0.6rem; font-weight: 500; min-height: 2.2em; }
+    .price-range { font-weight: 800; font-size: 1rem; color: #a6521e; background: #ffe3d2; padding: 0.35rem 1rem; border-radius: 40px; display: inline-block; margin-top: 0.3rem; }
+
+    /* ORDER PANEL */
+    .order-panel { flex: 1.2; min-width: 300px; background: #fdf6f0; border-radius: 2.5rem; padding: 2rem 1.8rem; box-shadow: inset 0 0 0 1px #ffe6d5, 0 15px 25px -10px #c9a185; display: flex; flex-direction: column; }
+    .order-panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.8rem; flex-wrap: wrap; gap: 0.5rem; }
+    .order-panel h2 { font-size: 1.7rem; font-weight: 700; color: #2d1b0e; display: flex; align-items: center; gap: 0.7rem; }
+    .clear-btn { background: #ffe6d5; border: 2px solid #ffb88c; color: #a54b1e; font-weight: 700; font-size: 0.8rem; padding: 0.5rem 1.1rem; border-radius: 50px; cursor: pointer; }
+    .cart-items { flex: 1; margin-bottom: 1.4rem; max-height: 300px; overflow-y: auto; padding-right: 0.5rem; }
+    .cart-item { display: flex; justify-content: space-between; align-items: center; background: white; padding: 0.7rem 0.9rem 0.7rem 1.2rem; border-radius: 60px; box-shadow: 0 3px 0 #e6cfbe; border: 1px solid #f5ded0; font-weight: 500; gap: 0.6rem; margin-bottom: 0.8rem; }
+    .cart-item-info { display: flex; flex-direction: column; gap: 0.2rem; flex: 1; min-width: 0; }
+    .cart-item-info .item-name { color: #3b1e0e; font-weight: 700; font-size: 0.9rem; }
+    .cart-item-info .item-details { font-size: 0.7rem; color: #8f5e3f; }
+    .qty-stepper { display: flex; align-items: center; gap: 0.35rem; background: #fff5ee; border-radius: 40px; padding: 0.2rem; border: 1px solid #ffd9c4; flex-shrink: 0; }
+    .qty-btn { background: #ffe0d0; border: none; color: #a54b1e; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 0.7rem; font-weight: 800; }
+    .qty-value { font-weight: 800; color: #3b1e0e; font-size: 0.8rem; min-width: 1.4rem; text-align: center; }
+    .item-price { font-weight: 700; color: #7b431f; background: #fff1e6; padding: 0.25rem 0.6rem; border-radius: 30px; font-size: 0.85rem; white-space: nowrap; }
+    .remove-item-btn { background: #ffe0d0; border: 1px solid #ffb898; color: #c4450c; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 0.75rem; }
+    .empty-cart-message { color: #bc8d70; text-align: center; padding: 2rem 0; font-style: italic; background: #fff9f4; border-radius: 2rem; border: 1px dashed #e7c2aa; margin-top: 0.8rem; }
+    
+    .free-delivery-block { background: #fff9f4; border: 1px solid #ffe6d5; border-radius: 1.4rem; padding: 0.9rem 1.1rem; margin-bottom: 1rem; }
+    .free-delivery-text { font-size: 0.82rem; font-weight: 600; color: #8a4a22; display: flex; align-items: center; gap: 0.45rem; margin-bottom: 0.55rem; }
+    .progress-track { height: 10px; background: #ffe6d5; border-radius: 20px; overflow: hidden; }
+    .progress-fill { height: 100%; width: 0%; border-radius: 20px; background: linear-gradient(90deg, #ffb88c, #ff7e3f); }
+    
+    .total-row { display: flex; justify-content: space-between; font-size: 1.5rem; font-weight: 800; color: #2d1b0e; padding: 1rem 0 0.8rem; border-top: 3px solid #ffc7a5; margin-bottom: 1.6rem; }
+    .total-row span:last-child { color: #b64a12; }
+    
+    .delivery-details { margin-bottom: 1.5rem; }
+    .delivery-details h3 { font-size: 1.1rem; font-weight: 600; color: #6b3f27; margin-bottom: 0.9rem; display: flex; align-items: center; gap: 0.5rem; }
+    .input-group { margin-bottom: 0.9rem; position: relative; }
+    .input-group i { position: absolute; left: 1.2rem; top: 50%; transform: translateY(-50%); color: #b97e5c; font-size: 1rem; }
+    .input-group input, .input-group textarea { width: 100%; padding: 0.9rem 1rem 0.9rem 2.8rem; border: 2px solid #ffd9c4; border-radius: 20px; font-size: 0.95rem; background: white; outline: none; color: #2d1b0e; font-weight: 500; font-family: inherit; resize: none; }
+    
+    .map-btn { display: flex; align-items: center; justify-content: center; gap: 0.5rem; width: 100%; padding: 0.8rem; background: #e8f0fe; color: #1a73e8; border: 2px solid #c6dafc; border-radius: 50px; font-weight: 700; cursor: pointer; margin-top: -0.5rem; margin-bottom: 1rem; }
+    .order-btn { background: #ff9f6e; border: none; border-radius: 60px; padding: 1.2rem; font-weight: 800; font-size: 1.2rem; color: #2d1b0e; display: flex; align-items: center; justify-content: center; gap: 0.9rem; cursor: pointer; box-shadow: 0 8px 0 #b95d2b; }
+    
+    /* MODALS */
+    .modal-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(45, 27, 14, 0.6); backdrop-filter: blur(5px); display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: 0.3s; z-index: 100; }
+    .modal-overlay.active { opacity: 1; pointer-events: auto; }
+    .modal-box { background: #ffffff; width: 90%; max-width: 450px; border-radius: 2.5rem; padding: 2rem; box-shadow: 0 20px 40px rgba(0,0,0,0.2); transform: translateY(20px); transition: 0.3s; max-height: 90vh; overflow-y: auto; }
+    .modal-overlay.active .modal-box { transform: translateY(0); }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+    .modal-header h2 { font-size: 1.4rem; color: #2d1b0e; display: flex; align-items: center; gap: 0.5rem; }
+    .close-modal { background: none; border: none; font-size: 1.5rem; color: #b97e5c; cursor: pointer; }
+    
+    .option-group { margin-bottom: 1.2rem; background: #fffbf7; padding: 1rem; border-radius: 1rem; border: 1px solid #ffe6d5; }
+    .option-title { font-weight: 700; color: #6b3f27; margin-bottom: 0.8rem; font-size: 0.95rem; }
+    .radio-label { display: flex; align-items: center; justify-content: space-between; padding: 0.8rem; background: white; border: 2px solid #eee; border-radius: 10px; margin-bottom: 0.5rem; cursor: pointer; font-weight: 600; font-size: 0.9rem; }
+    .radio-label.selected { border-color: #ff8a4c; background: #fff5ee; }
+    .radio-label input { accent-color: #ff8a4c; width: 18px; height: 18px; margin-right: 10px; }
+    .checkbox-label { display: flex; align-items: center; padding: 0.5rem; cursor: pointer; font-weight: 600; color: #3b1e0e; font-size: 0.9rem;}
+    .checkbox-label input { accent-color: #ff8a4c; width: 18px; height: 18px; margin-right: 10px; }
+    .modal-total { font-size: 1.2rem; font-weight: 800; color: #b64a12; text-align: right; margin-bottom: 1rem; }
+    
+    .payment-options { display: flex; flex-direction: column; gap: 0.8rem; margin-bottom: 1.5rem; }
+    .pay-option { display: flex; align-items: center; gap: 1rem; padding: 1rem; border: 2px solid #ffe6d5; border-radius: 1rem; cursor: pointer; }
+    .pay-option.selected { border-color: #ff8a4c; background: #fff5ee; box-shadow: 0 4px 0 #ffd9c4; }
+    .pay-option label { font-weight: 700; color: #3b1e0e; cursor: pointer; display: flex; align-items: center; gap: 0.8rem; width: 100%; font-size: 1rem; }
+    .payment-dynamic-fields { display: none; background: #fff9f4; border: 1px dashed #ffd9c4; padding: 1rem; border-radius: 1rem; margin-bottom: 1.5rem; }
+    .payment-dynamic-fields.active { display: block; }
+    .payment-dynamic-fields input { width: 100%; padding: 0.8rem; border: 1px solid #ffb88c; border-radius: 10px; margin-bottom: 0.8rem; outline: none; font-size: 0.95rem; }
+    .payment-dynamic-fields small { color: #8f5e3f; display: block; margin-bottom: 0.3rem; font-weight: 600; }
+    .confirm-pay-btn { width: 100%; background: #2e8b57; color: white; border: none; border-radius: 50px; padding: 1rem; font-size: 1.1rem; font-weight: 800; cursor: pointer; box-shadow: 0 6px 0 #1e5c39; }
+    .success-screen { display: none; text-align: center; padding: 1rem 0; }
+    .success-screen.active { display: block; }
+    .success-screen i { font-size: 4rem; color: #2e8b57; margin-bottom: 1rem; }
+    .receipt-box { background: #fdf6f0; border: 1px dashed #dba37b; padding: 1rem; border-radius: 1rem; text-align: left; font-size: 0.9rem; color: #3b1e0e; margin-bottom: 1.5rem; }
+    
+    /* FLOATING CART */
+    .floating-cart { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #ff9f6e; color: #2d1b0e; padding: 1rem 2rem; border-radius: 50px; font-weight: 800; box-shadow: 0 10px 25px rgba(255, 159, 110, 0.5); display: none; align-items: center; gap: 1rem; z-index: 90; border: 2px solid #ffbc94; cursor: pointer; }
+    
+    #map { height: 300px; width: 100%; border-radius: 1rem; margin-bottom: 1rem; border: 2px solid #ffe6d5; }
+    .map-instruction { font-size: 0.85rem; color: #6b3f27; margin-bottom: 0.5rem; font-weight: 600; text-align: center; }
 
     @media (max-width: 768px) {
-      body { padding: 1rem; }
-      .header { flex-direction: column; align-items: flex-start; }
-      .btn-group { width: 100%; justify-content: space-between; }
-      .btn { flex: 1; justify-content: center; padding: 0.6rem; font-size: 0.75rem; }
-      .dashboard-stats { grid-template-columns: 1fr 1fr; }
-      .clear-orders-btn { width: 100%; justify-content: center; }
+      body { padding: 0; background: #ffffff; }
+      .delivery-app { border-radius: 0; box-shadow: none; min-height: 100vh; padding-bottom: 80px; }
+      .header { padding: 1.2rem 1rem; border-radius: 0 0 1.5rem 1.5rem; }
+      .brand h1 { font-size: 1.4rem; }
+      .brand span { display: none; }
+      .brand i { font-size: 1.8rem; padding: 0.4rem; }
+      .admin-btn span { display: none; }
+      .admin-btn { padding: 0.6rem; border-radius: 50%; }
+      .main-panel { padding: 1rem; flex-direction: column; gap: 1.5rem; }
+      .donut-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+      .donut-card { padding: 1rem 0.5rem; border-radius: 1.5rem; }
+      .donut-icon { height: 60px; width: 60px; font-size: 3rem; }
+      .donut-card h3 { font-size: 1rem; }
+      .order-panel { border-radius: 2rem; padding: 1.5rem 1rem; }
+      .cart-item { border-radius: 1.5rem; flex-wrap: wrap; padding: 0.8rem; }
+      .cart-item-info { width: 100%; margin-bottom: 0.5rem; }
+      .qty-stepper { margin-right: auto; }
+      .order-btn { font-size: 1.1rem; padding: 1rem; }
+      .modal-box { width: 95%; padding: 1.5rem; border-radius: 1.5rem; }
+      .floating-cart.active { display: flex; }
     }
   </style>
 </head>
 <body>
 
-  <div class="login-container" id="loginView">
-    <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> Back</a>
-    <div class="login-box">
-      <i class="fas fa-cookie-bite"></i>
-      <h2>Admin Login</h2>
-      <div class="input-group"><i class="fas fa-user"></i><input type="text" id="username" placeholder="Username" value="admin"></div>
-      <div class="input-group"><i class="fas fa-lock"></i><input type="password" id="password" placeholder="Password" value="luna123"></div>
-      <button class="login-btn" onclick="handleLogin()">Login</button>
-      <div class="error-msg" id="loginError">Incorrect username or password!</div>
-    </div>
-  </div>
-
-  <div id="dashboardView">
+  <div class="delivery-app">
     <div class="header">
-      <h1><i class="fas fa-store"></i> Store Dashboard</h1>
-      <div class="btn-group">
-        <button class="btn btn-refresh" onclick="loadOrders()"><i class="fas fa-rotate"></i> Refresh</button>
-        <a href="index.html" class="btn btn-shop"><i class="fas fa-arrow-left"></i> Shop</a>
-        <button class="btn btn-logout" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+      <div class="brand">
+        <i class="fas fa-cookie-bite"></i>
+        <h1>Luna's Mini Donut <span>delivery</span></h1>
+      </div>
+      <div class="header-right">
+        <button class="admin-btn" onclick="openTrackingModal()"><i class="fas fa-truck-fast"></i> <span>Track</span></button>
+        <a href="admin.html" class="admin-btn"><i class="fas fa-lock"></i> <span>Admin</span></a>
       </div>
     </div>
 
-    <div class="tabs">
-      <button class="tab-btn active" id="tabOrders" onclick="switchTab('orders')"><i class="fas fa-receipt"></i> Live Orders</button>
-      <button class="tab-btn" id="tabMenu" onclick="switchTab('menu')"><i class="fas fa-pen-to-square"></i> Manage Menu</button>
-    </div>
-
-    <div id="ordersView">
-      <div class="dashboard-stats">
-        <div class="stat-card"><h3>Total</h3><p id="totalOrders">0</p></div>
-        <div class="stat-card" style="border-left-color: #2e8b57;"><h3>Revenue</h3><p id="totalRevenue">₱0.00</p></div>
-        <div class="stat-card" style="border-left-color: #ffb88c;"><h3>Pending</h3><p id="pendingOrders">0</p></div>
+    <div class="main-panel">
+      <div class="menu-section">
+        <div class="menu-header">
+          <h2><i class="fas fa-donut"></i> Menu</h2>
+          <p>tap to customize</p>
+        </div>
+        <div class="donut-grid" id="donutGrid">
+          <!-- Cards will be injected here by JS -->
+        </div>
       </div>
 
-      <button class="clear-orders-btn" onclick="clearFinishedOrders()"><i class="fas fa-broom"></i> Clear Finished</button>
+      <div class="order-panel">
+        <div class="order-panel-header">
+          <h2><i class="fas fa-shopping-bag"></i> Your Box</h2>
+          <button class="clear-btn" id="clearBoxBtn" disabled><i class="fas fa-trash-can"></i> Clear</button>
+        </div>
 
-      <div class="orders-table-container">
-        <table>
-          <thead>
-            <tr>
-              <th>Order</th>
-              <th>Customer & Phone</th>
-              <th>Address & Landmark</th>
-              <th>Items & Notes</th>
-              <th>Total</th>
-            </tr>
-          </thead>
-          <tbody id="ordersTableBody"></tbody>
-        </table>
-        <div id="emptyState" class="empty-state" style="display: none;"><i class="fas fa-receipt"></i><h2>No orders yet</h2></div>
+        <div class="cart-items" id="cartContainer">
+          <div class="empty-cart-message" id="emptyCartMsg"><i class="fas fa-donut" style="opacity:0.6;"></i> Your box is empty!</div>
+        </div>
+
+        <div class="free-delivery-block">
+          <div class="free-delivery-text" id="freeDeliveryText">
+            <i class="fas fa-truck-fast"></i><span id="freeDeliveryMsg">Add ₱500.00 more for FREE delivery</span>
+          </div>
+          <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+        </div>
+
+        <div class="total-row"><span>Total</span><span id="totalAmount">₱0.00</span></div>
+
+        <div class="delivery-details">
+          <h3><i class="fas fa-location-dot"></i> Delivery details</h3>
+          <div class="input-group"><i class="fas fa-user"></i><input type="text" id="customerName" placeholder="Full Name"></div>
+          <div class="input-group"><i class="fas fa-phone"></i><input type="tel" id="customerPhone" placeholder="Phone Number"></div>
+          <div class="input-group"><i class="fas fa-house"></i><input type="text" id="customerAddress" placeholder="Complete Address"></div>
+          <div class="input-group"><i class="fas fa-map-pin"></i><input type="text" id="customerLandmark" placeholder="Landmark"></div>
+          <div class="input-group"><i class="fas fa-pen"></i><textarea id="specialInstructions" placeholder="Special Instructions (e.g. extra sprinkles)" rows="2"></textarea></div>
+          <button class="map-btn" onclick="openMapModal()"><i class="fas fa-map-location-dot"></i> Pin Exact Location</button>
+        </div>
+
+        <button class="order-btn" id="orderBtn"><i class="fas fa-truck-fast"></i> Place Order</button>
       </div>
     </div>
 
-    <div id="editMenuView">
-      <div class="menu-editor-container">
-        <h2 style="margin-bottom: 1rem; color: #2d1b0e; font-size: 1.2rem;">Manage Menu Items</h2>
-        <p style="font-size:0.85rem; color:#666; margin-bottom:1rem;">I-toggle ang switch para gawing "Sold Out" ang isang item.</p>
+    <!-- FLOATING CART -->
+    <div class="floating-cart" id="floatingCart" onclick="scrollToCart()">
+      <i class="fas fa-shopping-bag"></i> <span id="floatingCartTotal">₱0.00</span>
+    </div>
+
+    <!-- MAP MODAL -->
+    <div class="modal-overlay" id="mapModal">
+      <div class="modal-box" style="max-width: 500px;">
+        <div class="modal-header"><h2><i class="fas fa-map-marker-alt"></i> Pin Location</h2><button class="close-modal" onclick="closeModal('mapModal')"><i class="fas fa-xmark"></i></button></div>
+        <p class="map-instruction">Tap on the map to drop a pin.</p>
+        <div id="map"></div>
+        <button class="confirm-pay-btn" onclick="confirmMapLocation()" style="background: #1a73e8; box-shadow: 0 6px 0 #0d47a1;"><i class="fas fa-check"></i> Confirm Location</button>
+      </div>
+    </div>
+
+    <!-- TRACKING MODAL -->
+    <div class="modal-overlay" id="trackingModal">
+      <div class="modal-box" style="max-width: 400px; text-align: center;">
+        <div class="modal-header" style="margin-bottom: 0;"><h2><i class="fas fa-search"></i> Track Order</h2><button class="close-modal" onclick="closeModal('trackingModal')"><i class="fas fa-xmark"></i></button></div>
+        <p style="color: #666; margin-bottom: 1rem; font-size: 0.9rem;">Enter your Order Number</p>
+        <div class="input-group"><i class="fas fa-hashtag"></i><input type="number" id="trackOrderId" placeholder="e.g. 12345"></div>
+        <button class="confirm-pay-btn" onclick="trackOrder()" style="background: #ff9f6e; color: #2d1b0e; box-shadow: 0 6px 0 #b95d2b;">Track</button>
+        <div id="trackResult" style="margin-top: 1.5rem; display: none; text-align: left; background: #fff9f4; padding: 1rem; border-radius: 1rem; border: 1px solid #ffe6d5;"></div>
+      </div>
+    </div>
+
+    <!-- CUSTOMIZATION MODAL -->
+    <div class="modal-overlay" id="customizeModal">
+      <div class="modal-box">
+        <div class="modal-header">
+          <h2 id="customizeTitle"><i class="fas fa-donut"></i> Customize</h2>
+          <button class="close-modal" onclick="closeModal('customizeModal')"><i class="fas fa-xmark"></i></button>
+        </div>
         
-        <table class="menu-editor-table">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Description</th>
-              <th style="width: 80px; text-align:center;">In Stock</th>
-            </tr>
-          </thead>
-          <tbody id="menuTableBody"></tbody>
-        </table>
-        <button class="btn-save-menu" onclick="saveMenuChanges()"><i class="fas fa-save"></i> Save Changes</button>
+        <!-- BOX SIZE / TYPE -->
+        <div class="option-group" id="boxSizeGroup">
+          <div class="option-title">1. Choose Box Size</div>
+          <label class="radio-label selected" onclick="selectBox(2, this)">
+            <span><input type="radio" name="boxSize" value="2" checked> 2 pcs</span>
+            <span id="price-2">₱20</span>
+          </label>
+          <label class="radio-label" onclick="selectBox(6, this)">
+            <span><input type="radio" name="boxSize" value="6"> 6 pcs</span>
+            <span id="price-6">₱55</span>
+          </label>
+          <label class="radio-label" onclick="selectBox(12, this)">
+            <span><input type="radio" name="boxSize" value="12"> 12 pcs</span>
+            <span id="price-12">₱120</span>
+          </label>
+        </div>
+
+        <!-- FLAVOR SELECTION -->
+        <div class="option-group" id="flavorGroup">
+          <div class="option-title">2. Choose Flavor(s)</div>
+          <div id="flavorCheckboxes">
+            <!-- Injected by JS based on Type -->
+          </div>
+        </div>
+
+        <!-- TOPPINGS -->
+        <div class="option-group" id="toppingsGroup">
+          <div class="option-title">3. Add Toppings (Optional)</div>
+          <div id="toppingCheckboxes">
+            <!-- Injected by JS based on Type -->
+          </div>
+        </div>
+
+        <div class="modal-total" id="customTotalText">Total: ₱20.00</div>
+        <button class="confirm-pay-btn" style="background: #ff9f6e; color: #2d1b0e; box-shadow: 0 6px 0 #b95d2b;" onclick="addCustomToCart()"><i class="fas fa-cart-plus"></i> Add to Box</button>
+      </div>
+    </div>
+
+    <!-- CHECKOUT MODAL -->
+    <div class="modal-overlay" id="paymentModalOverlay">
+      <div class="modal-box">
+        <div id="checkoutView">
+          <div class="modal-header"><h2><i class="fas fa-wallet"></i> Checkout</h2><button class="close-modal" id="closeModalBtn"><i class="fas fa-xmark"></i></button></div>
+          <p style="font-weight: 600; color: #6b3f27; margin-bottom: 1rem;">Select Payment Method:</p>
+          <div class="payment-options">
+            <div class="pay-option selected" onclick="selectPayment('cod', this)"><input type="radio" name="payment" value="cod" checked><label><i class="fas fa-money-bill-wave"></i> Cash on Delivery</label></div>
+            <div class="pay-option" onclick="selectPayment('gcash', this)"><input type="radio" name="payment" value="gcash"><label><i class="fas fa-mobile-screen"></i> GCash</label></div>
+            <div class="pay-option" onclick="selectPayment('maya', this)"><input type="radio" name="payment" value="maya"><label><i class="fas fa-mobile-screen"></i> Maya</label></div>
+          </div>
+          <div class="payment-dynamic-fields" id="eWalletFields">
+            <small>Enter your Mobile Number</small><input type="text" placeholder="Mobile Number" id="ewalletNumber" value="09171234567">
+            <small>Enter your MPIN</small><input type="password" placeholder="MPIN" id="ewalletPin" maxlength="4" value="1234">
+          </div>
+          <button class="confirm-pay-btn" id="confirmPayBtn"><i class="fas fa-lock"></i> Pay <span id="payAmount">₱0.00</span></button>
+        </div>
+
+        <div class="success-screen" id="successView">
+          <i class="fas fa-circle-check"></i><h2>Payment Successful!</h2><p>Your donuts are being prepared.</p>
+          <div class="receipt-box">
+            <strong>Receipt #<span id="receiptOrderNum">00000</span></strong>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 0.3rem;"><span>Customer:</span> <span id="receiptName">Name</span></div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 0.3rem;"><span>Phone:</span> <span id="receiptPhone">09XX</span></div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 0.3rem;"><span>Total:</span> <span id="receiptTotal">₱0.00</span></div>
+          </div>
+          <button class="confirm-pay-btn" onclick="finishCheckout()" style="background: #ff9f6e; color: #2d1b0e; box-shadow: 0 6px 0 #b95d2b;">Done</button>
+        </div>
       </div>
     </div>
   </div>
 
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, collection, onSnapshot, doc, updateDoc, deleteDoc, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyClaoSrxDdd0hLr6leu_XbYfLYPnCO7-pM",
@@ -176,162 +314,413 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
-    window.firebaseOnSnapshot = onSnapshot; window.firebaseCollection = collection; window.firebaseDoc = doc; window.firebaseUpdateDoc = updateDoc; window.firebaseDeleteDoc = deleteDoc; window.firebaseQuery = query; window.firebaseWhere = where; window.firebaseGetDocs = getDocs; window.firestoreDb = db;
+
+    window.firebaseReady = true;
+    window.firebaseAddDoc = addDoc;
+    window.firebaseCollection = collection;
+    window.firebaseGetDocs = getDocs;
+    window.firebaseQuery = query;
+    window.firebaseWhere = where;
+    window.firestoreDb = db;
   </script>
 
   <script>
-    const ADMIN_USER = "admin";
-    const ADMIN_PASS = "luna123";
+    const FREE_DELIVERY_THRESHOLD = 500;
+    const STORAGE_KEY_CART = 'luna_mini_donut_cart';
+    const STORAGE_KEY_ADDR = 'luna_mini_donut_address';
 
-    function handleLogin() {
-      if (document.getElementById('username').value === ADMIN_USER && document.getElementById('password').value === ADMIN_PASS) {
-        document.getElementById('loginError').style.display = 'none';
-        sessionStorage.setItem('luna_admin_logged_in', 'true');
-        showDashboard();
-      } else document.getElementById('loginError').style.display = 'block';
-    }
-
-    function handleLogout() {
-      sessionStorage.removeItem('luna_admin_logged_in');
-      document.getElementById('dashboardView').style.display = 'none';
-      document.getElementById('loginView').style.display = 'flex';
-    }
-
-    function showDashboard() {
-      document.getElementById('loginView').style.display = 'none';
-      document.getElementById('dashboardView').style.display = 'block';
-      loadOrders();
-    }
-
-    window.onload = function() {
-      if (sessionStorage.getItem('luna_admin_logged_in') === 'true') showDashboard();
+    // BAGONG PRICING LOGIC
+    const PRICES = {
+      classic: { 2: 20, 6: 55, 12: 120 },
+      premium: { 2: 25, 6: 60, 12: 150 }
     };
 
-    function switchTab(tab) {
-      document.getElementById('tabOrders').classList.remove('active');
-      document.getElementById('tabMenu').classList.remove('active');
-      document.getElementById('ordersView').style.display = 'none';
-      document.getElementById('editMenuView').style.display = 'none';
+    // BAGONG FLAVORS AT TOPPINGS
+    const classicFlavors = ['Chocolate', 'Strawberry', 'White Chocolate'];
+    const classicToppings = ['Mini mallows', 'Cashew nuts', 'Rainbow sprinkles', 'Rice crispy'];
+    
+    const premiumFlavors = ['Chocolate', 'Matcha', 'Strawberry', 'White Chocolate', 'Ube'];
+    const premiumToppings = ['Cookies', 'Nips', 'Almond slice', 'Chocolate sprinkles', 'Choco chips', 'Drizzle'];
 
-      if (tab === 'orders') {
-        document.getElementById('tabOrders').classList.add('active');
-        document.getElementById('ordersView').style.display = 'block';
-        loadOrders();
-      } else {
-        document.getElementById('tabMenu').classList.add('active');
-        document.getElementById('editMenuView').style.display = 'block';
-        loadMenuForEditing();
-      }
-    }
-
-    const formatPrice = (p) => `₱${p.toFixed(2)}`;
-    let unsubscribeOrders = null;
-    let previousOrderCount = -1;
-    const beep = new Audio("https://actions.google.com/sounds/v1/alarms/beep_short.ogg");
-
-    function loadOrders() {
-      if (unsubscribeOrders) unsubscribeOrders();
-      const tableBody = document.getElementById('ordersTableBody');
-      const emptyState = document.getElementById('emptyState');
-      
-      unsubscribeOrders = window.firebaseOnSnapshot(window.firebaseCollection(window.firestoreDb, "orders"), (snapshot) => {
-        let orders = [];
-        snapshot.forEach((doc) => orders.push({ firebaseId: doc.id, ...doc.data() }));
-        orders.sort((a, b) => b.timestamp - a.timestamp);
-
-        if (previousOrderCount !== -1 && orders.length > previousOrderCount) beep.play().catch(e => console.log("Audio blocked."));
-        previousOrderCount = orders.length;
-
-        document.getElementById('totalOrders').textContent = orders.length;
-        let revenue = 0, pending = 0;
-        orders.forEach(o => { if (o.status !== 'Rejected') revenue += o.total; if (o.status === 'Pending') pending++; });
-        document.getElementById('totalRevenue').textContent = formatPrice(revenue);
-        document.getElementById('pendingOrders').textContent = pending;
-
-        tableBody.innerHTML = '';
-        if (orders.length === 0) { emptyState.style.display = 'block'; return; }
-        else { emptyState.style.display = 'none'; }
-
-        orders.forEach((order) => {
-          const tr = document.createElement('tr');
-          let statusHtml = '';
-          if (order.status === 'Pending') {
-            statusHtml = `<div class="action-buttons"><button class="btn-complete" onclick="window.updateOrderStatus('${order.firebaseId}', 'Completed')">Done</button><button class="btn-reject" onclick="window.updateOrderStatus('${order.firebaseId}', 'Rejected')">Reject</button></div>`;
-          } else if (order.status === 'Completed') statusHtml = `<span class="status-badge status-completed">Done</span>`;
-          else if (order.status === 'Rejected') statusHtml = `<span class="status-badge status-rejected">Rejected</span>`;
-
-          const phoneLink = order.phone ? `<a href="tel:${order.phone}" style="color:#1a73e8; text-decoration:none; font-weight:bold;"><i class="fas fa-phone"></i> ${order.phone}</a>` : 'No phone';
-
-          tr.innerHTML = `
-            <td><strong>#${order.id}</strong><br><span style="font-size:0.75rem; color:#888;">${order.method}</span><br>${statusHtml}</td>
-            <td><strong>${order.name}</strong><br>${phoneLink}</td>
-            <td style="max-width: 180px; font-size:0.8rem;">${order.address}<br><span style="font-style:italic; color:#888;">Landmark: ${order.landmark || 'N/A'}</span></td>
-            <td style="font-size:0.8rem; max-width: 200px;">${order.items}${order.instructions ? `<br><span style="color:#d9534f; font-size:0.75rem; font-weight:bold;">Note: ${order.instructions}</span>` : ''}</td>
-            <td><strong style="color:#b64a12;">${formatPrice(order.total)}</strong></td>
-          `;
-          tableBody.appendChild(tr);
-        });
-      });
-    }
-
-    window.updateOrderStatus = async function(firebaseId, newStatus) {
-      if (newStatus === 'Rejected' && !confirm("Reject this order?")) return;
-      try { await window.firebaseUpdateDoc(window.firebaseDoc(window.firestoreDb, "orders", firebaseId), { status: newStatus }); } catch (e) { alert("Failed."); }
-    };
-
-    async function clearFinishedOrders() {
-      if (!confirm("Remove all Completed and Rejected orders?")) return;
-      try {
-        const q1 = window.firebaseQuery(window.firebaseCollection(window.firestoreDb, "orders"), window.firebaseWhere("status", "==", "Completed"));
-        const q2 = window.firebaseQuery(window.firebaseCollection(window.firestoreDb, "orders"), window.firebaseWhere("status", "==", "Rejected"));
-        const [snap1, snap2] = await Promise.all([window.firebaseGetDocs(q1), window.firebaseGetDocs(q2)]);
-        const del = [];
-        snap1.forEach(d => del.push(window.firebaseDeleteDoc(window.firebaseDoc(window.firestoreDb, "orders", d.id))));
-        snap2.forEach(d => del.push(window.firebaseDeleteDoc(window.firebaseDoc(window.firestoreDb, "orders", d.id))));
-        await Promise.all(del);
-      } catch (e) { alert("Error clearing."); }
-    }
-
-    // ADMIN EDIT MENU (Updates In-Stock status)
-    const STORAGE_KEY_MENU = 'luna_mini_donut_menu';
+    // DEFAULT MENU CARDS
     const defaultMenu = [
       { id: 'classic', name: 'Classic Donut', desc: 'Choose 3 flavors', icon: '🍩', type: 'classic', inStock: true },
       { id: 'premium', name: 'Premium Donut', desc: 'Choose 5 flavors', icon: '🍫', type: 'premium', inStock: true },
       { id: 'custom-minimal', name: 'Custom Box (Minimal)', desc: '25pcs Custom Design', icon: '📦', type: 'custom', price: 350, inStock: true },
       { id: 'custom-3d', name: 'Custom Box (3D)', desc: '25pcs 3D Design & Toppers', icon: '🎂', type: 'custom', price: 450, inStock: true }
     ];
-    let editingMenu = [];
 
-    function loadMenuForEditing() {
-      editingMenu = JSON.parse(localStorage.getItem(STORAGE_KEY_MENU)) || [...defaultMenu];
-      renderMenuEditor();
+    let menuItems = JSON.parse(localStorage.getItem('luna_mini_donut_menu')) || defaultMenu;
+    
+    // Ensure old menu format is migrated to new format
+    if(menuItems.length === 6 && menuItems[0].id === 'glazed') {
+        menuItems = defaultMenu;
+        localStorage.setItem('luna_mini_donut_menu', JSON.stringify(defaultMenu));
     }
 
-    function renderMenuEditor() {
-      const tbody = document.getElementById('menuTableBody');
-      tbody.innerHTML = '';
-      editingMenu.forEach((item, index) => {
-        const tr = document.createElement('tr');
-        const isChecked = item.inStock === false ? '' : 'checked';
-        tr.innerHTML = `
-          <td><strong>${item.name}</strong></td>
-          <td style="font-size:0.8rem; color:#666;">${item.desc}</td>
-          <td style="text-align:center;">
-            <label class="switch">
-              <input type="checkbox" ${isChecked} onchange="updateMenuField(${index}, 'inStock', this.checked)">
-              <span class="slider"></span>
-            </label>
-          </td>
+    let cart = {};
+    let currentTotal = 0;
+    let selectedPaymentMethod = 'cod';
+    let selectedMapLink = '';
+    
+    let customizingItem = null;
+    let selectedType = 'classic';
+    let selectedSize = 2;
+
+    // DOM Elements
+    const donutGrid = document.getElementById('donutGrid');
+    const cartContainer = document.getElementById('cartContainer');
+    const emptyCartMsg = document.getElementById('emptyCartMsg');
+    const totalAmountEl = document.getElementById('totalAmount');
+    const orderBtn = document.getElementById('orderBtn');
+    const floatingCart = document.getElementById('floatingCart');
+    
+    const customerNameInput = document.getElementById('customerName');
+    const customerPhoneInput = document.getElementById('customerPhone');
+    const customerAddressInput = document.getElementById('customerAddress');
+    const customerLandmarkInput = document.getElementById('customerLandmark');
+    const specialInstructionsInput = document.getElementById('specialInstructions');
+
+    const clearBoxBtn = document.getElementById('clearBoxBtn');
+    const progressFill = document.getElementById('progressFill');
+    const freeDeliveryMsg = document.getElementById('freeDeliveryMsg');
+
+    const modalOverlay = document.getElementById('paymentModalOverlay');
+    const checkoutView = document.getElementById('checkoutView');
+    const successView = document.getElementById('successView');
+    const confirmPayBtn = document.getElementById('confirmPayBtn');
+    const payAmountSpan = document.getElementById('payAmount');
+    const eWalletFields = document.getElementById('eWalletFields');
+
+    let map; let marker;
+
+    const formatPrice = (p) => `₱${p.toFixed(2)}`;
+
+    function loadState() {
+      try {
+        const savedCart = localStorage.getItem(STORAGE_KEY_CART);
+        if (savedCart) cart = JSON.parse(savedCart);
+      } catch (e) { cart = {}; }
+      
+      const savedAddr = localStorage.getItem(STORAGE_KEY_ADDR);
+      if (savedAddr) customerAddressInput.value = savedAddr;
+    }
+
+    function saveCart() { try { localStorage.setItem(STORAGE_KEY_CART, JSON.stringify(cart)); } catch (e) {} }
+    function saveCustomerDetails() { try { localStorage.setItem(STORAGE_KEY_ADDR, customerAddressInput.value.trim()); } catch (e) {} }
+
+    function renderMenu() {
+      donutGrid.innerHTML = '';
+      menuItems.forEach(item => {
+        if (item.inStock === false) return; // Skip out of stock
+
+        const card = document.createElement('div');
+        card.className = `donut-card ${item.type === 'custom' ? 'custom-box' : ''}`;
+        
+        let iconHtml = item.icon ? `<div class="donut-icon" style="font-size:3rem">${item.icon}</div>` : `<div class="donut-icon">🍩</div>`;
+        let priceHtml = item.type === 'custom' ? `₱${item.price}` : `₱10 / ₱15 per pc`;
+
+        card.innerHTML = `
+          ${iconHtml}
+          <h3>${item.name}</h3>
+          <div class="donut-desc">${item.desc}</div>
+          <div class="price-range">${priceHtml}</div>
         `;
-        tbody.appendChild(tr);
+        card.addEventListener('click', () => openCustomizer(item));
+        donutGrid.appendChild(card);
       });
     }
 
-    window.updateMenuField = (i, f, v) => { editingMenu[i][f] = v; };
-    
-    function saveMenuChanges() {
-      try { localStorage.setItem(STORAGE_KEY_MENU, JSON.stringify(editingMenu)); alert("Menu Saved! Customers will see the changes."); } catch (e) { alert("Failed."); }
+    function openCustomizer(item) {
+      customizingItem = item;
+      
+      if (item.type === 'custom') {
+        // Custom Boxes (350 or 450)
+        selectedType = 'custom';
+        document.getElementById('boxSizeGroup').style.display = 'none';
+        document.getElementById('flavorGroup').style.display = 'none';
+        document.getElementById('toppingsGroup').style.display = 'none';
+        document.getElementById('customTotalText').textContent = `Total: ${formatPrice(item.price)}`;
+        document.getElementById('customizeTitle').innerHTML = `<i class="fas fa-box"></i> ${item.name}`;
+      } else {
+        // Classic or Premium
+        selectedType = item.type;
+        selectedSize = 2;
+        document.getElementById('boxSizeGroup').style.display = 'block';
+        document.getElementById('flavorGroup').style.display = 'block';
+        document.getElementById('toppingsGroup').style.display = 'block';
+        document.getElementById('customizeTitle').innerHTML = `<i class="fas fa-donut"></i> ${item.name}`;
+        
+        // Reset Size
+        document.querySelectorAll('input[name="boxSize"]').forEach(r => r.checked = false);
+        document.querySelectorAll('input[name="boxSize"]')[0].checked = true;
+        document.querySelectorAll('input[name="boxSize"]').forEach(lbl => lbl.parentElement.classList.remove('selected'));
+        document.querySelectorAll('input[name="boxSize"]')[0].parentElement.classList.add('selected');
+
+        // Setup prices on size labels
+        document.getElementById('price-2').textContent = `₱${PRICES[selectedType][2]}`;
+        document.getElementById('price-6').textContent = `₱${PRICES[selectedType][6]}`;
+        document.getElementById('price-12').textContent = `₱${PRICES[selectedType][12]}`;
+
+        // Setup Flavors & Toppings
+        renderFlavorToppings();
+        calculateCustomPrice();
+      }
+      
+      document.getElementById('customizeModal').classList.add('active');
     }
+
+    function renderFlavorToppings() {
+      const fContainer = document.getElementById('flavorCheckboxes');
+      const tContainer = document.getElementById('toppingCheckboxes');
+      fContainer.innerHTML = ''; tContainer.innerHTML = '';
+
+      const fList = selectedType === 'classic' ? classicFlavors : premiumFlavors;
+      const tList = selectedType === 'classic' ? classicToppings : premiumToppings;
+
+      fList.forEach(f => {
+        fContainer.innerHTML += `<label class="checkbox-label"><input type="checkbox" value="${f}" onchange="calculateCustomPrice()"> ${f}</label>`;
+      });
+      tList.forEach(t => {
+        tContainer.innerHTML += `<label class="checkbox-label"><input type="checkbox" value="${t}" onchange="calculateCustomPrice()"> ${t}</label>`;
+      });
+    }
+
+    window.selectBox = (size, el) => {
+      selectedSize = size;
+      document.querySelectorAll('input[name="boxSize"]').forEach(opt => opt.parentElement.classList.remove('selected'));
+      el.classList.add('selected');
+      calculateCustomPrice();
+    }
+
+    window.calculateCustomPrice = () => {
+      if (selectedType === 'custom') return; // Fixed price na
+
+      let basePrice = PRICES[selectedType][selectedSize];
+      
+      // Toppings: Additional ₱5 per topping (pwede mong baguhin kung magkano)
+      const toppingPrice = 5;
+      let toppingsCount = document.querySelectorAll('#toppingCheckboxes input:checked').length;
+      let total = basePrice + (toppingsCount * toppingPrice);
+
+      document.getElementById('customTotalText').textContent = `Total: ${formatPrice(total)}`;
+    }
+
+    window.addCustomToCart = () => {
+      if (selectedType === 'custom') {
+        // Fixed custom box
+        const key = `custom_${customizingItem.id}`;
+        if(!cart[key]) cart[key] = { name: customizingItem.name, price: customizingItem.price, qty: 1, details: '25pcs Box' };
+        else cart[key].qty += 1;
+      } else {
+        // Classic / Premium
+        let toppings = Array.from(document.querySelectorAll('#toppingCheckboxes input:checked')).map(cb => cb.value);
+        let flavors = Array.from(document.querySelectorAll('#flavorCheckboxes input:checked')).map(cb => cb.value);
+        
+        if (flavors.length === 0) { alert("Please choose at least 1 flavor."); return; }
+
+        let basePrice = PRICES[selectedType][selectedSize];
+        let toppingPrice = 5;
+        let total = basePrice + (toppings.length * toppingPrice);
+        
+        let details = `${selectedSize}pcs (${flavors.join(', ')})`;
+        if (toppings.length > 0) details += ` + ${toppings.join(', ')}`;
+
+        const key = `${selectedType}_${selectedSize}_${flavors.join('_')}_${toppings.join('_')}`;
+        
+        if (!cart[key]) {
+          cart[key] = { name: `${customizingItem.name}`, price: total, qty: 1, details: details };
+        } else {
+          cart[key].qty += 1;
+        }
+      }
+
+      saveCart(); renderCart(); closeModal('customizeModal');
+    }
+
+    function renderCart() {
+      cartContainer.querySelectorAll('.cart-item').forEach(el => el.remove());
+      const cartKeys = Object.keys(cart);
+      currentTotal = 0;
+
+      if (cartKeys.length === 0) {
+        emptyCartMsg.style.display = 'block';
+        totalAmountEl.textContent = '₱0.00';
+        clearBoxBtn.disabled = true;
+        floatingCart.classList.remove('active');
+      } else {
+        emptyCartMsg.style.display = 'none';
+        clearBoxBtn.disabled = false;
+        floatingCart.classList.add('active');
+
+        cartKeys.forEach(key => {
+          const item = cart[key];
+          const itemTotal = item.price * item.qty;
+          currentTotal += itemTotal;
+
+          const itemEl = document.createElement('div');
+          itemEl.className = 'cart-item';
+          itemEl.innerHTML = `
+            <div class="cart-item-info">
+              <span class="item-name">${item.name}</span>
+              <span class="item-details">${item.details}</span>
+            </div>
+            <div class="qty-stepper">
+              <button class="qty-btn" onclick="window.changeQty('${key}', -1)"><i class="fas fa-minus"></i></button>
+              <span class="qty-value">${item.qty}</span>
+              <button class="qty-btn" onclick="window.changeQty('${key}', 1)"><i class="fas fa-plus"></i></button>
+            </div>
+            <div class="item-price">${formatPrice(itemTotal)}</div>
+            <button class="remove-item-btn" onclick="window.removeItem('${key}')"><i class="fas fa-xmark"></i></button>
+          `;
+          cartContainer.insertBefore(itemEl, emptyCartMsg);
+        });
+      }
+
+      totalAmountEl.textContent = formatPrice(currentTotal);
+      document.getElementById('floatingCartTotal').textContent = formatPrice(currentTotal);
+      orderBtn.disabled = cartKeys.length === 0;
+      
+      const ratio = Math.min(currentTotal / FREE_DELIVERY_THRESHOLD, 1);
+      progressFill.style.width = (ratio * 100) + '%';
+      freeDeliveryMsg.innerHTML = currentTotal >= FREE_DELIVERY_THRESHOLD ? '🎉 You unlocked <strong>FREE delivery!</strong>' : `Add <strong>${formatPrice(FREE_DELIVERY_THRESHOLD - currentTotal)}</strong> more for FREE delivery`;
+    }
+
+    window.scrollToCart = () => { document.querySelector('.order-panel').scrollIntoView({ behavior: 'smooth' }); }
+    window.changeQty = (key, delta) => { if (!cart[key]) return; cart[key].qty += delta; if (cart[key].qty <= 0) delete cart[key]; saveCart(); renderCart(); }
+    window.removeItem = (key) => { delete cart[key]; saveCart(); renderCart(); }
+    clearBoxBtn.addEventListener('click', () => { cart = {}; saveCart(); renderCart(); });
+
+    // MAP LOGIC (SAME AS BEFORE)
+    window.openMapModal = () => {
+      document.getElementById('mapModal').classList.add('active');
+      if (!map) {
+        map = L.map('map').setView([14.5995, 120.9842], 13);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+        map.locate({setView: true, maxZoom: 16});
+        map.on('locationfound', (e) => { if (marker) map.removeLayer(marker); marker = L.marker(e.latlng).addTo(map); });
+        map.on('click', (e) => { if (marker) map.removeLayer(marker); marker = L.marker(e.latlng).addTo(map); });
+      }
+      setTimeout(() => { map.invalidateSize(); }, 300);
+    }
+
+    window.confirmMapLocation = () => {
+      if (!marker) { alert("Please tap on the map to pin your location."); return; }
+      const lat = marker.getLatLng().lat; const lng = marker.getLatLng().lng;
+      selectedMapLink = `https://www.google.com/maps?q=${lat},${lng}`;
+      customerAddressInput.value = `Lat: ${lat.toFixed(6)}, Lng: ${lng.toFixed(6)}`;
+      customerLandmarkInput.value = `Pinned on Map`;
+      closeModal('mapModal');
+    }
+
+    // TRACKING
+    window.openTrackingModal = () => { document.getElementById('trackingModal').classList.add('active'); document.getElementById('trackResult').style.display = 'none'; }
+    window.trackOrder = async () => {
+      const id = document.getElementById('trackOrderId').value.trim();
+      if (!id) return;
+      
+      const q = window.firebaseQuery(window.firebaseCollection(window.firestoreDb, "orders"), window.firebaseWhere("id", "==", parseInt(id)));
+      const snap = await window.firebaseGetDocs(q);
+      
+      const resDiv = document.getElementById('trackResult');
+      resDiv.style.display = 'block';
+      
+      if (snap.empty) {
+        resDiv.innerHTML = `<p style="color:#d9534f; text-align:center;">Order not found.</p>`;
+      } else {
+        let order; snap.forEach(d => order = d.data());
+        resDiv.innerHTML = `
+          <p><strong>Status:</strong> <span style="color:${order.status==='Pending'?'#ff7e3f':'#2e8b57'}; font-weight:bold;">${order.status}</span></p>
+          <p style="font-size:0.9rem; margin-top:0.5rem;">Name: ${order.name}</p>
+          <p style="font-size:0.9rem;">Total: ₱${order.total.toFixed(2)}</p>
+        `;
+      }
+    }
+
+    // CHECKOUT
+    window.selectPayment = (method, el) => {
+      selectedPaymentMethod = method;
+      document.querySelectorAll('.pay-option').forEach(opt => opt.classList.remove('selected'));
+      el.classList.add('selected');
+      document.querySelector(`input[value="${method}"]`).checked = true;
+      eWalletFields.classList.remove('active');
+      if (method === 'gcash' || method === 'maya') eWalletFields.classList.add('active');
+    }
+
+    orderBtn.addEventListener('click', () => {
+      if (!customerNameInput.value.trim() || !customerPhoneInput.value.trim() || !customerAddressInput.value.trim()) {
+        alert('Please fill in Name, Phone, and Address.'); return;
+      }
+      saveCustomerDetails();
+      payAmountSpan.textContent = formatPrice(currentTotal);
+      checkoutView.style.display = 'block';
+      successView.classList.remove('active');
+      modalOverlay.classList.add('active');
+    });
+
+    document.getElementById('closeModalBtn').addEventListener('click', () => { modalOverlay.classList.remove('active'); });
+
+    confirmPayBtn.addEventListener('click', async () => {
+      if (selectedPaymentMethod === 'gcash' || selectedPaymentMethod === 'maya') {
+        if (document.getElementById('ewalletNumber').value.length < 10) { alert('Enter valid mobile number.'); return; }
+      }
+      confirmPayBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+      confirmPayBtn.disabled = true;
+
+      setTimeout(async () => {
+        const orderNum = Math.floor(10000 + Math.random() * 90000);
+        const methodName = selectedPaymentMethod === 'cod' ? 'Cash on Delivery' : (selectedPaymentMethod === 'gcash' ? 'GCash' : 'Maya');
+        
+        const itemsList = Object.keys(cart).map(k => `${cart[k].qty}x ${cart[k].name} [${cart[k].details}]`).join(', ');
+        
+        let landmark = customerLandmarkInput.value.trim();
+        if (selectedMapLink) landmark += ` | Map: ${selectedMapLink}`;
+
+        const orderData = {
+          id: orderNum,
+          name: customerNameInput.value.trim(),
+          phone: customerPhoneInput.value.trim(),
+          address: customerAddressInput.value.trim(),
+          landmark: landmark,
+          instructions: specialInstructionsInput.value.trim(),
+          items: itemsList,
+          total: currentTotal,
+          method: methodName,
+          status: 'Pending',
+          timestamp: Date.now()
+        };
+
+        try {
+          await window.firebaseAddDoc(window.firebaseCollection(window.firestoreDb, "orders"), orderData);
+          
+          document.getElementById('receiptOrderNum').textContent = orderNum;
+          document.getElementById('receiptName').textContent = orderData.name;
+          document.getElementById('receiptPhone').textContent = orderData.phone;
+          document.getElementById('receiptTotal').textContent = formatPrice(currentTotal);
+          
+          checkoutView.style.display = 'none';
+          successView.classList.add('active');
+          confirmPayBtn.innerHTML = '<i class="fas fa-lock"></i> Pay <span id="payAmount">₱0.00</span>';
+          confirmPayBtn.disabled = false;
+          
+          cart = {}; saveCart(); renderCart();
+        } catch (error) {
+          alert("Failed to save order. Check internet.");
+          confirmPayBtn.innerHTML = '<i class="fas fa-lock"></i> Pay <span id="payAmount">₱0.00</span>';
+          confirmPayBtn.disabled = false;
+        }
+      }, 1500);
+    });
+
+    window.finishCheckout = () => { modalOverlay.classList.remove('active'); selectedMapLink = ''; customerLandmarkInput.value = ''; specialInstructionsInput.value = ''; }
+    function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+    window.onload = () => {
+      window.addEventListener('storage', (e) => {
+        if (e.key === 'luna_mini_donut_menu') { menuItems = JSON.parse(e.newValue) || defaultMenu; renderMenu(); }
+      });
+      loadState(); renderMenu(); renderCart();
+    };
   </script>
 </body>
 </html>
