@@ -9,39 +9,22 @@
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
     body { background: #f4f7f6; padding: 2rem; color: #333; }
     
-    /* ==============================
-       LOGIN SCREEN (INAYOS)
-       ============================== */
+    /* LOGIN */
     .login-container { display: flex; justify-content: center; align-items: center; min-height: 80vh; position: relative; }
     .back-link { position: absolute; top: 0; left: 0; text-decoration: none; color: #a54b1e; font-weight: 700; display: flex; align-items: center; gap: 0.5rem; background: white; padding: 0.6rem 1.2rem; border-radius: 50px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); transition: 0.2s; }
     .back-link:hover { transform: translateY(-2px); }
-    
     .login-box { background: white; padding: 3rem 2rem; border-radius: 2rem; box-shadow: 0 10px 30px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center; }
     .login-box > i { font-size: 3rem; color: #ff9f6e; margin-bottom: 1rem; display: inline-block; }
     .login-box h2 { color: #2d1b0e; margin-bottom: 2rem; font-size: 1.8rem; }
-    
     .input-group { position: relative; margin-bottom: 1.2rem; }
-    /* Inayos ang left padding para hindi mag-overlap ang icon at text */
     .input-group i { position: absolute; left: 1.2rem; top: 50%; transform: translateY(-50%); color: #b97e5c; font-size: 1.2rem; z-index: 2; }
-    .input-group input { 
-      width: 100%; 
-      padding: 1rem 1rem 1rem 3.2rem; /* 3.2rem para may space ang icon */
-      border: 2px solid #ffe6d5; 
-      border-radius: 50px; 
-      font-size: 1rem; 
-      outline: none; 
-      font-weight: 500;
-      transition: 0.2s;
-    }
+    .input-group input { width: 100%; padding: 1rem 1rem 1rem 3.2rem; border: 2px solid #ffe6d5; border-radius: 50px; font-size: 1rem; outline: none; font-weight: 500; transition: 0.2s; }
     .input-group input:focus { border-color: #ff8a4c; box-shadow: 0 0 0 4px rgba(255, 138, 76, 0.2); }
-    
-    .login-btn { width: 100%; background: #ff9f6e; color: #2d1b0e; border: none; border-radius: 50px; padding: 1.2rem; font-size: 1.1rem; font-weight: 800; cursor: pointer; box-shadow: 0 6px 0 #b95d2b; transition: 0.1s; margin-top: 1rem; }
+    .login-btn { width: 100%; background: #ff9f6e; color: #2d1b0e; border: none; border-radius: 50px; padding: 1.2rem; font-size: 1.1rem; font-weight: 800; cursor: pointer; box-shadow: 0 6px 0 #b95d2b; margin-top: 1rem; }
     .login-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #b95d2b; }
     .error-msg { color: #d9534f; font-weight: bold; font-size: 0.9rem; margin-top: 1rem; display: none; }
 
-    /* ==============================
-       DASHBOARD
-       ============================== */
+    /* DASHBOARD */
     #dashboardView { display: none; }
     .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; }
     .header h1 { color: #2d1b0e; display: flex; align-items: center; gap: 0.5rem; font-size: 1.5rem; }
@@ -51,12 +34,10 @@
     .btn-refresh { background: #2e8b57; color: white; box-shadow: 0 4px 0 #1e5c39; }
     .btn-logout { background: #ffe6d5; color: #a54b1e; box-shadow: 0 4px 0 #ffb88c; }
 
-    /* TABS */
     .tabs { display: flex; gap: 1rem; margin-bottom: 2rem; border-bottom: 2px solid #ddd; padding-bottom: 1rem; overflow-x: auto; }
     .tab-btn { background: none; border: none; font-size: 1rem; font-weight: bold; color: #888; cursor: pointer; padding: 0.5rem 1rem; border-radius: 10px; white-space: nowrap; }
     .tab-btn.active { color: #ff7e3f; background: #fff5ee; }
 
-    /* ORDERS */
     .dashboard-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
     .stat-card { background: white; padding: 1rem; border-radius: 1rem; box-shadow: 0 5px 15px rgba(0,0,0,0.05); border-left: 5px solid #ff8a4c; }
     .stat-card h3 { font-size: 0.75rem; color: #888; text-transform: uppercase; }
@@ -75,7 +56,6 @@
     .action-buttons { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
     .btn-complete { background: #2e8b57; color: white; border: none; padding: 0.4rem 0.6rem; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 0.75rem;}
     .btn-reject { background: #d9534f; color: white; border: none; padding: 0.4rem 0.6rem; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 0.75rem;}
-    .btn-print { background: #666; color: white; border: none; padding: 0.4rem 0.6rem; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 0.75rem;}
     
     .clear-orders-btn { background: #d9534f; color: white; border: none; padding: 0.7rem 1.2rem; border-radius: 10px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 0 #a94442; display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; font-size: 0.85rem; }
     .empty-state { text-align: center; padding: 3rem; color: #888; }
@@ -87,13 +67,6 @@
     .menu-editor-table th, .menu-editor-table td { padding: 0.8rem; border-bottom: 1px solid #eee; text-align: left; vertical-align: middle; }
     .menu-editor-table input[type="text"] { width: 100%; padding: 0.6rem; border: 1px solid #ccc; border-radius: 5px; font-family: inherit; font-size: 0.9rem; }
     .btn-save-menu { background: #2e8b57; color: white; border: none; padding: 0.8rem 1.5rem; border-radius: 50px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 0 #1e5c39; font-size: 0.9rem; }
-    .btn-delete-row { background: #ff4d4d; color: white; border: none; padding: 0.5rem; border-radius: 5px; cursor: pointer; font-weight: bold; }
-    .add-donut-btn { background: #ff9f6e; color: #2d1b0e; border: none; padding: 0.6rem 1rem; border-radius: 5px; font-weight: bold; cursor: pointer; margin-bottom: 1rem; box-shadow: 0 4px 0 #b95d2b; font-size: 0.85rem; }
-    
-    .image-preview { width: 40px; height: 40px; object-fit: cover; border-radius: 50%; border: 2px solid #ffd9c4; background: #fff; display: block; margin: 0 auto; }
-    .upload-btn-wrapper { position: relative; overflow: hidden; display: inline-block; cursor: pointer; }
-    .upload-btn-wrapper input[type=file] { font-size: 100px; position: absolute; left: 0; top: 0; opacity: 0; cursor: pointer; }
-    .btn-upload { border: 2px solid #ff9f6e; color: #a54b1e; background-color: white; padding: 0.3rem 0.5rem; border-radius: 5px; font-size: 0.7rem; font-weight: bold; cursor: pointer; text-align: center; }
     
     /* TOGGLE SWITCH */
     .switch { position: relative; display: inline-block; width: 40px; height: 22px; }
@@ -103,7 +76,6 @@
     input:checked + .slider { background-color: #2e8b57; }
     input:checked + .slider:before { transform: translateX(18px); }
 
-    /* MOBILE */
     @media (max-width: 768px) {
       body { padding: 1rem; }
       .header { flex-direction: column; align-items: flex-start; }
@@ -116,28 +88,18 @@
 </head>
 <body>
 
-  <!-- LOGIN VIEW -->
   <div class="login-container" id="loginView">
     <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> Back</a>
     <div class="login-box">
       <i class="fas fa-cookie-bite"></i>
       <h2>Admin Login</h2>
-      
-      <div class="input-group">
-        <i class="fas fa-user"></i>
-        <input type="text" id="username" placeholder="Username" value="admin">
-      </div>
-      <div class="input-group">
-        <i class="fas fa-lock"></i>
-        <input type="password" id="password" placeholder="Password" value="luna123">
-      </div>
-      
+      <div class="input-group"><i class="fas fa-user"></i><input type="text" id="username" placeholder="Username" value="admin"></div>
+      <div class="input-group"><i class="fas fa-lock"></i><input type="password" id="password" placeholder="Password" value="luna123"></div>
       <button class="login-btn" onclick="handleLogin()">Login</button>
       <div class="error-msg" id="loginError">Incorrect username or password!</div>
     </div>
   </div>
 
-  <!-- DASHBOARD VIEW -->
   <div id="dashboardView">
     <div class="header">
       <h1><i class="fas fa-store"></i> Store Dashboard</h1>
@@ -150,7 +112,7 @@
 
     <div class="tabs">
       <button class="tab-btn active" id="tabOrders" onclick="switchTab('orders')"><i class="fas fa-receipt"></i> Live Orders</button>
-      <button class="tab-btn" id="tabMenu" onclick="switchTab('menu')"><i class="fas fa-pen-to-square"></i> Edit Flavors</button>
+      <button class="tab-btn" id="tabMenu" onclick="switchTab('menu')"><i class="fas fa-pen-to-square"></i> Manage Menu</button>
     </div>
 
     <div id="ordersView">
@@ -160,9 +122,7 @@
         <div class="stat-card" style="border-left-color: #ffb88c;"><h3>Pending</h3><p id="pendingOrders">0</p></div>
       </div>
 
-      <button class="clear-orders-btn" onclick="clearFinishedOrders()">
-        <i class="fas fa-broom"></i> Clear Finished
-      </button>
+      <button class="clear-orders-btn" onclick="clearFinishedOrders()"><i class="fas fa-broom"></i> Clear Finished</button>
 
       <div class="orders-table-container">
         <table>
@@ -173,31 +133,25 @@
               <th>Address & Landmark</th>
               <th>Items & Notes</th>
               <th>Total</th>
-              <th>Action</th>
             </tr>
           </thead>
           <tbody id="ordersTableBody"></tbody>
         </table>
-        <div id="emptyState" class="empty-state" style="display: none;">
-          <i class="fas fa-receipt"></i>
-          <h2>No orders yet</h2>
-        </div>
+        <div id="emptyState" class="empty-state" style="display: none;"><i class="fas fa-receipt"></i><h2>No orders yet</h2></div>
       </div>
     </div>
 
     <div id="editMenuView">
       <div class="menu-editor-container">
-        <h2 style="margin-bottom: 1rem; color: #2d1b0e; font-size: 1.2rem;">Edit Flavors</h2>
-        <button class="add-donut-btn" onclick="addNewDonutRow()"><i class="fas fa-plus"></i> Add Flavor</button>
+        <h2 style="margin-bottom: 1rem; color: #2d1b0e; font-size: 1.2rem;">Manage Menu Items</h2>
+        <p style="font-size:0.85rem; color:#666; margin-bottom:1rem;">I-toggle ang switch para gawing "Sold Out" ang isang item.</p>
         
         <table class="menu-editor-table">
           <thead>
             <tr>
-              <th style="width: 70px; text-align: center;">Img</th>
               <th>Name</th>
-              <th>Desc</th>
+              <th>Description</th>
               <th style="width: 80px; text-align:center;">In Stock</th>
-              <th style="width: 60px;">Del</th>
             </tr>
           </thead>
           <tbody id="menuTableBody"></tbody>
@@ -207,7 +161,6 @@
     </div>
   </div>
 
-  <!-- FIREBASE SDK -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getFirestore, collection, onSnapshot, doc, updateDoc, deleteDoc, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -223,16 +176,7 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
-
-    window.firebaseOnSnapshot = onSnapshot;
-    window.firebaseCollection = collection;
-    window.firebaseDoc = doc;
-    window.firebaseUpdateDoc = updateDoc;
-    window.firebaseDeleteDoc = deleteDoc;
-    window.firebaseQuery = query;
-    window.firebaseWhere = where;
-    window.firebaseGetDocs = getDocs;
-    window.firestoreDb = db;
+    window.firebaseOnSnapshot = onSnapshot; window.firebaseCollection = collection; window.firebaseDoc = doc; window.firebaseUpdateDoc = updateDoc; window.firebaseDeleteDoc = deleteDoc; window.firebaseQuery = query; window.firebaseWhere = where; window.firebaseGetDocs = getDocs; window.firestoreDb = db;
   </script>
 
   <script>
@@ -244,9 +188,7 @@
         document.getElementById('loginError').style.display = 'none';
         sessionStorage.setItem('luna_admin_logged_in', 'true');
         showDashboard();
-      } else {
-        document.getElementById('loginError').style.display = 'block';
-      }
+      } else document.getElementById('loginError').style.display = 'block';
     }
 
     function handleLogout() {
@@ -285,12 +227,10 @@
     const formatPrice = (p) => `₱${p.toFixed(2)}`;
     let unsubscribeOrders = null;
     let previousOrderCount = -1;
-
     const beep = new Audio("https://actions.google.com/sounds/v1/alarms/beep_short.ogg");
 
     function loadOrders() {
       if (unsubscribeOrders) unsubscribeOrders();
-
       const tableBody = document.getElementById('ordersTableBody');
       const emptyState = document.getElementById('emptyState');
       
@@ -299,9 +239,7 @@
         snapshot.forEach((doc) => orders.push({ firebaseId: doc.id, ...doc.data() }));
         orders.sort((a, b) => b.timestamp - a.timestamp);
 
-        if (previousOrderCount !== -1 && orders.length > previousOrderCount) {
-           beep.play().catch(e => console.log("Audio blocked."));
-        }
+        if (previousOrderCount !== -1 && orders.length > previousOrderCount) beep.play().catch(e => console.log("Audio blocked."));
         previousOrderCount = orders.length;
 
         document.getElementById('totalOrders').textContent = orders.length;
@@ -316,41 +254,20 @@
 
         orders.forEach((order) => {
           const tr = document.createElement('tr');
-          
           let statusHtml = '';
           if (order.status === 'Pending') {
-            statusHtml = `
-              <div class="action-buttons">
-                <button class="btn-complete" onclick="window.updateOrderStatus('${order.firebaseId}', 'Completed')">Done</button>
-                <button class="btn-reject" onclick="window.updateOrderStatus('${order.firebaseId}', 'Rejected')">Reject</button>
-              </div>
-            `;
+            statusHtml = `<div class="action-buttons"><button class="btn-complete" onclick="window.updateOrderStatus('${order.firebaseId}', 'Completed')">Done</button><button class="btn-reject" onclick="window.updateOrderStatus('${order.firebaseId}', 'Rejected')">Reject</button></div>`;
           } else if (order.status === 'Completed') statusHtml = `<span class="status-badge status-completed">Done</span>`;
           else if (order.status === 'Rejected') statusHtml = `<span class="status-badge status-rejected">Rejected</span>`;
 
           const phoneLink = order.phone ? `<a href="tel:${order.phone}" style="color:#1a73e8; text-decoration:none; font-weight:bold;"><i class="fas fa-phone"></i> ${order.phone}</a>` : 'No phone';
-          const printBtn = `<button class="btn-print" onclick="printReceipt('${order.id}')"><i class="fas fa-print"></i> Print</button>`;
 
           tr.innerHTML = `
-            <td>
-              <strong>#${order.id}</strong><br>
-              <span style="font-size:0.75rem; color:#888;">${order.method}</span><br>
-              ${statusHtml}
-            </td>
-            <td>
-              <strong>${order.name}</strong><br>
-              ${phoneLink}
-            </td>
-            <td style="max-width: 180px; font-size:0.8rem;">
-              ${order.address}<br>
-              <span style="font-style:italic; color:#888;">Landmark: ${order.landmark || 'N/A'}</span>
-            </td>
-            <td style="font-size:0.8rem; max-width: 200px;">
-              ${order.items}
-              ${order.instructions ? `<br><span style="color:#d9534f; font-size:0.75rem; font-weight:bold;">Note: ${order.instructions}</span>` : ''}
-            </td>
+            <td><strong>#${order.id}</strong><br><span style="font-size:0.75rem; color:#888;">${order.method}</span><br>${statusHtml}</td>
+            <td><strong>${order.name}</strong><br>${phoneLink}</td>
+            <td style="max-width: 180px; font-size:0.8rem;">${order.address}<br><span style="font-style:italic; color:#888;">Landmark: ${order.landmark || 'N/A'}</span></td>
+            <td style="font-size:0.8rem; max-width: 200px;">${order.items}${order.instructions ? `<br><span style="color:#d9534f; font-size:0.75rem; font-weight:bold;">Note: ${order.instructions}</span>` : ''}</td>
             <td><strong style="color:#b64a12;">${formatPrice(order.total)}</strong></td>
-            <td>${printBtn}</td>
           `;
           tableBody.appendChild(tr);
         });
@@ -359,9 +276,7 @@
 
     window.updateOrderStatus = async function(firebaseId, newStatus) {
       if (newStatus === 'Rejected' && !confirm("Reject this order?")) return;
-      try {
-        await window.firebaseUpdateDoc(window.firebaseDoc(window.firestoreDb, "orders", firebaseId), { status: newStatus });
-      } catch (e) { alert("Failed to update."); }
+      try { await window.firebaseUpdateDoc(window.firebaseDoc(window.firestoreDb, "orders", firebaseId), { status: newStatus }); } catch (e) { alert("Failed."); }
     };
 
     async function clearFinishedOrders() {
@@ -370,7 +285,6 @@
         const q1 = window.firebaseQuery(window.firebaseCollection(window.firestoreDb, "orders"), window.firebaseWhere("status", "==", "Completed"));
         const q2 = window.firebaseQuery(window.firebaseCollection(window.firestoreDb, "orders"), window.firebaseWhere("status", "==", "Rejected"));
         const [snap1, snap2] = await Promise.all([window.firebaseGetDocs(q1), window.firebaseGetDocs(q2)]);
-        
         const del = [];
         snap1.forEach(d => del.push(window.firebaseDeleteDoc(window.firebaseDoc(window.firestoreDb, "orders", d.id))));
         snap2.forEach(d => del.push(window.firebaseDeleteDoc(window.firebaseDoc(window.firestoreDb, "orders", d.id))));
@@ -378,75 +292,45 @@
       } catch (e) { alert("Error clearing."); }
     }
 
-    window.printReceipt = function(orderId) {
-      window.print(); 
-    }
-
+    // ADMIN EDIT MENU (Updates In-Stock status)
     const STORAGE_KEY_MENU = 'luna_mini_donut_menu';
+    const defaultMenu = [
+      { id: 'classic', name: 'Classic Donut', desc: 'Choose 3 flavors', icon: '🍩', type: 'classic', inStock: true },
+      { id: 'premium', name: 'Premium Donut', desc: 'Choose 5 flavors', icon: '🍫', type: 'premium', inStock: true },
+      { id: 'custom-minimal', name: 'Custom Box (Minimal)', desc: '25pcs Custom Design', icon: '📦', type: 'custom', price: 350, inStock: true },
+      { id: 'custom-3d', name: 'Custom Box (3D)', desc: '25pcs 3D Design & Toppers', icon: '🎂', type: 'custom', price: 450, inStock: true }
+    ];
     let editingMenu = [];
 
     function loadMenuForEditing() {
-      editingMenu = JSON.parse(localStorage.getItem(STORAGE_KEY_MENU)) || [
-        { id: 'glazed', name: 'Glazed', desc: 'Classic', image: '', inStock: true },
-        { id: 'chocolate', name: 'Choco', desc: 'Rich', image: '', inStock: true },
-        { id: 'strawberry', name: 'Berry', desc: 'Sweet', image: '', inStock: true },
-        { id: 'caramel', name: 'Caramel', desc: 'Salted', image: '', inStock: true },
-        { id: 'vanilla', name: 'Vanilla', desc: 'Smooth', image: '', inStock: true },
-        { id: 'pistachio', name: 'Pistachio', desc: 'Nutty', image: '', inStock: true }
-      ];
+      editingMenu = JSON.parse(localStorage.getItem(STORAGE_KEY_MENU)) || [...defaultMenu];
       renderMenuEditor();
     }
 
     function renderMenuEditor() {
       const tbody = document.getElementById('menuTableBody');
       tbody.innerHTML = '';
-      editingMenu.forEach((donut, index) => {
+      editingMenu.forEach((item, index) => {
         const tr = document.createElement('tr');
-        let imageHtml = donut.image ? `<img src="${donut.image}" class="image-preview" id="preview-${index}">` : `<div class="image-preview" style="display:flex; align-items:center; justify-content:center; font-size: 1.2rem;" id="preview-${index}">🍩</div>`;
-        
-        const isChecked = donut.inStock === false ? '' : 'checked';
-
+        const isChecked = item.inStock === false ? '' : 'checked';
         tr.innerHTML = `
-          <td style="text-align: center;">
-            ${imageHtml}
-            <div class="upload-btn-wrapper" style="margin-top: 5px;">
-              <button class="btn-upload"><i class="fas fa-upload"></i></button>
-              <input type="file" accept="image/*" onchange="handleImageUpload(event, ${index})" />
-            </div>
-          </td>
-          <td><input type="text" value="${donut.name}" onchange="updateMenuField(${index}, 'name', this.value)"></td>
-          <td><input type="text" value="${donut.desc}" onchange="updateMenuField(${index}, 'desc', this.value)"></td>
+          <td><strong>${item.name}</strong></td>
+          <td style="font-size:0.8rem; color:#666;">${item.desc}</td>
           <td style="text-align:center;">
             <label class="switch">
               <input type="checkbox" ${isChecked} onchange="updateMenuField(${index}, 'inStock', this.checked)">
               <span class="slider"></span>
             </label>
           </td>
-          <td><button class="btn-delete-row" onclick="deleteMenuRow(${index})"><i class="fas fa-trash"></i></button></td>
         `;
         tbody.appendChild(tr);
       });
     }
 
-    window.handleImageUpload = function(event, index) {
-      const file = event.target.files[0];
-      if (!file) return;
-      if (file.size > 1000000) { alert("Max 1MB."); return; }
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        editingMenu[index].image = e.target.result;
-        document.getElementById(`preview-${index}`).outerHTML = `<img src="${e.target.result}" class="image-preview" id="preview-${index}">`;
-      };
-      reader.readAsDataURL(file);
-    };
-
     window.updateMenuField = (i, f, v) => { editingMenu[i][f] = v; };
-    window.deleteMenuRow = (i) => { if (confirm("Delete?")) { editingMenu.splice(i, 1); renderMenuEditor(); } };
-    window.addNewDonutRow = () => { editingMenu.push({ id: 'flavor_'+Date.now(), name: 'New', desc: 'Tasty', image: '', inStock: true }); renderMenuEditor(); };
     
     function saveMenuChanges() {
-      for (let d of editingMenu) { if (!d.name.trim()) { alert("Names cannot be empty."); return; } }
-      try { localStorage.setItem(STORAGE_KEY_MENU, JSON.stringify(editingMenu)); alert("Saved!"); } catch (e) { alert("Failed."); }
+      try { localStorage.setItem(STORAGE_KEY_MENU, JSON.stringify(editingMenu)); alert("Menu Saved! Customers will see the changes."); } catch (e) { alert("Failed."); }
     }
   </script>
 </body>
