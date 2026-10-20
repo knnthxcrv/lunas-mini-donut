@@ -8,18 +8,20 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
     body { background: #f4f7f6; padding: 2rem; color: #333; }
+    
+    /* LOGIN */
     .login-container { display: flex; justify-content: center; align-items: center; min-height: 80vh; position: relative; }
-    .back-link { position: absolute; top: 0; left: 0; text-decoration: none; color: #a54b1e; font-weight: 700; display: flex; align-items: center; gap: 0.5rem; background: white; padding: 0.6rem 1.2rem; border-radius: 50px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); transition: 0.2s; }
+    .back-link { position: absolute; top: 0; left: 0; text-decoration: none; color: #a54b1e; font-weight: 700; display: flex; align-items: center; gap: 0.5rem; background: white; padding: 0.6rem 1.2rem; border-radius: 50px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
     .login-box { background: white; padding: 3rem 2rem; border-radius: 2rem; box-shadow: 0 10px 30px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center; }
     .login-box i { font-size: 3rem; color: #ff9f6e; margin-bottom: 1rem; }
     .login-box h2 { color: #2d1b0e; margin-bottom: 0.5rem; }
-    .login-box p { color: #888; margin-bottom: 2rem; font-size: 0.9rem; }
     .input-group { position: relative; margin-bottom: 1.2rem; }
-    .input-group i { position: absolute; left: 1.2rem; top: 50%; transform: translateY(-50%); color: #b97e5c; font-size: 1.1rem; }
-    .input-group input { width: 100%; padding: 1rem 1rem 1rem 3rem; border: 2px solid #ffe6d5; border-radius: 50px; font-size: 1rem; outline: none; font-weight: 500; }
+    .input-group i { position: absolute; left: 1.2rem; top: 50%; transform: translateY(-50%); color: #b97e5c; }
+    .input-group input { width: 100%; padding: 1rem 1rem 1rem 3rem; border: 2px solid #ffe6d5; border-radius: 50px; outline: none; font-weight: 500; }
     .login-btn { width: 100%; background: #ff9f6e; color: #2d1b0e; border: none; border-radius: 50px; padding: 1rem; font-size: 1.1rem; font-weight: 800; cursor: pointer; box-shadow: 0 6px 0 #b95d2b; }
     .error-msg { color: #d9534f; font-weight: bold; font-size: 0.9rem; margin-top: 1rem; display: none; }
 
+    /* DASHBOARD */
     #dashboardView { display: none; }
     .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; }
     .header h1 { color: #2d1b0e; display: flex; align-items: center; gap: 0.5rem; font-size: 1.5rem; }
@@ -29,18 +31,20 @@
     .btn-refresh { background: #2e8b57; color: white; box-shadow: 0 4px 0 #1e5c39; }
     .btn-logout { background: #ffe6d5; color: #a54b1e; box-shadow: 0 4px 0 #ffb88c; }
 
+    /* TABS */
     .tabs { display: flex; gap: 1rem; margin-bottom: 2rem; border-bottom: 2px solid #ddd; padding-bottom: 1rem; overflow-x: auto; }
     .tab-btn { background: none; border: none; font-size: 1rem; font-weight: bold; color: #888; cursor: pointer; padding: 0.5rem 1rem; border-radius: 10px; white-space: nowrap; }
     .tab-btn.active { color: #ff7e3f; background: #fff5ee; }
 
+    /* ORDERS */
     .dashboard-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
     .stat-card { background: white; padding: 1rem; border-radius: 1rem; box-shadow: 0 5px 15px rgba(0,0,0,0.05); border-left: 5px solid #ff8a4c; }
-    .stat-card h3 { font-size: 0.75rem; color: #888; text-transform: uppercase; margin-bottom: 0.3rem; }
+    .stat-card h3 { font-size: 0.75rem; color: #888; text-transform: uppercase; }
     .stat-card p { font-size: 1.5rem; font-weight: 800; color: #2d1b0e; }
 
     .orders-table-container { background: white; border-radius: 1rem; box-shadow: 0 5px 15px rgba(0,0,0,0.05); overflow-x: auto; margin-bottom: 2rem;}
-    table { width: 100%; border-collapse: collapse; text-align: left; min-width: 700px; }
-    th, td { padding: 0.8rem; border-bottom: 1px solid #eee; font-size: 0.9rem; }
+    table { width: 100%; border-collapse: collapse; text-align: left; min-width: 900px; }
+    th, td { padding: 0.8rem; border-bottom: 1px solid #eee; font-size: 0.9rem; vertical-align: top; }
     th { background: #fff8f0; color: #6b3f27; font-weight: 700; white-space: nowrap; }
     
     .status-badge { padding: 0.3rem 0.6rem; border-radius: 50px; font-size: 0.75rem; font-weight: bold; display: inline-block;}
@@ -48,16 +52,18 @@
     .status-completed { background: #d4edda; color: #155724; }
     .status-rejected { background: #f8d7da; color: #721c24; }
 
-    .action-buttons { display: flex; gap: 0.4rem; }
+    .action-buttons { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
     .btn-complete { background: #2e8b57; color: white; border: none; padding: 0.4rem 0.6rem; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 0.75rem;}
     .btn-reject { background: #d9534f; color: white; border: none; padding: 0.4rem 0.6rem; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 0.75rem;}
+    .btn-print { background: #666; color: white; border: none; padding: 0.4rem 0.6rem; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 0.75rem;}
     
-    .empty-state { text-align: center; padding: 3rem; color: #888; }
     .clear-orders-btn { background: #d9534f; color: white; border: none; padding: 0.7rem 1.2rem; border-radius: 10px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 0 #a94442; display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; font-size: 0.85rem; }
+    .empty-state { text-align: center; padding: 3rem; color: #888; }
 
+    /* EDIT MENU */
     #editMenuView { display: none; }
     .menu-editor-container { background: white; border-radius: 1rem; padding: 1.5rem; box-shadow: 0 5px 15px rgba(0,0,0,0.05); overflow-x: auto; }
-    .menu-editor-table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; min-width: 500px; }
+    .menu-editor-table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; min-width: 600px; }
     .menu-editor-table th, .menu-editor-table td { padding: 0.8rem; border-bottom: 1px solid #eee; text-align: left; vertical-align: middle; }
     .menu-editor-table input[type="text"] { width: 100%; padding: 0.6rem; border: 1px solid #ccc; border-radius: 5px; font-family: inherit; font-size: 0.9rem; }
     .btn-save-menu { background: #2e8b57; color: white; border: none; padding: 0.8rem 1.5rem; border-radius: 50px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 0 #1e5c39; font-size: 0.9rem; }
@@ -68,18 +74,22 @@
     .upload-btn-wrapper { position: relative; overflow: hidden; display: inline-block; cursor: pointer; }
     .upload-btn-wrapper input[type=file] { font-size: 100px; position: absolute; left: 0; top: 0; opacity: 0; cursor: pointer; }
     .btn-upload { border: 2px solid #ff9f6e; color: #a54b1e; background-color: white; padding: 0.3rem 0.5rem; border-radius: 5px; font-size: 0.7rem; font-weight: bold; cursor: pointer; text-align: center; }
+    
+    /* TOGGLE SWITCH */
+    .switch { position: relative; display: inline-block; width: 40px; height: 22px; }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
+    .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+    input:checked + .slider { background-color: #2e8b57; }
+    input:checked + .slider:before { transform: translateX(18px); }
 
     @media (max-width: 768px) {
       body { padding: 1rem; }
       .header { flex-direction: column; align-items: flex-start; }
-      .header h1 { font-size: 1.3rem; }
       .btn-group { width: 100%; justify-content: space-between; }
       .btn { flex: 1; justify-content: center; padding: 0.6rem; font-size: 0.75rem; }
       .dashboard-stats { grid-template-columns: 1fr 1fr; }
-      .stat-card { padding: 0.8rem; }
-      .stat-card p { font-size: 1.2rem; }
       .clear-orders-btn { width: 100%; justify-content: center; }
-      .menu-editor-container { padding: 1rem; }
     }
   </style>
 </head>
@@ -90,15 +100,8 @@
     <div class="login-box">
       <i class="fas fa-cookie-bite"></i>
       <h2>Admin Login</h2>
-      <p>Enter credentials.</p>
-      <div class="input-group">
-        <i class="fas fa-user"></i>
-        <input type="text" id="username" placeholder="Username" value="admin">
-      </div>
-      <div class="input-group">
-        <i class="fas fa-lock"></i>
-        <input type="password" id="password" placeholder="Password" value="luna123">
-      </div>
+      <div class="input-group"><i class="fas fa-user"></i><input type="text" id="username" value="admin"></div>
+      <div class="input-group"><i class="fas fa-lock"></i><input type="password" id="password" value="luna123"></div>
       <button class="login-btn" onclick="handleLogin()">Login</button>
       <div class="error-msg" id="loginError">Incorrect username or password!</div>
     </div>
@@ -121,18 +124,9 @@
 
     <div id="ordersView">
       <div class="dashboard-stats">
-        <div class="stat-card">
-          <h3>Total</h3>
-          <p id="totalOrders">0</p>
-        </div>
-        <div class="stat-card" style="border-left-color: #2e8b57;">
-          <h3>Revenue</h3>
-          <p id="totalRevenue">₱0.00</p>
-        </div>
-        <div class="stat-card" style="border-left-color: #ffb88c;">
-          <h3>Pending</h3>
-          <p id="pendingOrders">0</p>
-        </div>
+        <div class="stat-card"><h3>Total</h3><p id="totalOrders">0</p></div>
+        <div class="stat-card" style="border-left-color: #2e8b57;"><h3>Revenue</h3><p id="totalRevenue">₱0.00</p></div>
+        <div class="stat-card" style="border-left-color: #ffb88c;"><h3>Pending</h3><p id="pendingOrders">0</p></div>
       </div>
 
       <button class="clear-orders-btn" onclick="clearFinishedOrders()">
@@ -146,7 +140,7 @@
               <th>Order</th>
               <th>Customer & Phone</th>
               <th>Address & Landmark</th>
-              <th>Items</th>
+              <th>Items & Notes</th>
               <th>Total</th>
               <th>Action</th>
             </tr>
@@ -163,8 +157,6 @@
     <div id="editMenuView">
       <div class="menu-editor-container">
         <h2 style="margin-bottom: 1rem; color: #2d1b0e; font-size: 1.2rem;">Edit Flavors</h2>
-        <p style="color: #666; margin-bottom: 1.5rem; font-size: 0.8rem;">Prices fixed (₱20/₱25).</p>
-        
         <button class="add-donut-btn" onclick="addNewDonutRow()"><i class="fas fa-plus"></i> Add Flavor</button>
         
         <table class="menu-editor-table">
@@ -173,6 +165,7 @@
               <th style="width: 70px; text-align: center;">Img</th>
               <th>Name</th>
               <th>Desc</th>
+              <th style="width: 80px; text-align:center;">In Stock</th>
               <th style="width: 60px;">Del</th>
             </tr>
           </thead>
@@ -183,7 +176,7 @@
     </div>
   </div>
 
-  <!-- FIREBASE SDK IMPORTS -->
+  <!-- FIREBASE SDK -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getFirestore, collection, onSnapshot, doc, updateDoc, deleteDoc, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -211,28 +204,22 @@
     window.firestoreDb = db;
   </script>
 
-  <!-- MAIN ADMIN LOGIC -->
   <script>
     const ADMIN_USER = "admin";
     const ADMIN_PASS = "luna123";
 
     function handleLogin() {
-      const user = document.getElementById('username').value.trim();
-      const pass = document.getElementById('password').value.trim();
-      if (user === ADMIN_USER && pass === ADMIN_PASS) {
+      if (document.getElementById('username').value === ADMIN_USER && document.getElementById('password').value === ADMIN_PASS) {
         document.getElementById('loginError').style.display = 'none';
         sessionStorage.setItem('luna_admin_logged_in', 'true');
         showDashboard();
-      } else {
-        document.getElementById('loginError').style.display = 'block';
-      }
+      } else document.getElementById('loginError').style.display = 'block';
     }
 
     function handleLogout() {
       sessionStorage.removeItem('luna_admin_logged_in');
       document.getElementById('dashboardView').style.display = 'none';
       document.getElementById('loginView').style.display = 'flex';
-      document.getElementById('password').value = '';
     }
 
     function showDashboard() {
@@ -264,6 +251,10 @@
 
     const formatPrice = (p) => `₱${p.toFixed(2)}`;
     let unsubscribeOrders = null;
+    let previousOrderCount = -1; // For sound alert
+
+    // GENERATE BEEP SOUND
+    const beep = new Audio("https://actions.google.com/sounds/v1/alarms/beep_short.ogg");
 
     function loadOrders() {
       if (unsubscribeOrders) unsubscribeOrders();
@@ -273,30 +264,24 @@
       
       unsubscribeOrders = window.firebaseOnSnapshot(window.firebaseCollection(window.firestoreDb, "orders"), (snapshot) => {
         let orders = [];
-        snapshot.forEach((doc) => {
-          orders.push({ firebaseId: doc.id, ...doc.data() });
-        });
-
+        snapshot.forEach((doc) => orders.push({ firebaseId: doc.id, ...doc.data() }));
         orders.sort((a, b) => b.timestamp - a.timestamp);
+
+        // SOUND ALERT LOGIC
+        if (previousOrderCount !== -1 && orders.length > previousOrderCount) {
+           beep.play().catch(e => console.log("Audio play blocked by browser. Interact with page first."));
+        }
+        previousOrderCount = orders.length;
 
         document.getElementById('totalOrders').textContent = orders.length;
         let revenue = 0, pending = 0;
-        
-        orders.forEach(o => {
-          if (o.status !== 'Rejected') revenue += o.total; 
-          if (o.status === 'Pending') pending++;
-        });
-        
+        orders.forEach(o => { if (o.status !== 'Rejected') revenue += o.total; if (o.status === 'Pending') pending++; });
         document.getElementById('totalRevenue').textContent = formatPrice(revenue);
         document.getElementById('pendingOrders').textContent = pending;
 
         tableBody.innerHTML = '';
-        if (orders.length === 0) {
-          emptyState.style.display = 'block';
-          return;
-        } else {
-          emptyState.style.display = 'none';
-        }
+        if (orders.length === 0) { emptyState.style.display = 'block'; return; }
+        else { emptyState.style.display = 'none'; }
 
         orders.forEach((order) => {
           const tr = document.createElement('tr');
@@ -309,22 +294,35 @@
                 <button class="btn-reject" onclick="window.updateOrderStatus('${order.firebaseId}', 'Rejected')">Reject</button>
               </div>
             `;
-          } else if (order.status === 'Completed') {
-            statusHtml = `<span class="status-badge status-completed">Done</span>`;
-          } else if (order.status === 'Rejected') {
-            statusHtml = `<span class="status-badge status-rejected">Rejected</span>`;
-          }
+          } else if (order.status === 'Completed') statusHtml = `<span class="status-badge status-completed">Done</span>`;
+          else if (order.status === 'Rejected') statusHtml = `<span class="status-badge status-rejected">Rejected</span>`;
+
+          // CLICK-TO-CALL LINK
+          const phoneLink = order.phone ? `<a href="tel:${order.phone}" style="color:#1a73e8; text-decoration:none; font-weight:bold;"><i class="fas fa-phone"></i> ${order.phone}</a>` : 'No phone';
+
+          // PRINT BUTTON
+          const printBtn = `<button class="btn-print" onclick="printReceipt('${order.id}')"><i class="fas fa-print"></i> Print</button>`;
 
           tr.innerHTML = `
-            <td><strong>#${order.id}</strong><br><span style="font-size:0.7rem; color:#888;">${order.method}</span></td>
-            <td><strong>${order.name}</strong><br><span style="font-size:0.8rem; color:#2e8b57;">${order.phone || 'No phone'}</span></td>
+            <td>
+              <strong>#${order.id}</strong><br>
+              <span style="font-size:0.75rem; color:#888;">${order.method}</span><br>
+              ${statusHtml}
+            </td>
+            <td>
+              <strong>${order.name}</strong><br>
+              ${phoneLink}
+            </td>
             <td style="max-width: 180px; font-size:0.8rem;">
               ${order.address}<br>
               <span style="font-style:italic; color:#888;">Landmark: ${order.landmark || 'N/A'}</span>
             </td>
-            <td style="font-size:0.8rem; max-width: 200px;">${order.items}</td>
+            <td style="font-size:0.8rem; max-width: 200px;">
+              ${order.items}
+              ${order.instructions ? `<br><span style="color:#d9534f; font-size:0.75rem; font-weight:bold;">Note: ${order.instructions}</span>` : ''}
+            </td>
             <td><strong style="color:#b64a12;">${formatPrice(order.total)}</strong></td>
-            <td>${statusHtml}</td>
+            <td>${printBtn}</td>
           `;
           tableBody.appendChild(tr);
         });
@@ -332,68 +330,56 @@
     }
 
     window.updateOrderStatus = async function(firebaseId, newStatus) {
-      if (newStatus === 'Rejected' && !confirm("Are you sure you want to REJECT this order?")) return;
-
+      if (newStatus === 'Rejected' && !confirm("Reject this order?")) return;
       try {
-        const orderRef = window.firebaseDoc(window.firestoreDb, "orders", firebaseId);
-        await window.firebaseUpdateDoc(orderRef, { status: newStatus });
-      } catch (e) {
-        alert("Failed to update order.");
-      }
+        await window.firebaseUpdateDoc(window.firebaseDoc(window.firestoreDb, "orders", firebaseId), { status: newStatus });
+      } catch (e) { alert("Failed to update."); }
     };
 
     async function clearFinishedOrders() {
       if (!confirm("Remove all Completed and Rejected orders?")) return;
-      
       try {
         const q1 = window.firebaseQuery(window.firebaseCollection(window.firestoreDb, "orders"), window.firebaseWhere("status", "==", "Completed"));
-        const snap1 = await window.firebaseGetDocs(q1);
-        
         const q2 = window.firebaseQuery(window.firebaseCollection(window.firestoreDb, "orders"), window.firebaseWhere("status", "==", "Rejected"));
-        const snap2 = await window.firebaseGetDocs(q2);
+        const [snap1, snap2] = await Promise.all([window.firebaseGetDocs(q1), window.firebaseGetDocs(q2)]);
         
-        const deletePromises = [];
-        snap1.forEach((document) => deletePromises.push(window.firebaseDeleteDoc(window.firebaseDoc(window.firestoreDb, "orders", document.id))));
-        snap2.forEach((document) => deletePromises.push(window.firebaseDeleteDoc(window.firebaseDoc(window.firestoreDb, "orders", document.id))));
-        
-        await Promise.all(deletePromises);
-        alert("Finished orders cleared!");
-      } catch (e) {
-        alert("Failed to clear orders.");
-      }
+        const del = [];
+        snap1.forEach(d => del.push(window.firebaseDeleteDoc(window.firebaseDoc(window.firestoreDb, "orders", d.id))));
+        snap2.forEach(d => del.push(window.firebaseDeleteDoc(window.firebaseDoc(window.firestoreDb, "orders", d.id))));
+        await Promise.all(del);
+      } catch (e) { alert("Error clearing."); }
     }
 
-    // EDIT MENU
-    const STORAGE_KEY_MENU = 'luna_mini_donut_menu';
-    const defaultFlavors = [
-      { id: 'glazed', name: 'Glazed', desc: 'Classic sweet glaze', image: '' },
-      { id: 'chocolate', name: 'Choco', desc: 'Rich chocolate', image: '' },
-      { id: 'strawberry', name: 'Berry', desc: 'Sweet strawberry', image: '' },
-      { id: 'caramel', name: 'Caramel', desc: 'Salted caramel', image: '' },
-      { id: 'vanilla', name: 'Vanilla', desc: 'Smooth vanilla', image: '' },
-      { id: 'pistachio', name: 'Pistachio', desc: 'Nutty pistachio', image: '' }
-    ];
+    // PRINT RECEIPT
+    window.printReceipt = function(orderId) {
+      window.print(); // Basic browser print
+    }
 
+    // EDIT MENU (WITH STOCK TOGGLE)
+    const STORAGE_KEY_MENU = 'luna_mini_donut_menu';
     let editingMenu = [];
 
     function loadMenuForEditing() {
-      editingMenu = JSON.parse(localStorage.getItem(STORAGE_KEY_MENU)) || [...defaultFlavors];
+      editingMenu = JSON.parse(localStorage.getItem(STORAGE_KEY_MENU)) || [
+        { id: 'glazed', name: 'Glazed', desc: 'Classic', image: '', inStock: true },
+        { id: 'chocolate', name: 'Choco', desc: 'Rich', image: '', inStock: true },
+        { id: 'strawberry', name: 'Berry', desc: 'Sweet', image: '', inStock: true },
+        { id: 'caramel', name: 'Caramel', desc: 'Salted', image: '', inStock: true },
+        { id: 'vanilla', name: 'Vanilla', desc: 'Smooth', image: '', inStock: true },
+        { id: 'pistachio', name: 'Pistachio', desc: 'Nutty', image: '', inStock: true }
+      ];
       renderMenuEditor();
     }
 
     function renderMenuEditor() {
       const tbody = document.getElementById('menuTableBody');
       tbody.innerHTML = '';
-
       editingMenu.forEach((donut, index) => {
         const tr = document.createElement('tr');
+        let imageHtml = donut.image ? `<img src="${donut.image}" class="image-preview" id="preview-${index}">` : `<div class="image-preview" style="display:flex; align-items:center; justify-content:center; font-size: 1.2rem;" id="preview-${index}">🍩</div>`;
         
-        let imageHtml = '';
-        if (donut.image && donut.image.trim() !== '') {
-          imageHtml = `<img src="${donut.image}" class="image-preview" id="preview-${index}">`;
-        } else {
-          imageHtml = `<div class="image-preview" style="display:flex; align-items:center; justify-content:center; font-size: 1.2rem;" id="preview-${index}">🍩</div>`;
-        }
+        // STOCK TOGGLE
+        const isChecked = donut.inStock === false ? '' : 'checked';
 
         tr.innerHTML = `
           <td style="text-align: center;">
@@ -405,6 +391,12 @@
           </td>
           <td><input type="text" value="${donut.name}" onchange="updateMenuField(${index}, 'name', this.value)"></td>
           <td><input type="text" value="${donut.desc}" onchange="updateMenuField(${index}, 'desc', this.value)"></td>
+          <td style="text-align:center;">
+            <label class="switch">
+              <input type="checkbox" ${isChecked} onchange="updateMenuField(${index}, 'inStock', this.checked)">
+              <span class="slider"></span>
+            </label>
+          </td>
           <td><button class="btn-delete-row" onclick="deleteMenuRow(${index})"><i class="fas fa-trash"></i></button></td>
         `;
         tbody.appendChild(tr);
@@ -414,8 +406,7 @@
     window.handleImageUpload = function(event, index) {
       const file = event.target.files[0];
       if (!file) return;
-      if (file.size > 1000000) { alert("Image too large! Max 1MB."); return; }
-
+      if (file.size > 1000000) { alert("Max 1MB."); return; }
       const reader = new FileReader();
       reader.onload = function(e) {
         editingMenu[index].image = e.target.result;
@@ -424,34 +415,13 @@
       reader.readAsDataURL(file);
     };
 
-    window.updateMenuField = function(index, field, value) {
-      editingMenu[index][field] = value;
-    };
-
-    window.deleteMenuRow = function(index) {
-      if (confirm("Delete this flavor?")) {
-        editingMenu.splice(index, 1);
-        renderMenuEditor();
-      }
-    };
-
-    window.addNewDonutRow = function() {
-      const newId = 'flavor_' + Date.now();
-      editingMenu.push({ id: newId, name: 'New', desc: 'Tasty!', image: '' });
-      renderMenuEditor();
-    };
-
+    window.updateMenuField = (i, f, v) => { editingMenu[i][f] = v; };
+    window.deleteMenuRow = (i) => { if (confirm("Delete?")) { editingMenu.splice(i, 1); renderMenuEditor(); } };
+    window.addNewDonutRow = () => { editingMenu.push({ id: 'flavor_'+Date.now(), name: 'New', desc: 'Tasty', image: '', inStock: true }); renderMenuEditor(); };
+    
     function saveMenuChanges() {
-      for (let d of editingMenu) {
-        if (!d.name.trim()) { alert("Names cannot be empty."); return; }
-      }
-
-      try {
-        localStorage.setItem(STORAGE_KEY_MENU, JSON.stringify(editingMenu));
-        alert("Flavors saved!");
-      } catch (e) {
-        alert("Failed to save.");
-      }
+      for (let d of editingMenu) { if (!d.name.trim()) { alert("Names cannot be empty."); return; } }
+      try { localStorage.setItem(STORAGE_KEY_MENU, JSON.stringify(editingMenu)); alert("Saved!"); } catch (e) { alert("Failed."); }
     }
   </script>
 </body>
