@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Luna's Donut · Admin Dashboard</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
@@ -12,87 +12,97 @@
     /* LOGIN SCREEN */
     .login-container { display: flex; justify-content: center; align-items: center; min-height: 80vh; position: relative; }
     .back-link { position: absolute; top: 0; left: 0; text-decoration: none; color: #a54b1e; font-weight: 700; display: flex; align-items: center; gap: 0.5rem; background: white; padding: 0.6rem 1.2rem; border-radius: 50px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); transition: 0.2s; }
-    .back-link:hover { background: #fff8f0; transform: translateY(-2px); }
     .login-box { background: white; padding: 3rem 2rem; border-radius: 2rem; box-shadow: 0 10px 30px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center; }
     .login-box i { font-size: 3rem; color: #ff9f6e; margin-bottom: 1rem; }
     .login-box h2 { color: #2d1b0e; margin-bottom: 0.5rem; }
     .login-box p { color: #888; margin-bottom: 2rem; font-size: 0.9rem; }
     .input-group { position: relative; margin-bottom: 1.2rem; }
     .input-group i { position: absolute; left: 1.2rem; top: 50%; transform: translateY(-50%); color: #b97e5c; font-size: 1.1rem; }
-    .input-group input { width: 100%; padding: 1rem 1rem 1rem 3rem; border: 2px solid #ffe6d5; border-radius: 50px; font-size: 1rem; outline: none; transition: 0.2s; font-weight: 500; }
-    .input-group input:focus { border-color: #ff8a4c; box-shadow: 0 0 0 4px rgba(255, 138, 76, 0.2); }
-    .login-btn { width: 100%; background: #ff9f6e; color: #2d1b0e; border: none; border-radius: 50px; padding: 1rem; font-size: 1.1rem; font-weight: 800; cursor: pointer; box-shadow: 0 6px 0 #b95d2b; transition: 0.1s; }
-    .login-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #b95d2b; }
+    .input-group input { width: 100%; padding: 1rem 1rem 1rem 3rem; border: 2px solid #ffe6d5; border-radius: 50px; font-size: 1rem; outline: none; font-weight: 500; }
+    .login-btn { width: 100%; background: #ff9f6e; color: #2d1b0e; border: none; border-radius: 50px; padding: 1rem; font-size: 1.1rem; font-weight: 800; cursor: pointer; box-shadow: 0 6px 0 #b95d2b; }
     .error-msg { color: #d9534f; font-weight: bold; font-size: 0.9rem; margin-top: 1rem; display: none; }
 
     /* DASHBOARD */
     #dashboardView { display: none; }
     .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; }
-    .header h1 { color: #2d1b0e; display: flex; align-items: center; gap: 0.5rem; }
-    .btn-group { display: flex; gap: 1rem; flex-wrap: wrap; }
-    .btn { text-decoration: none; padding: 0.6rem 1.2rem; border-radius: 50px; font-weight: bold; cursor: pointer; border: none; display: flex; align-items: center; gap: 0.5rem; font-size: 0.95rem;}
+    .header h1 { color: #2d1b0e; display: flex; align-items: center; gap: 0.5rem; font-size: 1.5rem; }
+    .btn-group { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    .btn { text-decoration: none; padding: 0.5rem 1rem; border-radius: 50px; font-weight: bold; cursor: pointer; border: none; display: flex; align-items: center; gap: 0.4rem; font-size: 0.85rem;}
     .btn-shop { background: #ff9f6e; color: #2d1b0e; box-shadow: 0 4px 0 #b95d2b; }
     .btn-refresh { background: #2e8b57; color: white; box-shadow: 0 4px 0 #1e5c39; }
     .btn-logout { background: #ffe6d5; color: #a54b1e; box-shadow: 0 4px 0 #ffb88c; }
-    .btn:active { transform: translateY(4px); box-shadow: none; }
 
     /* TABS */
-    .tabs { display: flex; gap: 1rem; margin-bottom: 2rem; border-bottom: 2px solid #ddd; padding-bottom: 1rem; }
-    .tab-btn { background: none; border: none; font-size: 1.1rem; font-weight: bold; color: #888; cursor: pointer; padding: 0.5rem 1rem; border-radius: 10px; }
+    .tabs { display: flex; gap: 1rem; margin-bottom: 2rem; border-bottom: 2px solid #ddd; padding-bottom: 1rem; overflow-x: auto; }
+    .tab-btn { background: none; border: none; font-size: 1rem; font-weight: bold; color: #888; cursor: pointer; padding: 0.5rem 1rem; border-radius: 10px; white-space: nowrap; }
     .tab-btn.active { color: #ff7e3f; background: #fff5ee; }
 
     /* ORDERS TAB */
-    .dashboard-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
-    .stat-card { background: white; padding: 1.5rem; border-radius: 1rem; box-shadow: 0 5px 15px rgba(0,0,0,0.05); border-left: 5px solid #ff8a4c; }
-    .stat-card h3 { font-size: 0.9rem; color: #888; text-transform: uppercase; margin-bottom: 0.5rem; }
-    .stat-card p { font-size: 2rem; font-weight: 800; color: #2d1b0e; }
+    .dashboard-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+    .stat-card { background: white; padding: 1rem; border-radius: 1rem; box-shadow: 0 5px 15px rgba(0,0,0,0.05); border-left: 5px solid #ff8a4c; }
+    .stat-card h3 { font-size: 0.75rem; color: #888; text-transform: uppercase; margin-bottom: 0.3rem; }
+    .stat-card p { font-size: 1.5rem; font-weight: 800; color: #2d1b0e; }
 
     .orders-table-container { background: white; border-radius: 1rem; box-shadow: 0 5px 15px rgba(0,0,0,0.05); overflow-x: auto; margin-bottom: 2rem;}
-    table { width: 100%; border-collapse: collapse; text-align: left; }
-    th, td { padding: 1rem; border-bottom: 1px solid #eee; }
+    table { width: 100%; border-collapse: collapse; text-align: left; min-width: 600px; /* Force scroll on mobile */ }
+    th, td { padding: 0.8rem; border-bottom: 1px solid #eee; font-size: 0.9rem; }
     th { background: #fff8f0; color: #6b3f27; font-weight: 700; white-space: nowrap; }
-    tr:hover { background: #fafafa; }
     
-    .status-badge { padding: 0.3rem 0.8rem; border-radius: 50px; font-size: 0.8rem; font-weight: bold; display: inline-block;}
+    .status-badge { padding: 0.3rem 0.6rem; border-radius: 50px; font-size: 0.75rem; font-weight: bold; display: inline-block;}
     .status-pending { background: #ffe6d5; color: #a54b1e; }
     .status-completed { background: #d4edda; color: #155724; }
     .status-rejected { background: #f8d7da; color: #721c24; }
 
-    .action-buttons { display: flex; gap: 0.5rem; }
-    .btn-complete { background: #2e8b57; color: white; border: none; padding: 0.5rem 0.8rem; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 0.8rem;}
-    .btn-reject { background: #d9534f; color: white; border: none; padding: 0.5rem 0.8rem; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 0.8rem;}
+    .action-buttons { display: flex; gap: 0.4rem; }
+    .btn-complete { background: #2e8b57; color: white; border: none; padding: 0.4rem 0.6rem; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 0.75rem;}
+    .btn-reject { background: #d9534f; color: white; border: none; padding: 0.4rem 0.6rem; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 0.75rem;}
     
     .empty-state { text-align: center; padding: 3rem; color: #888; }
-    
-    .clear-orders-btn { background: #d9534f; color: white; border: none; padding: 0.8rem 1.5rem; border-radius: 10px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 0 #a94442; display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; }
-    .clear-orders-btn:active { transform: translateY(4px); box-shadow: none; }
+    .clear-orders-btn { background: #d9534f; color: white; border: none; padding: 0.7rem 1.2rem; border-radius: 10px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 0 #a94442; display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; font-size: 0.85rem; }
 
     /* EDIT MENU TAB */
     #editMenuView { display: none; }
-    .menu-editor-container { background: white; border-radius: 1rem; padding: 2rem; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
-    .menu-editor-table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; }
+    .menu-editor-container { background: white; border-radius: 1rem; padding: 1.5rem; box-shadow: 0 5px 15px rgba(0,0,0,0.05); overflow-x: auto; }
+    .menu-editor-table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; min-width: 500px; }
     .menu-editor-table th, .menu-editor-table td { padding: 0.8rem; border-bottom: 1px solid #eee; text-align: left; vertical-align: middle; }
-    .menu-editor-table input[type="text"] { width: 100%; padding: 0.6rem; border: 1px solid #ccc; border-radius: 5px; font-family: inherit; }
-    .btn-save-menu { background: #2e8b57; color: white; border: none; padding: 1rem 2rem; border-radius: 50px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 0 #1e5c39; font-size: 1rem; }
-    .btn-save-menu:active { transform: translateY(4px); box-shadow: none; }
-    .btn-delete-row { background: #ff4d4d; color: white; border: none; padding: 0.5rem 0.8rem; border-radius: 5px; cursor: pointer; font-weight: bold; }
-    .add-donut-btn { background: #ff9f6e; color: #2d1b0e; border: none; padding: 0.6rem 1.2rem; border-radius: 5px; font-weight: bold; cursor: pointer; margin-bottom: 1rem; box-shadow: 0 4px 0 #b95d2b; }
+    .menu-editor-table input[type="text"] { width: 100%; padding: 0.6rem; border: 1px solid #ccc; border-radius: 5px; font-family: inherit; font-size: 0.9rem; }
+    .btn-save-menu { background: #2e8b57; color: white; border: none; padding: 0.8rem 1.5rem; border-radius: 50px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 0 #1e5c39; font-size: 0.9rem; }
+    .btn-delete-row { background: #ff4d4d; color: white; border: none; padding: 0.5rem; border-radius: 5px; cursor: pointer; font-weight: bold; }
+    .add-donut-btn { background: #ff9f6e; color: #2d1b0e; border: none; padding: 0.6rem 1rem; border-radius: 5px; font-weight: bold; cursor: pointer; margin-bottom: 1rem; box-shadow: 0 4px 0 #b95d2b; font-size: 0.85rem; }
     
-    /* IMAGE UPLOAD STYLES */
-    .image-preview { width: 50px; height: 50px; object-fit: cover; border-radius: 50%; border: 2px solid #ffd9c4; background: #fff; display: block; margin: 0 auto; }
+    .image-preview { width: 40px; height: 40px; object-fit: cover; border-radius: 50%; border: 2px solid #ffd9c4; background: #fff; display: block; margin: 0 auto; }
     .upload-btn-wrapper { position: relative; overflow: hidden; display: inline-block; cursor: pointer; }
     .upload-btn-wrapper input[type=file] { font-size: 100px; position: absolute; left: 0; top: 0; opacity: 0; cursor: pointer; }
-    .btn-upload { border: 2px solid #ff9f6e; color: #a54b1e; background-color: white; padding: 0.4rem 0.8rem; border-radius: 5px; font-size: 0.8rem; font-weight: bold; cursor: pointer; text-align: center; }
+    .btn-upload { border: 2px solid #ff9f6e; color: #a54b1e; background-color: white; padding: 0.3rem 0.5rem; border-radius: 5px; font-size: 0.7rem; font-weight: bold; cursor: pointer; text-align: center; }
+
+    /* =========================================
+       MOBILE RESPONSIVENESS (SCREEN < 768px)
+       ========================================= */
+    @media (max-width: 768px) {
+      body { padding: 1rem; }
+      .header { flex-direction: column; align-items: flex-start; }
+      .header h1 { font-size: 1.3rem; }
+      .btn-group { width: 100%; justify-content: space-between; }
+      .btn { flex: 1; justify-content: center; padding: 0.6rem; font-size: 0.75rem; }
+      
+      .dashboard-stats { grid-template-columns: 1fr 1fr; }
+      .stat-card { padding: 0.8rem; }
+      .stat-card p { font-size: 1.2rem; }
+      
+      .clear-orders-btn { width: 100%; justify-content: center; }
+      
+      .menu-editor-container { padding: 1rem; }
+    }
   </style>
 </head>
 <body>
 
   <div class="login-container" id="loginView">
-    <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> Back to Shop</a>
+    <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> Back</a>
     <div class="login-box">
       <i class="fas fa-cookie-bite"></i>
       <h2>Admin Login</h2>
-      <p>Enter your credentials to manage orders.</p>
+      <p>Enter credentials.</p>
       <div class="input-group">
         <i class="fas fa-user"></i>
         <input type="text" id="username" placeholder="Username" value="admin">
@@ -101,7 +111,7 @@
         <i class="fas fa-lock"></i>
         <input type="password" id="password" placeholder="Password" value="luna123">
       </div>
-      <button class="login-btn" onclick="handleLogin()">Login to Dashboard</button>
+      <button class="login-btn" onclick="handleLogin()">Login</button>
       <div class="error-msg" id="loginError">Incorrect username or password!</div>
     </div>
   </div>
@@ -124,34 +134,34 @@
     <div id="ordersView">
       <div class="dashboard-stats">
         <div class="stat-card">
-          <h3>Total Orders</h3>
+          <h3>Total</h3>
           <p id="totalOrders">0</p>
         </div>
         <div class="stat-card" style="border-left-color: #2e8b57;">
-          <h3>Total Revenue</h3>
+          <h3>Revenue</h3>
           <p id="totalRevenue">₱0.00</p>
         </div>
         <div class="stat-card" style="border-left-color: #ffb88c;">
-          <h3>Pending Orders</h3>
+          <h3>Pending</h3>
           <p id="pendingOrders">0</p>
         </div>
       </div>
 
       <button class="clear-orders-btn" onclick="clearFinishedOrders()">
-        <i class="fas fa-broom"></i> Clear Completed & Rejected
+        <i class="fas fa-broom"></i> Clear Finished
       </button>
 
       <div class="orders-table-container">
         <table>
           <thead>
             <tr>
-              <th>Order #</th>
+              <th>Order</th>
               <th>Customer</th>
               <th>Address</th>
               <th>Items</th>
               <th>Payment</th>
               <th>Total</th>
-              <th>Action / Status</th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody id="ordersTableBody"></tbody>
@@ -159,30 +169,29 @@
         <div id="emptyState" class="empty-state" style="display: none;">
           <i class="fas fa-receipt"></i>
           <h2>No orders yet</h2>
-          <p>Place a test order on the shop page!</p>
         </div>
       </div>
     </div>
 
     <div id="editMenuView">
       <div class="menu-editor-container">
-        <h2 style="margin-bottom: 1rem; color: #2d1b0e;">Edit Donut Flavors & Images</h2>
-        <p style="color: #666; margin-bottom: 1.5rem; font-size: 0.9rem;">Prices are fixed (Classic ₱20 / Premium ₱25). Upload custom images for your donuts!</p>
+        <h2 style="margin-bottom: 1rem; color: #2d1b0e; font-size: 1.2rem;">Edit Flavors</h2>
+        <p style="color: #666; margin-bottom: 1.5rem; font-size: 0.8rem;">Prices fixed (₱20/₱25).</p>
         
-        <button class="add-donut-btn" onclick="addNewDonutRow()"><i class="fas fa-plus"></i> Add New Flavor</button>
+        <button class="add-donut-btn" onclick="addNewDonutRow()"><i class="fas fa-plus"></i> Add Flavor</button>
         
         <table class="menu-editor-table">
           <thead>
             <tr>
-              <th style="width: 80px; text-align: center;">Image</th>
-              <th>Flavor Name</th>
-              <th>Description</th>
-              <th style="width: 100px;">Action</th>
+              <th style="width: 70px; text-align: center;">Img</th>
+              <th>Name</th>
+              <th>Desc</th>
+              <th style="width: 60px;">Del</th>
             </tr>
           </thead>
           <tbody id="menuTableBody"></tbody>
         </table>
-        <button class="btn-save-menu" onclick="saveMenuChanges()"><i class="fas fa-save"></i> Save Flavor Changes</button>
+        <button class="btn-save-menu" onclick="saveMenuChanges()"><i class="fas fa-save"></i> Save Changes</button>
       </div>
     </div>
   </div>
@@ -266,9 +275,6 @@
       }
     }
 
-    // =========================================
-    // REAL-TIME ORDERS FROM FIREBASE
-    // =========================================
     const formatPrice = (p) => `₱${p.toFixed(2)}`;
     let unsubscribeOrders = null;
 
@@ -290,7 +296,6 @@
         let revenue = 0, pending = 0;
         
         orders.forEach(o => {
-          // I-count lang ang revenue kung HINDI Rejected
           if (o.status !== 'Rejected') revenue += o.total; 
           if (o.status === 'Pending') pending++;
         });
@@ -318,7 +323,7 @@
               </div>
             `;
           } else if (order.status === 'Completed') {
-            statusHtml = `<span class="status-badge status-completed">Completed</span>`;
+            statusHtml = `<span class="status-badge status-completed">Done</span>`;
           } else if (order.status === 'Rejected') {
             statusHtml = `<span class="status-badge status-rejected">Rejected</span>`;
           }
@@ -326,9 +331,9 @@
           tr.innerHTML = `
             <td><strong>#${order.id}</strong></td>
             <td><strong>${order.name}</strong></td>
-            <td style="max-width: 150px; font-size:0.9rem;">${order.address}</td>
-            <td style="font-size:0.9rem; max-width: 250px;">${order.items}</td>
-            <td><span style="background:#f0f0f0; padding: 0.3rem 0.6rem; border-radius: 5px; font-size:0.8rem; font-weight:bold;">${order.method}</span></td>
+            <td style="max-width: 120px; font-size:0.8rem;">${order.address}</td>
+            <td style="font-size:0.8rem; max-width: 200px;">${order.items}</td>
+            <td><span style="background:#f0f0f0; padding: 0.2rem 0.4rem; border-radius: 5px; font-size:0.75rem; font-weight:bold;">${order.method}</span></td>
             <td><strong style="color:#b64a12;">${formatPrice(order.total)}</strong></td>
             <td>${statusHtml}</td>
           `;
@@ -337,30 +342,24 @@
       });
     }
 
-    // Universal function to update status (Completed or Rejected)
     window.updateOrderStatus = async function(firebaseId, newStatus) {
       if (newStatus === 'Rejected' && !confirm("Are you sure you want to REJECT this order?")) return;
 
       try {
         const orderRef = window.firebaseDoc(window.firestoreDb, "orders", firebaseId);
         await window.firebaseUpdateDoc(orderRef, { status: newStatus });
-        // Real-time listener automatically updates the table!
       } catch (e) {
-        console.error("Error updating order: ", e);
         alert("Failed to update order.");
       }
     };
 
-    // Clear both Completed and Rejected
     async function clearFinishedOrders() {
-      if (!confirm("Are you sure you want to remove all Completed and Rejected orders?")) return;
+      if (!confirm("Remove all Completed and Rejected orders?")) return;
       
       try {
-        // Query for Completed
         const q1 = window.firebaseQuery(window.firebaseCollection(window.firestoreDb, "orders"), window.firebaseWhere("status", "==", "Completed"));
         const snap1 = await window.firebaseGetDocs(q1);
         
-        // Query for Rejected
         const q2 = window.firebaseQuery(window.firebaseCollection(window.firestoreDb, "orders"), window.firebaseWhere("status", "==", "Rejected"));
         const snap2 = await window.firebaseGetDocs(q2);
         
@@ -371,21 +370,18 @@
         await Promise.all(deletePromises);
         alert("Finished orders cleared!");
       } catch (e) {
-        console.error("Error clearing orders: ", e);
-        alert("Failed to clear orders. Check your internet connection.");
+        alert("Failed to clear orders.");
       }
     }
 
-    // =========================================
-    // EDIT MENU LOGIC
-    // =========================================
+    // EDIT MENU
     const STORAGE_KEY_MENU = 'luna_mini_donut_menu';
     const defaultFlavors = [
-      { id: 'glazed', name: 'Glazed Bliss', desc: 'Classic sweet glaze', image: '' },
-      { id: 'chocolate', name: 'Choco Dream', desc: 'Rich chocolate flavor', image: '' },
-      { id: 'strawberry', name: 'Berry Love', desc: 'Sweet strawberry taste', image: '' },
-      { id: 'caramel', name: 'Caramel Crunch', desc: 'Salted caramel twist', image: '' },
-      { id: 'vanilla', name: 'Vanilla Cloud', desc: 'Smooth vanilla bean', image: '' },
+      { id: 'glazed', name: 'Glazed', desc: 'Classic sweet glaze', image: '' },
+      { id: 'chocolate', name: 'Choco', desc: 'Rich chocolate', image: '' },
+      { id: 'strawberry', name: 'Berry', desc: 'Sweet strawberry', image: '' },
+      { id: 'caramel', name: 'Caramel', desc: 'Salted caramel', image: '' },
+      { id: 'vanilla', name: 'Vanilla', desc: 'Smooth vanilla', image: '' },
       { id: 'pistachio', name: 'Pistachio', desc: 'Nutty pistachio', image: '' }
     ];
 
@@ -407,14 +403,14 @@
         if (donut.image && donut.image.trim() !== '') {
           imageHtml = `<img src="${donut.image}" class="image-preview" id="preview-${index}">`;
         } else {
-          imageHtml = `<div class="image-preview" style="display:flex; align-items:center; justify-content:center; font-size: 1.5rem;" id="preview-${index}">🍩</div>`;
+          imageHtml = `<div class="image-preview" style="display:flex; align-items:center; justify-content:center; font-size: 1.2rem;" id="preview-${index}">🍩</div>`;
         }
 
         tr.innerHTML = `
           <td style="text-align: center;">
             ${imageHtml}
             <div class="upload-btn-wrapper" style="margin-top: 5px;">
-              <button class="btn-upload"><i class="fas fa-upload"></i> Upload</button>
+              <button class="btn-upload"><i class="fas fa-upload"></i></button>
               <input type="file" accept="image/*" onchange="handleImageUpload(event, ${index})" />
             </div>
           </td>
@@ -429,7 +425,7 @@
     window.handleImageUpload = function(event, index) {
       const file = event.target.files[0];
       if (!file) return;
-      if (file.size > 1000000) { alert("Image is too large! Please choose an image smaller than 1MB."); return; }
+      if (file.size > 1000000) { alert("Image too large! Max 1MB."); return; }
 
       const reader = new FileReader();
       reader.onload = function(e) {
@@ -444,7 +440,7 @@
     };
 
     window.deleteMenuRow = function(index) {
-      if (confirm("Delete this flavor from the menu?")) {
+      if (confirm("Delete this flavor?")) {
         editingMenu.splice(index, 1);
         renderMenuEditor();
       }
@@ -452,20 +448,20 @@
 
     window.addNewDonutRow = function() {
       const newId = 'flavor_' + Date.now();
-      editingMenu.push({ id: newId, name: 'New Flavor', desc: 'Delicious taste!', image: '' });
+      editingMenu.push({ id: newId, name: 'New', desc: 'Tasty!', image: '' });
       renderMenuEditor();
     };
 
     function saveMenuChanges() {
       for (let d of editingMenu) {
-        if (!d.name.trim()) { alert("Flavor names cannot be empty."); return; }
+        if (!d.name.trim()) { alert("Names cannot be empty."); return; }
       }
 
       try {
         localStorage.setItem(STORAGE_KEY_MENU, JSON.stringify(editingMenu));
-        alert("Flavors saved successfully!");
+        alert("Flavors saved!");
       } catch (e) {
-        alert("Failed to save. Your browser's storage might be full.");
+        alert("Failed to save.");
       }
     }
   </script>
