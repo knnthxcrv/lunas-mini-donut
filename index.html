@@ -7,7 +7,6 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <style>
-    /* COLOR PALETTE BASE SA LOGO */
     :root {
       --primary: #a855f7;
       --primary-light: #d8b4fe;
@@ -16,7 +15,6 @@
       --bg: #fdf4ff;
       --text-dark: #3b0764;
       --text-light: #6b21a8;
-      --accent: #f472b6;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, system-ui, sans-serif; -webkit-tap-highlight-color: transparent; }
@@ -104,14 +102,26 @@
     .checkbox-label input { accent-color: var(--primary); width: 18px; height: 18px; margin-right: 10px; }
     .modal-total { font-size: 1.2rem; font-weight: 800; color: var(--secondary); text-align: right; margin-bottom: 1rem; }
     
+    /* CHECKOUT STYLES */
     .payment-options { display: flex; flex-direction: column; gap: 0.8rem; margin-bottom: 1.5rem; }
     .pay-option { display: flex; align-items: center; gap: 1rem; padding: 1rem; border: 2px solid var(--primary-light); border-radius: 1rem; cursor: pointer; }
     .pay-option.selected { border-color: var(--primary); background: var(--bg); box-shadow: 0 4px 0 var(--primary-light); }
     .pay-option label { font-weight: 700; color: var(--text-dark); cursor: pointer; display: flex; align-items: center; gap: 0.8rem; width: 100%; font-size: 1rem; }
+    
+    .promo-group { display: flex; gap: 0.5rem; margin-bottom: 1.2rem; }
+    .promo-group input { flex: 1; padding: 0.8rem; border: 2px solid var(--primary-light); border-radius: 10px; outline: none; font-size: 0.95rem; }
+    .promo-group button { background: var(--secondary); color: white; border: none; padding: 0 1rem; border-radius: 10px; font-weight: bold; cursor: pointer; }
+    
+    .total-breakdown { background: var(--bg); border: 1px dashed var(--primary-light); padding: 1rem; border-radius: 1rem; margin-bottom: 1.5rem; }
+    .total-breakdown div { display: flex; justify-content: space-between; font-size: 0.9rem; color: var(--text-dark); margin-bottom: 0.4rem; }
+    .total-breakdown .final-total { font-size: 1.1rem; font-weight: 800; border-top: 1px solid var(--primary-light); padding-top: 0.4rem; margin-top: 0.4rem; color: var(--secondary); }
+
     .payment-dynamic-fields { display: none; background: var(--bg); border: 1px dashed var(--primary-light); padding: 1rem; border-radius: 1rem; margin-bottom: 1.5rem; }
     .payment-dynamic-fields.active { display: block; }
     .payment-dynamic-fields input { width: 100%; padding: 0.8rem; border: 1px solid var(--primary-light); border-radius: 10px; margin-bottom: 0.8rem; outline: none; font-size: 0.95rem; }
     .payment-dynamic-fields small { color: var(--text-light); display: block; margin-bottom: 0.3rem; font-weight: 600; }
+    .receipt-upload { background: white; border: 1px solid var(--primary-light); padding: 0.8rem; border-radius: 10px; margin-bottom: 0.8rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.5rem; font-weight: 600; color: var(--primary); }
+    
     .confirm-pay-btn { width: 100%; background: var(--primary); color: white; border: none; border-radius: 50px; padding: 1rem; font-size: 1.1rem; font-weight: 800; cursor: pointer; box-shadow: 0 6px 0 #7e22ce; }
     .success-screen { display: none; text-align: center; padding: 1rem 0; }
     .success-screen.active { display: block; }
@@ -254,16 +264,39 @@
       <div class="modal-box">
         <div id="checkoutView">
           <div class="modal-header"><h2><i class="fas fa-wallet"></i> Checkout</h2><button class="close-modal" id="closeModalBtn"><i class="fas fa-xmark"></i></button></div>
+          
+          <!-- PROMO CODE -->
+          <div class="promo-group">
+            <input type="text" id="promoCodeInput" placeholder="Enter Promo Code (e.g. LUNA10)">
+            <button onclick="applyPromo()">Apply</button>
+          </div>
+
           <p style="font-weight: 600; color: var(--text-dark); margin-bottom: 1rem;">Select Payment Method:</p>
           <div class="payment-options">
             <div class="pay-option selected" onclick="selectPayment('cod', this)"><input type="radio" name="payment" value="cod" checked><label><i class="fas fa-money-bill-wave"></i> Cash on Delivery</label></div>
             <div class="pay-option" onclick="selectPayment('gcash', this)"><input type="radio" name="payment" value="gcash"><label><i class="fas fa-mobile-screen"></i> GCash</label></div>
             <div class="pay-option" onclick="selectPayment('maya', this)"><input type="radio" name="payment" value="maya"><label><i class="fas fa-mobile-screen"></i> Maya</label></div>
           </div>
+          
+          <!-- GCASH / MAYA FIELDS -->
           <div class="payment-dynamic-fields" id="eWalletFields">
             <small>Enter your Mobile Number</small><input type="text" placeholder="Mobile Number" id="ewalletNumber" value="09171234567">
             <small>Enter your MPIN</small><input type="password" placeholder="MPIN" id="ewalletPin" maxlength="4" value="1234">
+            <small>Upload Payment Receipt (Required)</small>
+            <input type="file" accept="image/*" id="receiptUpload" style="display:none;" onchange="handleReceiptUpload(event)">
+            <div class="receipt-upload" onclick="document.getElementById('receiptUpload').click()">
+              <i class="fas fa-camera"></i> <span id="receiptStatus">Tap to upload screenshot</span>
+            </div>
           </div>
+
+          <!-- DELIVERY FEE BREAKDOWN -->
+          <div class="total-breakdown">
+            <div><span>Subtotal</span><span id="checkoutSubtotal">₱0.00</span></div>
+            <div><span>Delivery Fee</span><span id="checkoutDelivery">₱0.00</span></div>
+            <div id="discountRow" style="display:none; color: #10b981;"><span>Discount</span><span id="checkoutDiscount">-₱0.00</span></div>
+            <div class="final-total"><span>Total to Pay</span><span id="checkoutTotal">₱0.00</span></div>
+          </div>
+
           <button class="confirm-pay-btn" id="confirmPayBtn"><i class="fas fa-lock"></i> Pay <span id="payAmount">₱0.00</span></button>
         </div>
 
@@ -302,6 +335,7 @@
 
   <script>
     const FREE_DELIVERY_THRESHOLD = 500;
+    const DELIVERY_FEE = 50; // Fixed delivery fee kung hindi umabot ng 500
     const STORAGE_KEY_CART = 'luna_mini_donut_cart';
     const STORAGE_KEY_ADDR = 'luna_mini_donut_address';
     const STORAGE_KEY_MENU = 'luna_mini_donut_menu';
@@ -330,6 +364,12 @@
     let customizingItem = null;
     let selectedType = 'classic';
     let selectedSize = 2;
+    
+    // CHECKOUT VARIABLES
+    let currentDiscount = 0;
+    let currentDeliveryFee = 0;
+    let currentSubtotal = 0;
+    let uploadedReceiptBase64 = '';
 
     const donutGrid = document.getElementById('donutGrid');
     const cartContainer = document.getElementById('cartContainer');
@@ -363,7 +403,6 @@
     function saveCart() { try { localStorage.setItem(STORAGE_KEY_CART, JSON.stringify(cart)); } catch (e) {} }
     function saveCustomerDetails() { try { localStorage.setItem(STORAGE_KEY_ADDR, customerAddressInput.value.trim()); } catch (e) {} }
 
-    // DINITO IPAPASOK ANG LOGIC PARA SA TOTOONG PICTURE
     function renderMenu() {
       donutGrid.innerHTML = '';
       menuItems.forEach(item => {
@@ -371,7 +410,6 @@
         const card = document.createElement('div');
         card.className = `donut-card ${item.type === 'custom' ? 'custom-box' : ''}`;
         
-        // KUNG MAY IMAGE, GAMITIN ANG IMAGE. KUNG WALA, GAMITIN ANG ICON.
         let iconHtml = '';
         if (item.image && item.image.trim() !== '') {
           iconHtml = `<div class="donut-icon"><img src="${item.image}" class="donut-img" alt="${item.name}"></div>`;
@@ -478,6 +516,7 @@
       totalAmountEl.textContent = formatPrice(currentTotal);
       document.getElementById('floatingCartTotal').textContent = formatPrice(currentTotal);
       orderBtn.disabled = cartKeys.length === 0;
+      
       const ratio = Math.min(currentTotal / FREE_DELIVERY_THRESHOLD, 1);
       progressFill.style.width = (ratio * 100) + '%';
       freeDeliveryMsg.innerHTML = currentTotal >= FREE_DELIVERY_THRESHOLD ? '🎉 You unlocked <strong>FREE delivery!</strong>' : `Add <strong>${formatPrice(FREE_DELIVERY_THRESHOLD - currentTotal)}</strong> more for FREE delivery`;
@@ -516,20 +555,75 @@
       else { let order; snap.forEach(d => order = d.data()); resDiv.innerHTML = `<p><strong>Status:</strong> <span style="color:${order.status==='Pending'?'#ff7e3f':'#2e8b57'}; font-weight:bold;">${order.status}</span></p><p style="font-size:0.9rem; margin-top:0.5rem;">Name: ${order.name}</p><p style="font-size:0.9rem;">Total: ₱${order.total.toFixed(2)}</p>`; }
     }
 
+    // CHECKOUT LOGIC (PROMO, DELIVERY FEE, RECEIPT)
     window.selectPayment = (method, el) => {
       selectedPaymentMethod = method; document.querySelectorAll('.pay-option').forEach(opt => opt.classList.remove('selected')); el.classList.add('selected');
       document.querySelector(`input[value="${method}"]`).checked = true; eWalletFields.classList.remove('active'); if (method === 'gcash' || method === 'maya') eWalletFields.classList.add('active');
     }
 
+    window.handleReceiptUpload = (event) => {
+      const file = event.target.files[0];
+      if (!file) return;
+      if (file.size > 2000000) { alert("Image too large. Max 2MB."); return; }
+      
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        uploadedReceiptBase64 = e.target.result;
+        document.getElementById('receiptStatus').textContent = "Receipt Uploaded!";
+        document.querySelector('.receipt-upload').style.color = "#10b981"; // Green
+      };
+      reader.readAsDataURL(file);
+    }
+
+    window.applyPromo = () => {
+      const code = document.getElementById('promoCodeInput').value.trim().toUpperCase();
+      if (code === 'LUNA10') {
+        currentDiscount = currentSubtotal * 0.10; // 10% discount
+        document.getElementById('discountRow').style.display = 'flex';
+        document.getElementById('checkoutDiscount').textContent = `-₱${currentDiscount.toFixed(2)}`;
+        document.getElementById('promoCodeInput').value = '';
+        updateCheckoutTotal();
+        alert("Promo applied! 10% off.");
+      } else {
+        alert("Invalid Promo Code.");
+      }
+    }
+
+    function updateCheckoutTotal() {
+      let totalToPay = currentSubtotal + currentDeliveryFee - currentDiscount;
+      if (totalToPay < 0) totalToPay = 0;
+      document.getElementById('checkoutTotal').textContent = formatPrice(totalToPay);
+      payAmountSpan.textContent = formatPrice(totalToPay);
+    }
+
     orderBtn.addEventListener('click', () => {
       if (!customerNameInput.value.trim() || !customerPhoneInput.value.trim() || !customerAddressInput.value.trim()) { alert('Please fill in Name, Phone, and Address.'); return; }
-      saveCustomerDetails(); payAmountSpan.textContent = formatPrice(currentTotal); checkoutView.style.display = 'block'; successView.classList.remove('active'); modalOverlay.classList.add('active');
+      
+      // Compute totals
+      currentSubtotal = currentTotal;
+      currentDiscount = 0;
+      currentDeliveryFee = currentSubtotal >= FREE_DELIVERY_THRESHOLD ? 0 : DELIVERY_FEE;
+      
+      document.getElementById('checkoutSubtotal').textContent = formatPrice(currentSubtotal);
+      document.getElementById('checkoutDelivery').textContent = formatPrice(currentDeliveryFee);
+      document.getElementById('discountRow').style.display = 'none';
+      
+      updateCheckoutTotal();
+      
+      saveCustomerDetails(); 
+      checkoutView.style.display = 'block'; 
+      successView.classList.remove('active'); 
+      modalOverlay.classList.add('active');
     });
 
     document.getElementById('closeModalBtn').addEventListener('click', () => { modalOverlay.classList.remove('active'); });
 
     confirmPayBtn.addEventListener('click', async () => {
-      if (selectedPaymentMethod === 'gcash' || selectedPaymentMethod === 'maya') { if (document.getElementById('ewalletNumber').value.length < 10) { alert('Enter valid mobile number.'); return; } }
+      if (selectedPaymentMethod === 'gcash' || selectedPaymentMethod === 'maya') {
+        if (document.getElementById('ewalletNumber').value.length < 10) { alert('Enter valid mobile number.'); return; }
+        if (!uploadedReceiptBase64) { alert('Please upload your payment receipt.'); return; }
+      }
+      
       confirmPayBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...'; confirmPayBtn.disabled = true;
 
       setTimeout(async () => {
@@ -537,13 +631,46 @@
         const methodName = selectedPaymentMethod === 'cod' ? 'Cash on Delivery' : (selectedPaymentMethod === 'gcash' ? 'GCash' : 'Maya');
         const itemsList = Object.keys(cart).map(k => `${cart[k].qty}x ${cart[k].name} [${cart[k].details}]`).join(', ');
         let landmark = customerLandmarkInput.value.trim(); if (selectedMapLink) landmark += ` | Map: ${selectedMapLink}`;
-        const orderData = { id: orderNum, name: customerNameInput.value.trim(), phone: customerPhoneInput.value.trim(), address: customerAddressInput.value.trim(), landmark: landmark, instructions: specialInstructionsInput.value.trim(), items: itemsList, total: currentTotal, method: methodName, status: 'Pending', timestamp: Date.now() };
+        
+        let finalTotal = currentSubtotal + currentDeliveryFee - currentDiscount;
+
+        const orderData = { 
+          id: orderNum, 
+          name: customerNameInput.value.trim(), 
+          phone: customerPhoneInput.value.trim(), 
+          address: customerAddressInput.value.trim(), 
+          landmark: landmark, 
+          instructions: specialInstructionsInput.value.trim(), 
+          items: itemsList, 
+          total: finalTotal, 
+          method: methodName, 
+          status: 'Pending', 
+          timestamp: Date.now(),
+          receipt: uploadedReceiptBase64 // Isasama ang resibo sa order
+        };
 
         try {
           await window.firebaseAddDoc(window.firebaseCollection(window.firestoreDb, "orders"), orderData);
-          document.getElementById('receiptOrderNum').textContent = orderNum; document.getElementById('receiptName').textContent = orderData.name; document.getElementById('receiptPhone').textContent = orderData.phone; document.getElementById('receiptTotal').textContent = formatPrice(currentTotal);
-          checkoutView.style.display = 'none'; successView.classList.add('active'); confirmPayBtn.innerHTML = '<i class="fas fa-lock"></i> Pay <span id="payAmount">₱0.00</span>'; confirmPayBtn.disabled = false; cart = {}; saveCart(); renderCart();
-        } catch (error) { alert("Failed to save order."); confirmPayBtn.innerHTML = '<i class="fas fa-lock"></i> Pay <span id="payAmount">₱0.00</span>'; confirmPayBtn.disabled = false; }
+          
+          document.getElementById('receiptOrderNum').textContent = orderNum; 
+          document.getElementById('receiptName').textContent = orderData.name; 
+          document.getElementById('receiptPhone').textContent = orderData.phone; 
+          document.getElementById('receiptTotal').textContent = formatPrice(finalTotal);
+          
+          checkoutView.style.display = 'none'; 
+          successView.classList.add('active'); 
+          confirmPayBtn.innerHTML = '<i class="fas fa-lock"></i> Pay <span id="payAmount">₱0.00</span>'; 
+          confirmPayBtn.disabled = false; 
+          
+          cart = {}; saveCart(); renderCart();
+          uploadedReceiptBase64 = ''; // Reset
+          document.getElementById('receiptStatus').textContent = 'Tap to upload screenshot';
+          document.querySelector('.receipt-upload').style.color = "var(--primary)";
+          
+        } catch (error) { 
+          alert("Failed to save order."); 
+          confirmPayBtn.innerHTML = '<i class="fas fa-lock"></i> Pay <span id="payAmount">₱0.00</span>'; confirmPayBtn.disabled = false; 
+        }
       }, 1500);
     });
 
