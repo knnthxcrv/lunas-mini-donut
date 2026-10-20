@@ -32,20 +32,18 @@
     
     /* MAIN LAYOUT */
     .main-panel { display: flex; flex-direction: row; flex-wrap: wrap; padding: 2rem 2.5rem 2.5rem; gap: 2.2rem; }
-    .menu-section { flex: 2.5; min-width: 320px; } /* Pinalaki ang menu section */
+    .menu-section { flex: 2.5; min-width: 320px; }
     
     /* GALLERY GRID */
     .donut-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1.5rem; }
     .donut-card { background: #ffffff; border-radius: 1.5rem; padding: 0; box-shadow: 0 8px 0 var(--primary-light), 0 12px 20px -8px rgba(168, 85, 247, 0.2); transition: 0.2s; display: flex; flex-direction: column; overflow: hidden; border: 1px solid var(--secondary-light); cursor: pointer; position: relative; }
     .donut-card:hover { transform: translateY(-5px); box-shadow: 0 12px 0 var(--primary-light), 0 18px 25px -8px rgba(168, 85, 247, 0.3); }
     
-    /* MALAKING PICTURE SA TAAS */
     .donut-image-box { width: 100%; height: 180px; background: #f8f4fb; display: flex; justify-content: center; align-items: center; overflow: hidden; position: relative; }
     .donut-image-box img { width: 100%; height: 100%; object-fit: cover; transition: 0.3s; }
     .donut-card:hover .donut-image-box img { transform: scale(1.05); }
     .donut-image-box .fallback-icon { font-size: 5rem; }
 
-    /* DETALYE SA ILALIM */
     .donut-details { padding: 1.2rem; text-align: center; display: flex; flex-direction: column; align-items: center; flex: 1; justify-content: space-between; }
     .donut-card h3 { font-size: 1.2rem; font-weight: 800; color: var(--text-dark); margin-bottom: 0.3rem; }
     .donut-desc { font-size: 0.8rem; color: var(--text-light); margin-bottom: 0.8rem; font-weight: 500; }
@@ -143,11 +141,7 @@
     #map { height: 300px; width: 100%; border-radius: 1rem; margin-bottom: 1rem; border: 2px solid var(--primary-light); }
     .map-instruction { font-size: 0.85rem; color: var(--text-dark); margin-bottom: 0.5rem; font-weight: 600; text-align: center; }
 
-    @media (max-width: 900px) {
-      .main-panel { flex-direction: column; }
-      .order-panel { position: static; width: 100%; }
-    }
-
+    @media (max-width: 900px) { .main-panel { flex-direction: column; } .order-panel { position: static; width: 100%; } }
     @media (max-width: 768px) {
       body { padding: 0; background: #ffffff; }
       .delivery-app { border-radius: 0; box-shadow: none; min-height: 100vh; padding-bottom: 80px; }
@@ -344,7 +338,7 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, collection, addDoc, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, getDocs, query, where, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyClaoSrxDdd0hLr6leu_XbYfLYPnCO7-pM",
@@ -357,7 +351,7 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
-    window.firebaseReady = true; window.firebaseAddDoc = addDoc; window.firebaseCollection = collection; window.firebaseGetDocs = getDocs; window.firebaseQuery = query; window.firebaseWhere = where; window.firestoreDb = db;
+    window.firebaseReady = true; window.firebaseAddDoc = addDoc; window.firebaseCollection = collection; window.firebaseGetDocs = getDocs; window.firebaseQuery = query; window.firebaseWhere = where; window.firebaseOnSnapshot = onSnapshot; window.firestoreDb = db;
   </script>
 
   <script>
@@ -365,7 +359,6 @@
     const DELIVERY_FEE = 50;
     const STORAGE_KEY_CART = 'luna_mini_donut_cart';
     const STORAGE_KEY_ADDR = 'luna_mini_donut_address';
-    const STORAGE_KEY_MENU = 'luna_mini_donut_menu';
     const STORAGE_KEY_SETTINGS = 'luna_mini_donut_settings';
 
     const defaultSettings = {
@@ -377,12 +370,7 @@
     };
 
     let settings = JSON.parse(localStorage.getItem(STORAGE_KEY_SETTINGS)) || defaultSettings;
-    let menuItems = JSON.parse(localStorage.getItem(STORAGE_KEY_MENU)) || [
-      { id: 'classic', name: 'Classic Donut', desc: 'Choose 3 flavors', icon: '🍩', image: '', type: 'classic', inStock: true },
-      { id: 'premium', name: 'Premium Donut', desc: 'Choose 5 flavors', icon: '🍫', image: '', type: 'premium', inStock: true },
-      { id: 'custom-minimal', name: 'Custom Box (Minimal)', desc: '25pcs Custom Design', icon: '📦', image: '', type: 'custom', price: 350, inStock: true },
-      { id: 'custom-3d', name: 'Custom Box (3D)', desc: '25pcs 3D Design & Toppers', icon: '🎂', image: '', type: 'custom', price: 450, inStock: true }
-    ];
+    let menuItems = []; // Magsisimula sa walang laman, pupuno ng Firebase
 
     let cart = {};
     let currentTotal = 0;
@@ -432,6 +420,11 @@
     // UPDATED RENDER MENU (GALLERY STYLE)
     function renderMenu() {
       donutGrid.innerHTML = '';
+      if(menuItems.length === 0) {
+        donutGrid.innerHTML = '<div style="grid-column: 1/-1; text-align:center; padding: 2rem; color:#888;">Loading menu from Firebase...</div>';
+        return;
+      }
+      
       menuItems.forEach(item => {
         if (item.inStock === false) return;
         
@@ -563,7 +556,6 @@
     window.removeItem = (key) => { delete cart[key]; saveCart(); renderCart(); }
     clearBoxBtn.addEventListener('click', () => { cart = {}; saveCart(); renderCart(); });
 
-    // REST OF THE CODE (MAP, CHECKOUT, TRACKING) REMAINS EXACTLY THE SAME...
     window.openMapModal = () => {
       document.getElementById('mapModal').classList.add('active');
       if (!map) {
@@ -713,10 +705,20 @@
 
     window.onload = () => {
       window.addEventListener('storage', (e) => {
-        if (e.key === STORAGE_KEY_MENU) { menuItems = JSON.parse(e.newValue); renderMenu(); }
         if (e.key === STORAGE_KEY_SETTINGS) { settings = JSON.parse(e.newValue); renderMenu(); }
       });
-      loadState(); renderMenu(); renderCart();
+      
+      loadState(); 
+      renderCart();
+      
+      // KUNIN ANG MENU MULA SA FIREBASE (REAL-TIME)
+      const unsubscribeMenu = window.firebaseOnSnapshot(window.firebaseCollection(window.firestoreDb, "menu"), (snapshot) => {
+        menuItems = [];
+        snapshot.forEach(doc => {
+          menuItems.push(doc.data());
+        });
+        renderMenu(); // I-render kapag nakuha na ang data
+      });
     };
   </script>
 </body>
