@@ -9,57 +9,31 @@
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, system-ui, sans-serif; }
     body { background: #fff8f0; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 1.5rem; }
     
-    /* =========================================
-       CUSTOMER LOGIN SCREEN STYLES
-       ========================================= */
-    .auth-container {
-      background: #ffffff; max-width: 420px; width: 100%; border-radius: 3.5rem;
-      box-shadow: 0 25px 50px -8px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(255, 184, 140, 0.3);
-      padding: 3rem 2.5rem; text-align: center; display: none; 
-    }
-    .auth-container.active { display: block; }
-    .auth-container i.main-icon { font-size: 4rem; color: #ff9f6e; margin-bottom: 1rem; }
-    .auth-container h2 { color: #2d1b0e; margin-bottom: 0.5rem; font-size: 1.8rem; }
-    .auth-container p { color: #888; margin-bottom: 2rem; font-size: 0.95rem; }
+    /* MAIN APP CONTAINER */
+    .delivery-app { max-width: 1300px; width: 100%; background: #ffffff; border-radius: 3.5rem; box-shadow: 0 25px 50px -8px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(255, 184, 140, 0.3); overflow: hidden; display: flex; flex-direction: column; position: relative; }
     
-    .auth-input-group { position: relative; margin-bottom: 1.2rem; text-align: left; }
-    .auth-input-group i { position: absolute; left: 1.2rem; top: 50%; transform: translateY(-50%); color: #b97e5c; font-size: 1.1rem; }
-    .auth-input-group input {
-      width: 100%; padding: 1rem 1rem 1rem 3rem; border: 2px solid #ffe6d5; border-radius: 50px;
-      font-size: 1rem; outline: none; transition: 0.2s; font-weight: 500;
-    }
-    .auth-input-group input:focus { border-color: #ff8a4c; box-shadow: 0 0 0 4px rgba(255, 138, 76, 0.2); }
-
-    .auth-btn {
-      width: 100%; background: #ff9f6e; color: #2d1b0e; border: none; border-radius: 50px;
-      padding: 1rem; font-size: 1.1rem; font-weight: 800; cursor: pointer;
-      box-shadow: 0 6px 0 #b95d2b; transition: 0.1s; margin-bottom: 1rem;
-    }
-    .auth-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #b95d2b; }
-    
-    .toggle-auth { color: #a6521e; font-weight: 700; cursor: pointer; text-decoration: underline; }
-    .auth-error { color: #d9534f; font-weight: bold; font-size: 0.85rem; margin-bottom: 1rem; display: none; }
-
-    /* =========================================
-       MAIN APP STYLES (Hidden until logged in)
-       ========================================= */
-    .delivery-app { display: none; max-width: 1300px; width: 100%; background: #ffffff; border-radius: 3.5rem; box-shadow: 0 25px 50px -8px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(255, 184, 140, 0.3); overflow: hidden; flex-direction: column; position: relative; }
-    .delivery-app.active { display: flex; }
-    
+    /* HEADER */
     .header { background: linear-gradient(135deg, #ffb88c 0%, #ff9f6e 100%); padding: 1.8rem 2.5rem; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; }
-    .brand { display: flex; align-items: center; gap: 0.75rem; }
+    .brand { display: flex; align-items: center; gap: 0.75rem; cursor: pointer; }
     .brand i { font-size: 2.4rem; color: #4a2c1b; background: #fff1e0; border-radius: 50%; padding: 0.6rem; box-shadow: 0 6px 0 #c26b3b; transform: rotate(10deg); }
     .brand h1 { font-size: 2rem; font-weight: 800; color: #3b1e0e; letter-spacing: -0.5px; text-shadow: 2px 2px 0 #ffd9b5; }
     .brand span { font-size: 0.9rem; font-weight: 500; color: #51301a; background: #fff1e0; padding: 0.25rem 0.8rem; border-radius: 40px; margin-left: 0.5rem; }
     
     .header-right { display: flex; align-items: center; gap: 1rem; }
-    .user-greeting { color: #3b1e0e; font-weight: 700; background: #fff1e0; padding: 0.5rem 1rem; border-radius: 50px; font-size: 0.9rem; display: flex; align-items: center; gap: 0.5rem;}
-    .logout-link { background: none; border: none; color: #d9534f; font-weight: 700; cursor: pointer; text-decoration: underline; font-size: 0.9rem;}
+    .login-btn-header { background: #2d1b0e; color: #ffe6d5; padding: 0.7rem 1.4rem; border-radius: 50px; font-weight: 700; border: none; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; box-shadow: 0 4px 0 #0f0905; }
+    .login-btn-header:active { transform: translateY(4px); box-shadow: none; }
+    
+    .user-greeting { color: #3b1e0e; font-weight: 700; background: #fff1e0; padding: 0.6rem 1.2rem; border-radius: 50px; font-size: 0.9rem; display: flex; align-items: center; gap: 0.5rem; cursor: pointer; transition: 0.2s; border: 1px solid #ffd9c4; }
+    .user-greeting:hover { background: #ffe6d5; }
 
     .delivery-badge { background: #2d1b0e; color: #ffe6d5; padding: 0.75rem 1.6rem; border-radius: 60px; font-weight: 600; display: flex; align-items: center; gap: 0.8rem; font-size: 1rem; box-shadow: 0 6px 0 #0f0905; }
     .delivery-badge i { font-size: 1.2rem; color: #ffb88c; }
     
-    .main-panel { display: flex; flex-direction: row; flex-wrap: wrap; padding: 2rem 2.5rem 2.5rem; gap: 2.2rem; }
+    /* MAIN CONTENT VIEWS (Shop vs Orders) */
+    .view-section { display: none; }
+    .view-section.active { display: flex; flex-direction: row; flex-wrap: wrap; padding: 2rem 2.5rem 2.5rem; gap: 2.2rem; }
+    
+    /* SHOP VIEW */
     .menu-section { flex: 2; min-width: 320px; }
     .menu-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 1.5rem; }
     .menu-header h2 { font-size: 1.9rem; font-weight: 700; color: #2d1b0e; display: flex; align-items: center; gap: 0.6rem; }
@@ -75,6 +49,7 @@
     .donut-desc { font-size: 0.8rem; color: #8f5e3f; margin-bottom: 0.6rem; font-weight: 500; min-height: 2.2em; }
     .price { font-weight: 800; font-size: 1.3rem; color: #a6521e; background: #ffe3d2; padding: 0.35rem 1rem; border-radius: 40px; display: inline-block; margin-top: 0.3rem; }
     
+    /* ORDER PANEL (CART) */
     .order-panel { flex: 1.2; min-width: 300px; background: #fdf6f0; border-radius: 2.5rem; padding: 2rem 1.8rem; box-shadow: inset 0 0 0 1px #ffe6d5, 0 15px 25px -10px #c9a185; display: flex; flex-direction: column; }
     .order-panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.8rem; flex-wrap: wrap; gap: 0.5rem; }
     .order-panel h2 { font-size: 1.7rem; font-weight: 700; color: #2d1b0e; display: flex; align-items: center; gap: 0.7rem; }
@@ -115,14 +90,36 @@
     .order-btn:active { transform: translateY(5px); box-shadow: 0 3px 0 #b95d2b; }
     .order-btn:disabled { opacity: 0.5; transform: translateY(4px); box-shadow: 0 4px 0 #b95d2b; cursor: not-allowed; pointer-events: none; }
     
+    /* MY ORDERS VIEW */
+    .orders-section { flex: 1; width: 100%; max-width: 900px; margin: 0 auto; background: white; border-radius: 2rem; padding: 2rem; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+    .orders-section h2 { color: #2d1b0e; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem; border-bottom: 2px dashed #ffe6d5; padding-bottom: 1rem; }
+    .order-history-card { border: 1px solid #ffe6d5; border-radius: 1rem; padding: 1.2rem; margin-bottom: 1rem; background: #fffbf7; }
+    .order-history-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #ffe6d5; padding-bottom: 0.8rem; margin-bottom: 0.8rem; font-weight: bold; }
+    .order-history-header span { color: #6b3f27; }
+    .order-status { padding: 0.3rem 0.8rem; border-radius: 50px; font-size: 0.8rem; font-weight: bold; background: #ffe6d5; color: #a54b1e; }
+    .order-items-list { font-size: 0.95rem; color: #3b1e0e; margin-bottom: 0.8rem; }
+    .order-history-footer { display: flex; justify-content: space-between; font-weight: 800; color: #b64a12; }
+    .empty-orders { text-align: center; color: #888; padding: 3rem; font-style: italic; }
+
     /* MODAL STYLES */
     .modal-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(45, 27, 14, 0.6); backdrop-filter: blur(5px); display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: 0.3s; z-index: 100; }
     .modal-overlay.active { opacity: 1; pointer-events: auto; }
-    .payment-modal { background: #ffffff; width: 90%; max-width: 450px; border-radius: 2.5rem; padding: 2rem; box-shadow: 0 20px 40px rgba(0,0,0,0.2); transform: translateY(20px); transition: 0.3s; max-height: 90vh; overflow-y: auto; }
-    .modal-overlay.active .payment-modal { transform: translateY(0); }
+    .modal-box { background: #ffffff; width: 90%; max-width: 450px; border-radius: 2.5rem; padding: 2rem; box-shadow: 0 20px 40px rgba(0,0,0,0.2); transform: translateY(20px); transition: 0.3s; max-height: 90vh; overflow-y: auto; }
+    .modal-overlay.active .modal-box { transform: translateY(0); }
     .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
     .modal-header h2 { font-size: 1.5rem; color: #2d1b0e; display: flex; align-items: center; gap: 0.5rem; }
     .close-modal { background: none; border: none; font-size: 1.5rem; color: #b97e5c; cursor: pointer; }
+    
+    /* AUTH FORM STYLES */
+    .auth-input-group { position: relative; margin-bottom: 1.2rem; text-align: left; }
+    .auth-input-group i { position: absolute; left: 1.2rem; top: 50%; transform: translateY(-50%); color: #b97e5c; font-size: 1.1rem; }
+    .auth-input-group input { width: 100%; padding: 1rem 1rem 1rem 3rem; border: 2px solid #ffe6d5; border-radius: 50px; font-size: 1rem; outline: none; transition: 0.2s; font-weight: 500; }
+    .auth-input-group input:focus { border-color: #ff8a4c; box-shadow: 0 0 0 4px rgba(255, 138, 76, 0.2); }
+    .auth-btn { width: 100%; background: #ff9f6e; color: #2d1b0e; border: none; border-radius: 50px; padding: 1rem; font-size: 1.1rem; font-weight: 800; cursor: pointer; box-shadow: 0 6px 0 #b95d2b; transition: 0.1s; margin-bottom: 1rem; }
+    .auth-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #b95d2b; }
+    .toggle-auth { color: #a6521e; font-weight: 700; cursor: pointer; text-decoration: underline; }
+    .auth-error { color: #d9534f; font-weight: bold; font-size: 0.85rem; margin-bottom: 1rem; display: none; }
+
     .payment-options { display: flex; flex-direction: column; gap: 0.8rem; margin-bottom: 1.5rem; }
     .pay-option { display: flex; align-items: center; gap: 1rem; padding: 1rem; border: 2px solid #ffe6d5; border-radius: 1rem; cursor: pointer; transition: 0.2s; }
     .pay-option:hover { background: #fff9f4; }
@@ -146,64 +143,26 @@
     .receipt-box strong { display: block; margin-bottom: 0.5rem; border-bottom: 1px solid #e6cfbe; padding-bottom: 0.5rem; font-size: 1rem; }
     @keyframes pop { 0% { transform: scale(0); } 80% { transform: scale(1.2); } 100% { transform: scale(1); } }
     .footer-note { text-align: center; padding: 1rem 2rem 1.8rem; color: #b68c73; font-size: 0.85rem; border-top: 2px dashed #ffe1d0; margin-top: 0.5rem; }
-    @media (max-width: 750px) { .delivery-app { border-radius: 2rem; } .main-panel { padding: 1.8rem 1.5rem; } .brand h1 { font-size: 1.6rem; } .cart-item { flex-wrap: wrap; } }
+    @media (max-width: 750px) { .delivery-app { border-radius: 2rem; } .view-section.active { padding: 1.8rem 1.5rem; } .brand h1 { font-size: 1.6rem; } .cart-item { flex-wrap: wrap; } }
   </style>
 </head>
 <body>
 
-  <!-- =========================================
-       CUSTOMER LOGIN SCREEN
-       ========================================= -->
-  <div class="auth-container" id="authView">
-    <i class="fas fa-cookie-bite main-icon"></i>
-    <h2 id="authTitle">Welcome to Luna's</h2>
-    <p id="authSubtitle">Log in to order your mini donuts.</p>
-    
-    <div class="auth-error" id="authError">Invalid email or password!</div>
-    
-    <div class="auth-input-group">
-      <i class="fas fa-envelope"></i>
-      <input type="email" id="authEmail" placeholder="Email Address">
-    </div>
-    <div class="auth-input-group">
-      <i class="fas fa-lock"></i>
-      <input type="password" id="authPassword" placeholder="Password">
-    </div>
-    <!-- Extra name field for Registration -->
-    <div class="auth-input-group" id="nameField" style="display: none;">
-      <i class="fas fa-user"></i>
-      <input type="text" id="authName" placeholder="Your Full Name">
-    </div>
-    
-    <button class="auth-btn" id="authSubmitBtn" onclick="handleAuthSubmit()">Login</button>
-    
-    <p style="font-size: 0.9rem; color: #6b3f27;">
-      <span id="authToggleText">Don't have an account?</span> 
-      <span class="toggle-auth" onclick="toggleAuthMode()" id="authToggleBtn">Register here</span>
-    </p>
-  </div>
-
-  <!-- =========================================
-       MAIN DELIVERY APP
-       ========================================= -->
-  <div class="delivery-app" id="appView">
+  <div class="delivery-app">
+    <!-- HEADER -->
     <div class="header">
-      <div class="brand">
+      <div class="brand" onclick="switchView('shop')">
         <i class="fas fa-cookie-bite"></i>
         <h1>Luna's Mini Donut <span>delivery</span></h1>
       </div>
-      <div class="header-right">
-        <div class="user-greeting" id="userGreeting">
-          <i class="fas fa-user-circle"></i> <span id="displayName">User</span>
-        </div>
-        <button class="logout-link" onclick="handleLogout()">Logout</button>
-        <div class="delivery-badge">
-          <i class="fas fa-motorcycle"></i> 30–45 min
-        </div>
+      
+      <div class="header-right" id="headerRight">
+        <!-- Replaced dynamically by JS based on login state -->
       </div>
     </div>
 
-    <div class="main-panel">
+    <!-- VIEW 1: SHOP & CART -->
+    <div class="view-section active" id="shopView">
       <div class="menu-section">
         <div class="menu-header">
           <h2><i class="fas fa-donut"></i> Mini Donuts</h2>
@@ -259,13 +218,59 @@
       </div>
     </div>
 
+    <!-- VIEW 2: MY ORDERS (Hidden by default) -->
+    <div class="view-section" id="ordersView" style="display: none;">
+      <div class="orders-section">
+        <h2><i class="fas fa-receipt"></i> My Order History</h2>
+        <div id="customerOrdersList">
+          <!-- Orders will be injected here -->
+        </div>
+      </div>
+    </div>
+
     <div class="footer-note">
       <i class="fas fa-heart"></i> Freshly baked mini donuts · Free delivery over ₱500
     </div>
 
-    <!-- MODAL -->
+    <!-- =========================================
+         MODALS (Login & Payment)
+         ========================================= -->
+         
+    <!-- LOGIN / REGISTER MODAL -->
+    <div class="modal-overlay" id="authModal">
+      <div class="modal-box">
+        <div class="modal-header">
+          <h2 id="authTitle"><i class="fas fa-user"></i> Welcome Back</h2>
+          <button class="close-modal" onclick="closeModal('authModal')"><i class="fas fa-xmark"></i></button>
+        </div>
+        
+        <div class="auth-error" id="authError">Invalid email or password!</div>
+        
+        <div class="auth-input-group" id="nameField" style="display: none;">
+          <i class="fas fa-user"></i>
+          <input type="text" id="authName" placeholder="Full Name">
+        </div>
+        <div class="auth-input-group">
+          <i class="fas fa-envelope"></i>
+          <input type="email" id="authEmail" placeholder="Email Address">
+        </div>
+        <div class="auth-input-group">
+          <i class="fas fa-lock"></i>
+          <input type="password" id="authPassword" placeholder="Password">
+        </div>
+        
+        <button class="auth-btn" id="authSubmitBtn" onclick="handleAuthSubmit()">Login</button>
+        
+        <p style="font-size: 0.9rem; color: #6b3f27; text-align: center;">
+          <span id="authToggleText">Don't have an account?</span> 
+          <span class="toggle-auth" onclick="toggleAuthMode()" id="authToggleBtn">Register here</span>
+        </p>
+      </div>
+    </div>
+
+    <!-- PAYMENT MODAL -->
     <div class="modal-overlay" id="paymentModalOverlay">
-      <div class="payment-modal">
+      <div class="modal-box">
         <div id="checkoutView">
           <div class="modal-header">
             <h2><i class="fas fa-wallet"></i> Checkout</h2>
@@ -294,7 +299,7 @@
           </div>
 
           <div class="payment-dynamic-fields" id="eWalletFields">
-            <small>Enter your Mobile Number (e.g. 0917XXXXXXX)</small>
+            <small>Enter your Mobile Number</small>
             <input type="text" placeholder="Mobile Number" id="ewalletNumber" value="09171234567">
             <small>Enter your MPIN</small>
             <input type="password" placeholder="MPIN" id="ewalletPin" maxlength="4" value="1234">
@@ -351,35 +356,53 @@
 
   <script>
     // =========================================
-    // 1. CUSTOMER AUTHENTICATION LOGIC
+    // 1. AUTHENTICATION & HEADER LOGIC
     // =========================================
     let isRegisterMode = false;
+    let currentUser = sessionStorage.getItem('luna_customer_name') || null;
+
+    function updateHeader() {
+      const headerRight = document.getElementById('headerRight');
+      if (currentUser) {
+        headerRight.innerHTML = `
+          <div class="user-greeting" onclick="switchView('orders')" title="View My Orders">
+            <i class="fas fa-user-circle"></i> Hi, ${currentUser.split(' ')[0]}
+          </div>
+          <button class="logout-link" onclick="handleLogout()" style="background:none; border:none; color:#3b1e0e; font-weight:bold; cursor:pointer; text-decoration:underline; margin-right:1rem;">Logout</button>
+          <div class="delivery-badge">
+            <i class="fas fa-motorcycle"></i> 30–45 min
+          </div>
+        `;
+        document.getElementById('customerName').value = currentUser;
+      } else {
+        headerRight.innerHTML = `
+          <button class="login-btn-header" onclick="openAuthModal()">
+            <i class="fas fa-user"></i> Login / Register
+          </button>
+          <div class="delivery-badge">
+            <i class="fas fa-motorcycle"></i> 30–45 min
+          </div>
+        `;
+      }
+    }
+
+    function openAuthModal() {
+      document.getElementById('authModal').classList.add('active');
+      document.getElementById('authError').style.display = 'none';
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.remove('active');
+    }
 
     function toggleAuthMode() {
       isRegisterMode = !isRegisterMode;
-      const title = document.getElementById('authTitle');
-      const subtitle = document.getElementById('authSubtitle');
-      const submitBtn = document.getElementById('authSubmitBtn');
-      const toggleText = document.getElementById('authToggleText');
-      const toggleBtn = document.getElementById('authToggleBtn');
-      const nameField = document.getElementById('nameField');
+      document.getElementById('authTitle').innerHTML = isRegisterMode ? '<i class="fas fa-user-plus"></i> Create Account' : '<i class="fas fa-user"></i> Welcome Back';
+      document.getElementById('authSubmitBtn').textContent = isRegisterMode ? 'Register' : 'Login';
+      document.getElementById('authToggleText').textContent = isRegisterMode ? 'Already have an account?' : "Don't have an account?";
+      document.getElementById('authToggleBtn').textContent = isRegisterMode ? 'Login here' : 'Register here';
+      document.getElementById('nameField').style.display = isRegisterMode ? 'block' : 'none';
       document.getElementById('authError').style.display = 'none';
-
-      if (isRegisterMode) {
-        title.textContent = "Create an Account";
-        subtitle.textContent = "Join Luna's to place an order.";
-        submitBtn.textContent = "Register";
-        toggleText.textContent = "Already have an account?";
-        toggleBtn.textContent = "Login here";
-        nameField.style.display = 'block';
-      } else {
-        title.textContent = "Welcome to Luna's";
-        subtitle.textContent = "Log in to order your mini donuts.";
-        submitBtn.textContent = "Login";
-        toggleText.textContent = "Don't have an account?";
-        toggleBtn.textContent = "Register here";
-        nameField.style.display = 'none';
-      }
     }
 
     function handleAuthSubmit() {
@@ -394,34 +417,30 @@
         return;
       }
 
-      // Get existing users list
       let users = JSON.parse(localStorage.getItem('luna_users') || '[]');
 
       if (isRegisterMode) {
-        if (!nameInput) {
-          errorEl.textContent = "Please enter your name.";
-          errorEl.style.display = 'block';
-          return;
-        }
-        // Check if user exists
-        if (users.find(u => u.email === email)) {
-          errorEl.textContent = "Email already registered. Try logging in.";
-          errorEl.style.display = 'block';
-          return;
-        }
-        // Register new user
+        if (!nameInput) { errorEl.textContent = "Please enter your name."; errorEl.style.display = 'block'; return; }
+        if (users.find(u => u.email === email)) { errorEl.textContent = "Email already registered."; errorEl.style.display = 'block'; return; }
+        
         users.push({ email, password, name: nameInput });
         localStorage.setItem('luna_users', JSON.stringify(users));
-        alert("Registration successful! You can now log in.");
-        toggleAuthMode(); // Switch to login mode
+        alert("Registration successful! Please log in.");
+        toggleAuthMode();
       } else {
-        // Login existing user
         const user = users.find(u => u.email === email && u.password === password);
         if (user) {
-          // Success!
+          currentUser = user.name;
           sessionStorage.setItem('luna_customer_logged_in', 'true');
-          sessionStorage.setItem('luna_customer_name', user.name);
-          showApp(user.name);
+          sessionStorage.setItem('luna_customer_name', currentUser);
+          closeModal('authModal');
+          updateHeader();
+          
+          // If they were trying to checkout, open it now
+          if (document.getElementById('orderBtn').dataset.pendingCheckout === 'true') {
+            document.getElementById('orderBtn').dataset.pendingCheckout = 'false';
+            initiateCheckout();
+          }
         } else {
           errorEl.textContent = "Incorrect email or password.";
           errorEl.style.display = 'block';
@@ -432,36 +451,74 @@
     function handleLogout() {
       sessionStorage.removeItem('luna_customer_logged_in');
       sessionStorage.removeItem('luna_customer_name');
-      document.getElementById('appView').classList.remove('active');
-      document.getElementById('authView').classList.add('active');
-      document.getElementById('authPassword').value = '';
+      currentUser = null;
+      updateHeader();
+      switchView('shop');
+      document.getElementById('customerName').value = '';
     }
-
-    function showApp(name) {
-      document.getElementById('authView').classList.remove('active');
-      document.getElementById('appView').classList.add('active');
-      document.getElementById('displayName').textContent = name;
-      
-      // Auto-fill delivery name!
-      document.getElementById('customerName').value = name;
-      
-      // Load cart and render
-      loadState();
-      renderMenu();
-      renderCart();
-    }
-
-    // Check if user is already logged in on page load
-    window.onload = function() {
-      if (sessionStorage.getItem('luna_customer_logged_in') === 'true') {
-        showApp(sessionStorage.getItem('luna_customer_name'));
-      } else {
-        document.getElementById('authView').classList.add('active');
-      }
-    };
 
     // =========================================
-    // 2. SHOP & CART LOGIC
+    // 2. VIEW SWITCHING (Shop vs Orders)
+    // =========================================
+    function switchView(viewName) {
+      if (viewName === 'orders' && !currentUser) {
+        openAuthModal();
+        return;
+      }
+
+      document.getElementById('shopView').classList.remove('active');
+      document.getElementById('shopView').style.display = 'none';
+      document.getElementById('ordersView').classList.remove('active');
+      document.getElementById('ordersView').style.display = 'none';
+
+      if (viewName === 'shop') {
+        document.getElementById('shopView').classList.add('active');
+        document.getElementById('shopView').style.display = 'flex';
+      } else if (viewName === 'orders') {
+        document.getElementById('ordersView').classList.add('active');
+        document.getElementById('ordersView').style.display = 'flex';
+        loadCustomerOrders();
+      }
+    }
+
+    function loadCustomerOrders() {
+      const container = document.getElementById('customerOrdersList');
+      container.innerHTML = '';
+
+      const allOrders = JSON.parse(localStorage.getItem('luna_orders') || '[]');
+      // Filter orders that belong to this customer (by name)
+      const myOrders = allOrders.filter(o => o.name.toLowerCase() === currentUser.toLowerCase());
+
+      if (myOrders.length === 0) {
+        container.innerHTML = '<div class="empty-orders"><i class="fas fa-box-open" style="font-size:3rem; color:#ddd; margin-bottom:1rem;"></i><br>You have no orders yet.</div>';
+        return;
+      }
+
+      myOrders.forEach(order => {
+        const card = document.createElement('div');
+        card.className = 'order-history-card';
+        card.innerHTML = `
+          <div class="order-history-header">
+            <span>Order #${order.id}</span>
+            <span class="order-status">${order.status}</span>
+          </div>
+          <div style="font-size:0.85rem; color:#888; margin-bottom:0.5rem;">
+            <i class="fas fa-clock"></i> ${order.time} · Paid via ${order.method}
+          </div>
+          <div class="order-items-list">
+            ${order.items}
+          </div>
+          <div class="order-history-footer">
+            <span>Total</span>
+            <span>₱${order.total.toFixed(2)}</span>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    // =========================================
+    // 3. SHOP & CART LOGIC
     // =========================================
     const FREE_DELIVERY_THRESHOLD = 500;
     const STORAGE_KEY_CART = 'luna_mini_donut_cart';
@@ -480,7 +537,6 @@
     let currentTotal = 0;
     let selectedPaymentMethod = 'cod';
 
-    // DOM refs
     const donutGrid = document.getElementById('donutGrid');
     const cartContainer = document.getElementById('cartContainer');
     const emptyCartMsg = document.getElementById('emptyCartMsg');
@@ -523,12 +579,7 @@
     }
 
     function saveCart() { try { localStorage.setItem(STORAGE_KEY_CART, JSON.stringify(cart)); } catch (e) {} }
-    
-    function saveCustomerDetails() {
-      try {
-        localStorage.setItem(STORAGE_KEY_ADDR, customerAddressInput.value.trim());
-      } catch (e) {}
-    }
+    function saveCustomerDetails() { try { localStorage.setItem(STORAGE_KEY_ADDR, customerAddressInput.value.trim()); } catch (e) {} }
 
     function renderMenu() {
       donutGrid.innerHTML = '';
@@ -645,7 +696,20 @@
       else if (method === 'card') cardFields.classList.add('active');
     }
 
+    // =========================================
+    // 4. CHECKOUT LOGIC
+    // =========================================
     orderBtn.addEventListener('click', () => {
+      if (!currentUser) {
+        // Force login if they aren't logged in
+        orderBtn.dataset.pendingCheckout = 'true';
+        openAuthModal();
+        return;
+      }
+      initiateCheckout();
+    });
+
+    function initiateCheckout() {
       const name = customerNameInput.value.trim();
       const address = customerAddressInput.value.trim();
       if (!name) { alert('Please enter your name.'); customerNameInput.focus(); return; }
@@ -656,7 +720,7 @@
       checkoutView.style.display = 'block';
       successView.classList.remove('active');
       modalOverlay.classList.add('active');
-    });
+    }
 
     closeModalBtn.addEventListener('click', () => { modalOverlay.classList.remove('active'); });
 
@@ -683,7 +747,7 @@
         if (selectedPaymentMethod === 'card') methodName = 'Card';
         document.getElementById('receiptMethod').textContent = methodName;
 
-        // === SAVE ORDER TO LOCALSTORAGE (For Admin Panel) ===
+        // SAVE ORDER TO LOCALSTORAGE
         const orderData = {
           id: orderNum,
           name: customerNameInput.value.trim(),
@@ -701,7 +765,6 @@
         let existingOrders = JSON.parse(localStorage.getItem('luna_orders') || '[]');
         existingOrders.unshift(orderData);
         localStorage.setItem('luna_orders', JSON.stringify(existingOrders));
-        // ====================================================
 
         checkoutView.style.display = 'none';
         successView.classList.add('active');
@@ -712,11 +775,24 @@
         saveCart();
         renderMenu();
         renderCart();
-
       }, 1500);
     });
 
-    finishOrderBtn.addEventListener('click', () => { modalOverlay.classList.remove('active'); });
+    finishOrderBtn.addEventListener('click', () => { 
+      modalOverlay.classList.remove('active'); 
+      switchView('orders'); // Take them to their orders page after successful checkout!
+    });
+
+    // =========================================
+    // 5. INITIALIZATION
+    // =========================================
+    window.onload = function() {
+      updateHeader();
+      loadState();
+      renderMenu();
+      renderCart();
+    };
+
   </script>
 </body>
 </html>
