@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Luna's Mini Donut · Delivery</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <!-- LEAFLET MAP CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, system-ui, sans-serif; -webkit-tap-highlight-color: transparent; }
     body { background: #fff8f0; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 1.5rem; }
@@ -63,7 +65,7 @@
     .total-row { display: flex; justify-content: space-between; font-size: 1.5rem; font-weight: 800; color: #2d1b0e; padding: 1rem 0 0.8rem; border-top: 3px solid #ffc7a5; margin-bottom: 1.6rem; }
     .total-row span:last-child { color: #b64a12; }
     
-    /* DELIVERY DETAILS (UPDATED) */
+    /* DELIVERY DETAILS */
     .delivery-details { margin-bottom: 1.5rem; }
     .delivery-details h3 { font-size: 1.1rem; font-weight: 600; color: #6b3f27; margin-bottom: 0.9rem; display: flex; align-items: center; gap: 0.5rem; }
     .input-group { margin-bottom: 0.9rem; position: relative; }
@@ -117,6 +119,10 @@
     .success-screen i { font-size: 4rem; color: #2e8b57; margin-bottom: 1rem; }
     .receipt-box { background: #fdf6f0; border: 1px dashed #dba37b; padding: 1rem; border-radius: 1rem; text-align: left; font-size: 0.9rem; color: #3b1e0e; margin-bottom: 1.5rem; }
     .footer-note { text-align: center; padding: 1rem 2rem 1.8rem; color: #b68c73; font-size: 0.85rem; border-top: 2px dashed #ffe1d0; }
+
+    /* MAP MODAL SPECIFIC */
+    #map { height: 300px; width: 100%; border-radius: 1rem; margin-bottom: 1rem; border: 2px solid #ffe6d5; }
+    .map-instruction { font-size: 0.85rem; color: #6b3f27; margin-bottom: 0.5rem; font-weight: 600; text-align: center; }
 
     /* MOBILE RESPONSIVENESS */
     @media (max-width: 768px) {
@@ -199,7 +205,7 @@
           <span id="totalAmount">₱0.00</span>
         </div>
 
-        <!-- UPDATED DELIVERY DETAILS -->
+        <!-- DELIVERY DETAILS -->
         <div class="delivery-details">
           <h3><i class="fas fa-location-dot"></i> Delivery details</h3>
           
@@ -221,7 +227,7 @@
           </div>
           
           <!-- MAP BUTTON -->
-          <button class="map-btn" onclick="openGoogleMaps()">
+          <button class="map-btn" onclick="openMapModal()">
             <i class="fas fa-map-location-dot"></i> Pin Exact Location on Map
           </button>
         </div>
@@ -234,6 +240,21 @@
 
     <div class="footer-note">
       <i class="fas fa-heart"></i> Freshly baked mini donuts · Free delivery over ₱500
+    </div>
+
+    <!-- MAP MODAL (NEW) -->
+    <div class="modal-overlay" id="mapModal">
+      <div class="modal-box" style="max-width: 500px;">
+        <div class="modal-header">
+          <h2><i class="fas fa-map-marker-alt"></i> Pin Location</h2>
+          <button class="close-modal" onclick="closeModal('mapModal')"><i class="fas fa-xmark"></i></button>
+        </div>
+        <p class="map-instruction">Tap anywhere on the map to drop a pin.</p>
+        <div id="map"></div>
+        <button class="confirm-pay-btn" onclick="confirmMapLocation()" style="background: #1a73e8; box-shadow: 0 6px 0 #0d47a1;">
+          <i class="fas fa-check"></i> Confirm Location
+        </button>
+      </div>
     </div>
 
     <!-- CUSTOMIZATION MODAL -->
@@ -339,7 +360,7 @@
               <span>Address:</span> <span id="receiptAddress" style="text-align:right; max-width: 60%;">Address</span>
             </div>
             <div style="display: flex; justify-content: space-between; margin-bottom: 0.3rem;">
-              <span>Landmark:</span> <span id="receiptLandmark" style="text-align:right; max-width: 60%;">Landmark</span>
+              <span>Map Link:</span> <span id="receiptMapLink" style="text-align:right; max-width: 60%; font-size:0.8rem; color:#1a73e8; word-break:break-all;">None</span>
             </div>
             <div style="display: flex; justify-content: space-between; margin-bottom: 0.3rem;">
               <span>Payment:</span> <span id="receiptMethod">GCash</span>
@@ -356,6 +377,9 @@
       </div>
     </div>
   </div>
+
+  <!-- LEAFLET MAP SCRIPT -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
   <!-- FIREBASE SDK IMPORTS -->
   <script type="module">
@@ -407,13 +431,17 @@
     let customType = 'classic';
     let customQty = 1;
 
+    // Map Variables
+    let map;
+    let marker;
+    let selectedMapLink = ''; // To store the Google Maps link
+
     const donutGrid = document.getElementById('donutGrid');
     const cartContainer = document.getElementById('cartContainer');
     const emptyCartMsg = document.getElementById('emptyCartMsg');
     const totalAmountEl = document.getElementById('totalAmount');
     const orderBtn = document.getElementById('orderBtn');
     
-    // Inputs
     const customerNameInput = document.getElementById('customerName');
     const customerPhoneInput = document.getElementById('customerPhone');
     const customerAddressInput = document.getElementById('customerAddress');
@@ -623,6 +651,63 @@
       renderCart();
     });
 
+    // =========================================
+    // MAP LOGIC
+    // =========================================
+    window.openMapModal = function() {
+      document.getElementById('mapModal').classList.add('active');
+      
+      // Initialize map if not yet initialized
+      if (!map) {
+        map = L.map('map').setView([14.5995, 120.9842], 13); // Default to Manila
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        // Try to get user's actual GPS location
+        map.locate({setView: true, maxZoom: 16});
+
+        // When a location is found, drop a pin
+        map.on('locationfound', function(e) {
+          if (marker) map.removeLayer(marker);
+          marker = L.marker(e.latlng).addTo(map);
+          map.setView(e.latlng, 16);
+        });
+
+        // If user taps map, place a marker there
+        map.on('click', function(e) {
+          if (marker) map.removeLayer(marker);
+          marker = L.marker(e.latlng).addTo(map);
+        });
+      }
+      
+      // Fix map rendering issue inside modals
+      setTimeout(() => { map.invalidateSize(); }, 300);
+    }
+
+    window.confirmMapLocation = function() {
+      if (!marker) {
+        alert("Please tap on the map to pin your location first.");
+        return;
+      }
+
+      const lat = marker.getLatLng().lat;
+      const lng = marker.getLatLng().lng;
+      
+      // Generate the Google Maps link
+      selectedMapLink = `https://www.google.com/maps?q=${lat},${lng}`;
+      
+      // Auto-fill the fields
+      customerAddressInput.value = `Lat: ${lat.toFixed(6)}, Lng: ${lng.toFixed(6)}`;
+      customerLandmarkInput.value = `Pinned on Map (Tap to view)`;
+      
+      closeModal('mapModal');
+    }
+
+    // =========================================
+    // CHECKOUT LOGIC
+    // =========================================
     window.selectPayment = function(method, el) {
       selectedPaymentMethod = method;
       document.querySelectorAll('.pay-option').forEach(opt => opt.classList.remove('selected'));
@@ -633,16 +718,10 @@
       if (method === 'gcash' || method === 'maya') eWalletFields.classList.add('active');
     }
 
-    // OPEN GOOGLE MAPS
-    window.openGoogleMaps = function() {
-      window.open("https://www.google.com/maps", "_blank");
-    }
-
     orderBtn.addEventListener('click', () => {
       const name = customerNameInput.value.trim();
       const phone = customerPhoneInput.value.trim();
       const address = customerAddressInput.value.trim();
-      const landmark = customerLandmarkInput.value.trim();
       
       if (!name) { alert('Please enter your name.'); customerNameInput.focus(); return; }
       if (!phone) { alert('Please enter your phone number.'); customerPhoneInput.focus(); return; }
@@ -683,18 +762,22 @@
           return `${item.qty}x ${item.name} (${typeText})${toppingsText}`;
         }).join(', ');
 
-        // GET ALL CUSTOMER DETAILS
         const customerName = customerNameInput.value.trim();
         const customerPhone = customerPhoneInput.value.trim();
         const customerAddress = customerAddressInput.value.trim();
-        const customerLandmark = customerLandmarkInput.value.trim();
+        let customerLandmark = customerLandmarkInput.value.trim();
+
+        // If naka-pin sa map, isama ang link sa landmark
+        if (selectedMapLink) {
+          customerLandmark = `${customerLandmark} | Map: ${selectedMapLink}`;
+        }
 
         const orderData = {
           id: orderNum,
           name: customerName,
-          phone: customerPhone,       // NEW
+          phone: customerPhone,
           address: customerAddress,
-          landmark: customerLandmark, // NEW
+          landmark: customerLandmark,
           items: orderItems,
           total: currentTotal,
           method: methodName,
@@ -709,7 +792,13 @@
           document.getElementById('receiptName').textContent = customerName;
           document.getElementById('receiptPhone').textContent = customerPhone;
           document.getElementById('receiptAddress').textContent = customerAddress;
-          document.getElementById('receiptLandmark').textContent = customerLandmark || 'N/A';
+          
+          if (selectedMapLink) {
+            document.getElementById('receiptMapLink').innerHTML = `<a href="${selectedMapLink}" target="_blank">View on Map</a>`;
+          } else {
+            document.getElementById('receiptMapLink').textContent = "None";
+          }
+
           document.getElementById('receiptTotal').textContent = formatPrice(currentTotal);
           document.getElementById('receiptMethod').textContent = methodName;
 
@@ -732,7 +821,12 @@
       }, 1500);
     });
 
-    finishOrderBtn.addEventListener('click', () => { modalOverlay.classList.remove('active'); });
+    finishOrderBtn.addEventListener('click', () => { 
+      modalOverlay.classList.remove('active');
+      // Reset map state
+      selectedMapLink = '';
+      customerLandmarkInput.value = '';
+    });
 
     window.onload = function() {
       window.addEventListener('storage', (e) => {
